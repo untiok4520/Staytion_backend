@@ -1,4 +1,6 @@
+# macOS 系統檔案
 .DS_Store
+
 HELP.md
 target/
 build/
@@ -33,8 +35,6 @@ build/
 
 ### VS Code ###
 .vscode/
-# macOS 系統檔案
-.DS_Store
 
 # Eclipse 相關檔案
 .classpath
