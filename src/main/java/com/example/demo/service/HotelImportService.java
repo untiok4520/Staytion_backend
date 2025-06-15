@@ -46,7 +46,7 @@ public class HotelImportService {
 			//載入json
 			ObjectMapper mapper = new ObjectMapper();
 			File file = new File(
-					"/Users/ycchu/Documents/iSpan-JAVA/hotel-project/Staytion_backend/staytion/src/main/resources/data/HotelList.json");
+					"src/main/resources/static/data/HotelList.json");
 			HotelWrapperDto wrapper = mapper.readValue(file, HotelWrapperDto.class);
 			List<HotelJsonDto> dtoList = wrapper.getHotels();
 			
