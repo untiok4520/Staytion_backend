@@ -16,11 +16,11 @@ public class RoomAmenity {
 
 	@Id
 	@Column(name = "room_type_id")
-	private Integer roomTypeId; // 外鍵
+	private Long roomTypeId; // 外鍵
 
 	@Id
 	@Column(name = "amenity_id")
-	private Integer amenityId; // 外鍵
+	private Long amenityId; // 外鍵
 
 	public static class RoomAmenityId implements Serializable {
 

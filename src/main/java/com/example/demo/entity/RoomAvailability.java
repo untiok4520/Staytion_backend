@@ -22,8 +22,9 @@ public class RoomAvailability {
 
 	@Column(name = "available_quantity")
 	private Integer availableQuantity;
-	
-//	-------------------------------------
+
+	// -------------------------------------
+	// Constructor
 	public RoomAvailability() {
 
 	}
@@ -32,13 +33,13 @@ public class RoomAvailability {
 		this.date = date;
 		this.availableQuantity = availableQuantity;
 	}
-	
-//	-------------------------------------
+
+	// -------------------------------------
 	@ManyToOne
 	@JoinColumn(name = "room_type_id")
 	private RoomType roomType;
 
-//	-------------------------------------
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}

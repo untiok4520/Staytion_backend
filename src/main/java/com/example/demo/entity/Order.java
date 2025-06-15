@@ -40,6 +40,7 @@ public class Order {
 	@Column(name = "status", columnDefinition = "ENUM('CONFIRMED','CANCELED') DEFAULT 'CONFIRMED'")
 	private OrderStatus status = OrderStatus.CONFIRMED;
 
+	// Constructor
 	public Order() {
 	}
 
@@ -52,17 +53,17 @@ public class Order {
 		this.createdAt = createdAt;
 	}
 
-//	-------------------------------------
+	// -------------------------------------
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
 
-//	-------------------------------------
+	// -------------------------------------
 	public enum OrderStatus {
 		CONFIRMED, CANCELED
 	}
 
-//	-------------------------------------
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}

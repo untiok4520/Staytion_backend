@@ -50,9 +50,9 @@ public class RoomType {
 	@Column(name = "capacity")
 	private Integer capacity; // 容納人數
 
-//	-------------------------------------
+	// Constructor
 	public RoomType() {
-
+		
 	}
 
 	public RoomType(String rname, BigDecimal price, String description, Integer size, String view, String imgUrl,
@@ -70,6 +70,12 @@ public class RoomType {
 		this.capacity = capacity;
 	}
 
+	// -------------------------------------
+	@ManyToOne
+	@JoinColumn(name = "hotel_id")
+	private Hotel hotel;
+
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}
@@ -166,11 +172,6 @@ public class RoomType {
 		this.capacity = capacity;
 	}
 
-//	-------------------------------------
-	@ManyToOne
-	@JoinColumn(name = "hotel_id")
-	private Hotel hotel;
-
 	public Hotel getHotel() {
 		return hotel;
 	}
@@ -179,10 +180,11 @@ public class RoomType {
 		this.hotel = hotel;
 	}
 
-//	-------------------------------------
-	@Override
-	public String toString() {
-		return "RoomType{" + "id=" + id + ", hotelId=" + hotel + ", rname='" + rname + '\'' + ", price=" + price
-				+ ", size=" + size + ", quantity=" + quantity + '}';
-	}
+	// -------------------------------------
+	// @Override
+	// public String toString() {
+	// return "RoomType{" + "id=" + id + ", hotelId=" + hotel + ", rname='" + rname
+	// + '\'' + ", price=" + price
+	// + ", size=" + size + ", quantity=" + quantity + '}';
+	// }
 }

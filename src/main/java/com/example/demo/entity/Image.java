@@ -28,6 +28,7 @@ public class Image {
 	@JoinColumn(name = "hotel_id")
 	private Hotel hotel;
 
+	// Constructor
 	public Image() {
 	}
 
@@ -69,9 +70,10 @@ public class Image {
 		this.hotel = hotel;
 	}
 
-	@Override
-	public String toString() {
-		return "Image{" + "id=" + id + ", hotelId=" + hotel + ", imgUrl='" + imgUrl + '\'' + ", isCover=" + isCover
-				+ '}';
-	}
+	// @Override
+	// public String toString() {
+	// return "Image{" + "id=" + id + ", hotelId=" + hotel.getId() + ", imgUrl='" +
+	// imgUrl + '\'' + ", isCover=" + isCover
+	// + '}';
+	// }
 }

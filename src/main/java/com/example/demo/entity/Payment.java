@@ -22,46 +22,48 @@ public class Payment {
 	private Long id;
 
 	@Column(name = "amount")
-    private BigDecimal amount;
-	
+	private BigDecimal amount;
+
 	@Enumerated(EnumType.STRING)
-    @Column(name = "method", columnDefinition = "ENUM('CREDIT_CARD','CASH') DEFAULT 'CASH'")
-    private PaymentMethod method = PaymentMethod.CASH;
+	@Column(name = "method", columnDefinition = "ENUM('CREDIT_CARD','CASH') DEFAULT 'CASH'")
+	private PaymentMethod method = PaymentMethod.CASH;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", columnDefinition = "ENUM('PAID','UNPAID','CANCELED') DEFAULT 'UNPAID'")
-    private PaymentStatus status = PaymentStatus.UNPAID;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", columnDefinition = "ENUM('PAID','UNPAID','CANCELED') DEFAULT 'UNPAID'")
+	private PaymentStatus status = PaymentStatus.UNPAID;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-    
-    
-    public Payment() {}
+	@Column(name = "created_at")
+	private LocalDateTime createdAt;
 
-    public Payment(BigDecimal amount, PaymentMethod method, PaymentStatus status, LocalDateTime createdAt) {
-        this.amount = amount;
-        this.method = method;
-        this.status = status;
-        this.createdAt = createdAt;
-    }
-//	-------------------------------------
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;   
- 
-//	-------------------------------------
-    public enum PaymentMethod {
-        CREDIT_CARD,
-        CASH
-    }
+	// Constructor
+	public Payment() {
+	}
 
-    public enum PaymentStatus {
-        PAID,
-        UNPAID,
-        CANCELED
-    }
+	public Payment(BigDecimal amount, PaymentMethod method, PaymentStatus status, LocalDateTime createdAt) {
+		this.amount = amount;
+		this.method = method;
+		this.status = status;
+		this.createdAt = createdAt;
+	}
 
-//	-------------------------------------
+	// -------------------------------------
+	@ManyToOne
+	@JoinColumn(name = "order_id")
+	private Order order;
+
+	// -------------------------------------
+	public enum PaymentMethod {
+		CREDIT_CARD,
+		CASH
+	}
+
+	public enum PaymentStatus {
+		PAID,
+		UNPAID,
+		CANCELED
+	}
+
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}
@@ -109,5 +111,5 @@ public class Payment {
 	public void setOrder(Order order) {
 		this.order = order;
 	}
-	
+
 }

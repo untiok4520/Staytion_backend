@@ -28,6 +28,7 @@ public class OrderItem {
 	@Column(name = "subtotal")
 	private BigDecimal subtotal;
 
+	// Constructor
 	public OrderItem() {
 	}
 
@@ -37,7 +38,7 @@ public class OrderItem {
 		this.subtotal = subtotal;
 	}
 
-//	-------------------------------------
+	// -------------------------------------
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "order_id")
 	private Order order;
@@ -46,7 +47,7 @@ public class OrderItem {
 	@JoinColumn(name = "room_type_id")
 	private RoomType roomType;
 
-//	-------------------------------------
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}

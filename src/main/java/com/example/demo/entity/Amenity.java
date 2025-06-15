@@ -41,10 +41,10 @@ public class Amenity {
 		this.aname = aname;
 	}
 
-//	-------------------------------------
-	@Override
-	public String toString() {
-		return "Amenity{" + "id=" + id + ", aname='" + aname + '\'' + '}';
-	}
+	// -------------------------------------
+	// @Override
+	// public String toString() {
+	// return "Amenity{" + "id=" + id + ", aname='" + aname + '\'' + '}';
+	// }
 
 }

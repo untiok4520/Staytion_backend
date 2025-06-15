@@ -44,6 +44,7 @@ public class Message {
 		USER, HOTEL
 	}
 
+	// Constructor
 	public Message() {
 	}
 
@@ -53,6 +54,7 @@ public class Message {
 		this.sentAt = sentAt;
 	}
 
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}
