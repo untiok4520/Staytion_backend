@@ -1,12 +1,17 @@
 package com.example.demo.entity;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -52,7 +57,7 @@ public class RoomType {
 
 	// Constructor
 	public RoomType() {
-		
+
 	}
 
 	public RoomType(String rname, BigDecimal price, String description, Integer size, String view, String imgUrl,
@@ -74,6 +79,13 @@ public class RoomType {
 	@ManyToOne
 	@JoinColumn(name = "hotel_id")
 	private Hotel hotel;
+
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "room_amenities", // 中間表的名稱
+			joinColumns = @JoinColumn(name = "room_type_id"), // 本實體 (RoomType) 在中間表的外鍵
+			inverseJoinColumns = @JoinColumn(name = "amenity_id") // 另一實體 (Amenity) 在中間表的外鍵
+	)
+	private Set<Amenity> amenities = new HashSet<>(); // 使用 Set 避免重複
 
 	// Getters and Setters
 	public Long getId() {
@@ -179,6 +191,15 @@ public class RoomType {
 	public void setHotel(Hotel hotel) {
 		this.hotel = hotel;
 	}
+
+	public Set<Amenity> getAmenities() {
+		return amenities;
+	}
+
+	public void setAmenities(Set<Amenity> amenities) {
+		this.amenities = amenities;
+	}
+	
 
 	// -------------------------------------
 	// @Override

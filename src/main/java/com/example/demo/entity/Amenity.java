@@ -1,10 +1,14 @@
 package com.example.demo.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,6 +29,9 @@ public class Amenity {
 		this.aname = aname;
 	}
 
+	@ManyToMany(mappedBy = "amenities") // mappedBy 指向 RoomType 中定義的 "amenities" 屬性
+	private Set<RoomType> roomTypes = new HashSet<>();
+
 	public Long getId() {
 		return id;
 	}
@@ -40,6 +47,15 @@ public class Amenity {
 	public void setAname(String aname) {
 		this.aname = aname;
 	}
+
+	public Set<RoomType> getRoomTypes() {
+		return roomTypes;
+	}
+
+	public void setRoomTypes(Set<RoomType> roomTypes) {
+		this.roomTypes = roomTypes;
+	}
+	
 
 	// -------------------------------------
 	// @Override
