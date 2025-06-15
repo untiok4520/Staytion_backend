@@ -1,10 +1,15 @@
 package com.example.demo.entity;
 
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -44,6 +49,16 @@ public class City {
 		this.imgUrl = imgUrl;
 	}
 	
-	
+	//-------------------------
+	@OneToMany(mappedBy = "city", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<District> districts;
 
+	public Set<District> getDistricts() {
+		return districts;
+	}
+
+	public void setDistricts(Set<District> districts) {
+		this.districts = districts;
+	}
+	
 }
