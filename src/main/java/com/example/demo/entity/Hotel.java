@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,11 +19,22 @@ public class Hotel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "hname")
 	private String hname;
+	
+	@Column(name = "address")
 	private String address;
+	
+	@Column(name = "tel")
 	private String tel;
+	
+	@Column(name = "description")
 	private String description;
+	
+	@Column(name = "latitude")
 	private Double latitude;
+	
+	@Column(name = "longitude")
 	private Double longitude;
 
 	// Constructor
@@ -151,8 +163,10 @@ public class Hotel {
 	// -------------------------------------
 	// @Override
 	// public String toString() {
-	// 	return "Hotel{" + "id=" + id + ", hname='" + hname + '\'' + ", address='" + address + '\'' + ", tel='" + tel
-	// 			+ '\'' + ", districtId=" + district.getId() + ", latitude=" + latitude + ", longitude=" + longitude
-	// 			+ ", ownerId=" + owner.getId() + '}';
+	// return "Hotel{" + "id=" + id + ", hname='" + hname + '\'' + ", address='" +
+	// address + '\'' + ", tel='" + tel
+	// + '\'' + ", districtId=" + district.getId() + ", latitude=" + latitude + ",
+	// longitude=" + longitude
+	// + ", ownerId=" + owner.getId() + '}';
 	// }
 }
