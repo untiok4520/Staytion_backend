@@ -2,13 +2,10 @@ package com.example.demo.service;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.Condition;
 import java.util.stream.Collectors;
 
-import org.hibernate.service.spi.Stoppable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,19 +40,19 @@ public class HotelImportService {
 			hotelRepository.deleteAll();
 			entityManager.createNativeQuery("ALTER TABLE hotels AUTO_INCREMENT = 1").executeUpdate();
 
-			//載入json
+            //載入json
 			ObjectMapper mapper = new ObjectMapper();
 			File file = new File(
 					"src/main/resources/static/data/HotelList.json");
 			HotelWrapperDto wrapper = mapper.readValue(file, HotelWrapperDto.class);
 			List<HotelJsonDto> dtoList = wrapper.getHotels();
-			
+
 			//建立map：城市+行政區 => districtId
 			List<District> districts = districtRepository.findAll();
 			Map<String, Long> cityTownToDistrictIdMap = districts.stream().filter(d -> d.getCity() != null && d.getDname() != null)
 					.collect(Collectors.toMap(
-							d->d.getCity().getCname() + d.getDname(), 
-							District::getId, 
+							d->d.getCity().getCname() + d.getDname(),
+							District::getId,
 							(existing, replacement)-> existing));
 			//轉換為entity
 			List<Hotel> hotels = new ArrayList<>();
@@ -70,7 +67,7 @@ public class HotelImportService {
 				// address
 				PostalAddress addr = dto.getPostalAddress();
 				if (addr != null) {
-					String fullAddress = String.format("%s%s%s", 
+					String fullAddress = String.format("%s%s%s",
 							addr.getCity() != null ? addr.getCity() : "",
 							addr.getTown() != null ? addr.getTown() : "",
 							addr.getStreetAddress() != null ? addr.getStreetAddress() : "");
