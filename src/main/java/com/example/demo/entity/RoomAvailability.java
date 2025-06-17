@@ -13,22 +13,22 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="room_availability")
+@Table(name = "room_availability")
 public class RoomAvailability {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_type_id")
     private RoomType roomType;
 
-    @Column(name="date")
+    @Column(name = "date")
     private LocalDate date;
 
-    @Column(name="quantity_change")
+    @Column(name = "quantity_change")
     private Integer quantityChange;
 
     public Long getId() {
@@ -63,5 +63,4 @@ public class RoomAvailability {
         this.quantityChange = quantityChange;
     }
 
-    
 }

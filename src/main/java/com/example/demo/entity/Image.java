@@ -11,23 +11,35 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="images")
+@Table(name = "images")
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
-    @Column(name="img_url")
+    @Column(name = "img_url")
     private String imgUrl;
 
-    @Column(name="is_cover")
+    @Column(name = "is_cover")
     private Boolean isCover;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_type_id")
+    private RoomType roomType;
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
 
     public Long getId() {
         return id;
@@ -61,5 +73,4 @@ public class Image {
         this.isCover = isCover;
     }
 
-    
 }

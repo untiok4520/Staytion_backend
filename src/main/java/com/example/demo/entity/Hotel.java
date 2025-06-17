@@ -20,7 +20,7 @@ public class Hotel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name="id")
+	@Column(name = "id")
 	private Long id;
 
 	@Column(name = "hname")
@@ -96,67 +96,65 @@ public class Hotel {
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
-	
-	//------------------------------
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="district_id")
-    private District district;
 
-    //-------------------------------
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
-    private User owner; 
+	// ------------------------------
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "district_id")
+	private District district;
 
-    //------------------
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<RoomType> roomTypes;
+	// -------------------------------
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "owner_id")
+	private User owner;
 
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Image> images;
+	// ------------------
+	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<RoomType> roomTypes;
 
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Review> reviews;
+	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<Image> images;
 
-    public District getDistrict() {
-        return district;
-    }
+	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<Review> reviews;
 
-    public void setDistrict(District district) {
-        this.district = district;
-    }
+	public District getDistrict() {
+		return district;
+	}
 
-    public User getOwner() {
-        return owner;
-    }
+	public void setDistrict(District district) {
+		this.district = district;
+	}
 
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
+	public User getOwner() {
+		return owner;
+	}
 
-    public Set<RoomType> getRoomTypes() {
-        return roomTypes;
-    }
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
 
-    public void setRoomTypes(Set<RoomType> roomTypes) {
-        this.roomTypes = roomTypes;
-    }
+	public Set<RoomType> getRoomTypes() {
+		return roomTypes;
+	}
 
-    public Set<Image> getImages() {
-        return images;
-    }
+	public void setRoomTypes(Set<RoomType> roomTypes) {
+		this.roomTypes = roomTypes;
+	}
 
-    public void setImages(Set<Image> images) {
-        this.images = images;
-    }
+	public Set<Image> getImages() {
+		return images;
+	}
 
-    public Set<Review> getReviews() {
-        return reviews;
-    }
+	public void setImages(Set<Image> images) {
+		this.images = images;
+	}
 
-    public void setReviews(Set<Review> reviews) {
-        this.reviews = reviews;
-    }
+	public Set<Review> getReviews() {
+		return reviews;
+	}
 
-    
+	public void setReviews(Set<Review> reviews) {
+		this.reviews = reviews;
+	}
 
 }

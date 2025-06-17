@@ -37,13 +37,13 @@ public class User {
 	}
 
 	public User(String firstName, String lastName, String email, String password, String tel, LocalDateTime createdAt) {
-	        this.firstName = firstName;
-	        this.lastName = lastName;
-	        this.email = email;
-	        this.password = password;
-	        this.tel = tel;
-	        this.createdAt = createdAt;
-	    }
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.tel = tel;
+		this.createdAt = createdAt;
+	}
 
 	public Long getId() {
 		return id;
@@ -100,6 +100,5 @@ public class User {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
-	
-	
+
 }

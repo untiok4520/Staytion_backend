@@ -21,8 +21,8 @@ public class City {
 	private Long id;
 
 	private String cname;
-	
-	@Column (name="img_url")
+
+	@Column(name = "img_url")
 	private String imgUrl;
 
 	public Long getId() {
@@ -48,8 +48,8 @@ public class City {
 	public void setImgUrl(String imgUrl) {
 		this.imgUrl = imgUrl;
 	}
-	
-	//-------------------------
+
+	// -------------------------
 	@OneToMany(mappedBy = "city", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<District> districts;
 
@@ -60,5 +60,5 @@ public class City {
 	public void setDistricts(Set<District> districts) {
 		this.districts = districts;
 	}
-	
+
 }

@@ -52,17 +52,17 @@ public class Order {
 		this.createdAt = createdAt;
 	}
 
-//	-------------------------------------
+	// -------------------------------------
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
 
-//	-------------------------------------
+	// -------------------------------------
 	public enum OrderStatus {
 		CONFIRMED, CANCELED
 	}
 
-//	-------------------------------------
+	// -------------------------------------
 	public Long getId() {
 		return id;
 	}

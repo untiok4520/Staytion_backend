@@ -19,7 +19,7 @@ import com.example.demo.repository.DistrictRepository;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins="http://127.0.0.1:5500")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class LocationController {
     @Autowired
     private CityRepository cityRepository;
@@ -49,5 +49,5 @@ public class LocationController {
             return m;
         }).collect(Collectors.toList());
     }
-    
+
 }

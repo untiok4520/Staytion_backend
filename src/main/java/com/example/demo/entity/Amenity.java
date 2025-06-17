@@ -14,17 +14,17 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "amenities")
 public class Amenity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name="id")
-	private Long id;
+    @Column(name = "id")
+    private Long id;
 
-	@Column(name = "aname", unique = true)
-	private String aname;
+    @Column(name = "aname", unique = true)
+    private String aname;
 
-	@ManyToMany(mappedBy = "amenities") // mappedBy 指向 RoomType 中定義的 "amenities" 屬性
-	private Set<RoomType> roomTypes = new HashSet<>();
+    @ManyToMany(mappedBy = "amenities") // mappedBy 指向 RoomType 中定義的 "amenities" 屬性
+    private Set<RoomType> roomTypes = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -50,11 +50,10 @@ public class Amenity {
         this.roomTypes = roomTypes;
     }
 
-	
-	// -------------------------------------
-	// @Override
-	// public String toString() {
-	// return "Amenity{" + "id=" + id + ", aname='" + aname + '\'' + '}';
-	// }
+    // -------------------------------------
+    // @Override
+    // public String toString() {
+    // return "Amenity{" + "id=" + id + ", aname='" + aname + '\'' + '}';
+    // }
 
 }

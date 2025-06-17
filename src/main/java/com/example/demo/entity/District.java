@@ -15,16 +15,16 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table (name="districts")
+@Table(name = "districts")
 public class District {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 
-	@Column(name="id")
-    private Long id;
+	@Column(name = "id")
+	private Long id;
 
-	@Column(name="dname")
-    private String dname;
+	@Column(name = "dname")
+	private String dname;
 
 	public Long getId() {
 		return id;
@@ -42,13 +42,12 @@ public class District {
 		this.dname = dname;
 	}
 
-// -----------------------------------------
+	// -----------------------------------------
 
-    @ManyToOne
-    @JoinColumn(name = "city_id")
-    private City city;
-	
-	
+	@ManyToOne
+	@JoinColumn(name = "city_id")
+	private City city;
+
 	public City getCity() {
 		return city;
 	}
@@ -56,18 +55,17 @@ public class District {
 	public void setCity(City city) {
 		this.city = city;
 	}
-    
-//-------------------------
-@OneToMany(mappedBy = "district", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-private Set<Hotel> hotels;
 
-public Set<Hotel> getHotels() {
-	return hotels;
-}
+	// -------------------------
+	@OneToMany(mappedBy = "district", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<Hotel> hotels;
 
-public void setHotels(Set<Hotel> hotels) {
-	this.hotels = hotels;
-}
+	public Set<Hotel> getHotels() {
+		return hotels;
+	}
 
-    
+	public void setHotels(Set<Hotel> hotels) {
+		this.hotels = hotels;
+	}
+
 }

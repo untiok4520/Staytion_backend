@@ -15,7 +15,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="reviews")
+@Table(name = "reviews")
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +23,12 @@ public class Review {
     // @Column(name="id")
     // private Long id;
 
-    @Column(name="order_id")
+    @Column(name = "order_id")
     private Integer orderId;
 
     @OneToOne
     @MapsId
-    @JoinColumn(name="order_id")
+    @JoinColumn(name = "order_id")
     private Order order;
 
     public Integer getOrderId() {
@@ -55,21 +55,21 @@ public class Review {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name="score")
+    @Column(name = "score")
     private Float score;
 
-    @Column(name="comment")
+    @Column(name = "comment")
     private String comment;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     private LocalDateTime crearedAt;
 
     // public Long getId() {
-    //     return id;
+    // return id;
     // }
 
     // public void setId(Long id) {
-    //     this.id = id;
+    // this.id = id;
     // }
 
     public Hotel getHotel() {
@@ -111,7 +111,5 @@ public class Review {
     public void setCrearedAt(LocalDateTime crearedAt) {
         this.crearedAt = crearedAt;
     }
-
-    
 
 }

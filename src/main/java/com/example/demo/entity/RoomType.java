@@ -18,19 +18,19 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="room_types")
+@Table(name = "room_types")
 public class RoomType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
-    @Column(name="rname")
+    @Column(name = "rname")
     private String rname;
 
     public String getRname() {
@@ -41,42 +41,38 @@ public class RoomType {
         this.rname = rname;
     }
 
-    @Column(name="price")
+    @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
-    @Column(name="size")
+    @Column(name = "size")
     private Integer size;
 
-    @Column(name="view")
+    @Column(name = "view")
     private String view;
 
-    @Column(name="img_url")
+    @Column(name = "img_url")
     private String imgUrl;
 
-    @Column(name="is_canceled")
+    @Column(name = "is_canceled")
     private Boolean isCanceled;
 
-    @Column(name="quantity")
+    @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name="bed_count")
+    @Column(name = "bed_count")
     private Integer bedCount;
 
-    @Column(name="bed_type")
+    @Column(name = "bed_type")
     private String bedType;
 
-    @Column(name="capacity")
+    @Column(name = "capacity")
     private Integer capacity;
 
     @ManyToMany
-    @JoinTable(
-        name = "room_amenity",
-        joinColumns = @JoinColumn(name = "room_type_id"),
-        inverseJoinColumns = @JoinColumn(name = "amenity_id")
-    )
+    @JoinTable(name = "room_amenities", joinColumns = @JoinColumn(name = "room_type_id"), inverseJoinColumns = @JoinColumn(name = "amenity_id"))
     private Set<Amenity> amenities;
 
     @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -194,5 +190,4 @@ public class RoomType {
         this.roomAvailabilities = roomAvailabilities;
     }
 
-    
 }

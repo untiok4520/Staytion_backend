@@ -1,5 +1,5 @@
 package com.example.demo.repository;
 
-public interface  OrderRepository {
+public interface OrderRepository {
 
 }

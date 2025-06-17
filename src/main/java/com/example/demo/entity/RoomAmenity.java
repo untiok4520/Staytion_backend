@@ -16,19 +16,19 @@ public class RoomAmenity {
     // private RoomType roomType;
 
     // public RoomType getRoomType() {
-    //     return roomType;
+    // return roomType;
     // }
 
     // public void setRoomType(RoomType roomType) {
-    //     this.roomType = roomType;
+    // this.roomType = roomType;
     // }
 
     // public Amenity getAmenity() {
-    //     return amenity;
+    // return amenity;
     // }
 
     // public void setAmenity(Amenity amenity) {
-    //     this.amenity = amenity;
+    // this.amenity = amenity;
     // }
 
     // @Id
@@ -37,7 +37,7 @@ public class RoomAmenity {
     // private Amenity amenity;
 
     // public static class RoomAmenityId implements Serializable {
-    //     private Long roomType;
-    //     private Long amenity;
+    // private Long roomType;
+    // private Long amenity;
     // }
 }
