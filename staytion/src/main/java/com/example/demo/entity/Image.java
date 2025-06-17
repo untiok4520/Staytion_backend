@@ -20,6 +20,7 @@ public class Image {
     
 //    @ManyToOne
 //    @JoinColumn(name = "") 
+//    w
     
 //    constructor
     public Image() {
