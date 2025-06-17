@@ -32,7 +32,7 @@ public class RoomTypeService {
     @Autowired
     private AmenityRepository amenityRepository;
 
-    // ✅ 查詢全部房型
+    // 查詢全部房型
     public List<RoomTypeResponseDto> getAllRoomTypes() {
         return roomTypeRepository.findAll()
                 .stream()
@@ -40,7 +40,7 @@ public class RoomTypeService {
                 .collect(Collectors.toList());
     }
 
-    // ✅ 查詢指定飯店的房型
+    // 查詢指定飯店的房型
     public List<RoomTypeResponseDto> getRoomTypesByHotel(Long hotelId) {
         return roomTypeRepository.findByHotelId(hotelId)
                 .stream()
@@ -48,14 +48,14 @@ public class RoomTypeService {
                 .collect(Collectors.toList());
     }
 
-    // ✅ 關鍵字搜尋 + 分頁
+    // 關鍵字搜尋 + 分頁
     public Page<RoomTypeResponseDto> search(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<RoomType> roomPage = roomTypeRepository.findByRnameContaining(keyword, pageable);
         return roomPage.map(this::toDto);
     }
 
-    // ✅ 新增
+    // 新增
     public RoomTypeResponseDto saveRoomType(RoomTypeRequestDto dto) {
         Hotel hotel = hotelRepository.findById(dto.getHotelId())
                 .orElseThrow(() -> new RuntimeException("Hotel not found with id: " + dto.getHotelId()));
@@ -68,7 +68,7 @@ public class RoomTypeService {
         return toDto(saved);
     }
 
-    // ✅ 更新
+    // 更新
     public RoomTypeResponseDto updateRoomType(Long id, RoomTypeRequestDto dto) {
         RoomType room = roomTypeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("RoomType not found with id: " + id));
@@ -79,7 +79,6 @@ public class RoomTypeService {
         Set<Amenity> amenities = dto.getAmenityIds() == null ? Set.of()
                 : new HashSet<>(amenityRepository.findAllById(dto.getAmenityIds()));
 
-        // 更新欄位
         room.setRname(dto.getRname());
         room.setPrice(dto.getPrice());
         room.setDescription(dto.getDescription());
@@ -98,7 +97,7 @@ public class RoomTypeService {
         return toDto(saved);
     }
 
-    // ✅ 刪除
+    // 刪除
     public void deleteRoomType(Long id) {
         if (!roomTypeRepository.existsById(id)) {
             throw new RuntimeException("RoomType not found with id: " + id);
@@ -106,7 +105,7 @@ public class RoomTypeService {
         roomTypeRepository.deleteById(id);
     }
 
-    // ✅ 將 RequestDto 轉換成 Entity（新增時使用）
+    // 將 RequestDto 轉換成 Entity
     private RoomType toEntity(RoomTypeRequestDto dto, Hotel hotel, Set<Amenity> amenities) {
         RoomType room = new RoomType();
         room.setRname(dto.getRname());
@@ -125,7 +124,7 @@ public class RoomTypeService {
         return room;
     }
 
-    // ✅ 將 Entity 轉換為 ResponseDto（共用）
+    // 將 Entity 轉換為 ResponseDto
     private RoomTypeResponseDto toDto(RoomType room) {
         RoomTypeResponseDto dto = new RoomTypeResponseDto();
         dto.setId(room.getId());
@@ -142,8 +141,6 @@ public class RoomTypeService {
         dto.setBedCount(room.getBedCount());
         dto.setBedType(room.getBedType());
         dto.setCapacity(room.getCapacity());
-
-       
 
         Set<String> amenityNames = room.getAmenities()
                 .stream()

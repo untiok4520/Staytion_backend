@@ -10,24 +10,6 @@ import org.springframework.data.repository.query.Param;
 import com.example.demo.entity.Hotel;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
-	@Query("""
-			SELECT
-				h
-				FROM Hotel h
-			WHERE h.hname LIKE %:name%
-				AND h.address LIKE :addr%
-				AND h.tel LIKE %:tel%
-		""")
-		List<Hotel> findByNameWithAndAddrStartAndTelWith(
-				@Param("name") String nameLike,
-				@Param("addr") String addrStart,
-				@Param("tel") String telLike);
+	List<Hotel> findByOwnerId(Long ownerId);
 	
-	@Query("""
-			SELECT h
-			FROM Hotel h
-			WHERE h.id = :HotelId
-			""")
-	Optional<Hotel> findByHotelIdWithRoomTypes(
-			@Param("HotelId") String HotelId);
 }
