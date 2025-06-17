@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 @Table(name = "reviews")
 public class Review {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "order_id")
+    private Long orderId;
 
     private Integer score;
 
@@ -21,6 +21,11 @@ public class Review {
     private LocalDateTime createdAt;
 
     //---------------------------
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -28,15 +33,6 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Integer getScore() {
         return score;
@@ -84,5 +80,13 @@ public class Review {
 
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 }
