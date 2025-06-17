@@ -1,5 +1,9 @@
 package com.example.demo.repository;
 
-public class HotelRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.example.demo.entity.Hotel;
+
+public interface  HotelRepository extends JpaRepository<Hotel, Long> {
+    // Page<Hotel> findAll(Pageable pageable);
 }

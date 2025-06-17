@@ -1,5 +1,5 @@
 package com.example.demo.repository;
 
-public class RoomTypeRepository {
+public interface  RoomTypeRepository {
 
 }

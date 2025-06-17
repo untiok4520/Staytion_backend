@@ -30,8 +30,16 @@ public class RoomType {
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
-    @Column(name="room_type")
-    private String roomType;
+    @Column(name="rname")
+    private String rname;
+
+    public String getRname() {
+        return rname;
+    }
+
+    public void setRname(String rname) {
+        this.rname = rname;
+    }
 
     @Column(name="price")
     private BigDecimal price;
@@ -45,8 +53,8 @@ public class RoomType {
     @Column(name="view")
     private String view;
 
-    @Column(name="picurl")
-    private String picurl;
+    @Column(name="img_url")
+    private String imgUrl;
 
     @Column(name="is_canceled")
     private Boolean isCanceled;
@@ -90,14 +98,6 @@ public class RoomType {
         this.hotel = hotel;
     }
 
-    public String getRoomType() {
-        return roomType;
-    }
-
-    public void setRoomType(String roomType) {
-        this.roomType = roomType;
-    }
-
     public BigDecimal getPrice() {
         return price;
     }
@@ -130,12 +130,12 @@ public class RoomType {
         this.view = view;
     }
 
-    public String getPicurl() {
-        return picurl;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setPicurl(String picurl) {
-        this.picurl = picurl;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public Boolean getIsCanceled() {

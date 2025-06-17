@@ -10,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -18,8 +20,32 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name="id")
-    private Long id;
+    // @Column(name="id")
+    // private Long id;
+
+    @Column(name="order_id")
+    private Integer orderId;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name="order_id")
+    private Order order;
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
@@ -35,16 +61,16 @@ public class Review {
     @Column(name="comment")
     private String comment;
 
-    @Column(name="created_id")
+    @Column(name="created_at")
     private LocalDateTime crearedAt;
 
-    public Long getId() {
-        return id;
-    }
+    // public Long getId() {
+    //     return id;
+    // }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // public void setId(Long id) {
+    //     this.id = id;
+    // }
 
     public Hotel getHotel() {
         return hotel;
