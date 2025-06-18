@@ -14,8 +14,10 @@ import com.example.demo.repository.OrderItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -117,8 +119,52 @@ public class ReviewService {
     }
 
     // 後台分頁查詢所有評論
-    public Page<ReviewResponseDto> listAllReviews(Pageable pageable) {
-        return reviewRepo.findAll(pageable)
+    public Page<ReviewResponseDto> searchReviewsForHost(
+            String firstName,
+            String comment,
+            String hotelName,
+            Integer minScore,
+            Integer maxScore,
+            LocalDate startDate,
+            LocalDate endDate,
+            Pageable pageable
+
+    ) {
+        Specification<Review> spec = (root, query, cb) -> cb.conjunction();
+        if(firstName != null && !firstName.isBlank()){
+            spec = spec.and((root, query, cb) -> cb.like(root.get("user").get("firstName"), "%" + firstName + "%"));
+        }
+        if (comment != null && !comment.isBlank()) {
+            spec = spec.and((root, query, cb) ->
+                    cb.like(root.get("comment"), "%" + comment + "%"));
+        }
+
+        if (hotelName != null && !hotelName.isBlank()) {
+            spec = spec.and((root, query, cb) ->
+                    cb.like(root.get("hotel").get("hname"), "%" + hotelName + "%"));
+        }
+
+        if (minScore != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.greaterThanOrEqualTo(root.get("score"), minScore));
+        }
+
+        if (maxScore != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.lessThanOrEqualTo(root.get("score"), maxScore));
+        }
+
+        if (startDate != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.greaterThanOrEqualTo(root.get("createdAt"), startDate));
+        }
+
+        if (endDate != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.lessThanOrEqualTo(root.get("createdAt"), endDate));
+        }
+
+        return reviewRepo.findAll(spec, pageable)
                 .map(this::toResponse);
     }
 

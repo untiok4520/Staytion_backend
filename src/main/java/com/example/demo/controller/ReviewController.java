@@ -8,8 +8,13 @@ import com.example.demo.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -30,6 +35,21 @@ public class ReviewController {
     @Operation(summary = "使用者中心：取得自己的評論")
     public List<ReviewResponseDto> getMyReviews(@PathVariable("userId") Long userId) {
         return reviewService.getByUser(userId);
+    }
+    //後台條件篩選分頁查詢
+    @GetMapping("/host/reviews")
+    @Operation(summary = "後台評論管理")
+    public Page<ReviewResponseDto> searchReviewsForHost(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String comment,
+            @RequestParam(required = false) String hotelName,
+            @RequestParam(required = false) Integer minScore,
+            @RequestParam(required = false) Integer maxScore,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Pageable pageable
+    ){
+        return reviewService.searchReviewsForHost(firstName, comment, hotelName, minScore, maxScore,startDate, endDate, pageable);
     }
 
     // 新增評論
