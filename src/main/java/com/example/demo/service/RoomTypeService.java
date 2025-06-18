@@ -107,10 +107,14 @@ public class RoomTypeService {
     }
 
     // 查詢房型總覽
+    /*
     public List<RoomTypeSummaryDto> getOwnerRoomTypeSummary(Long ownerId, String rname) {
         return roomTypeRepository.summarizeByOwnerAndRoomType(ownerId, rname);
     }
-
+    public RoomTypeSummaryDto getCombinedRoomTypeSummary(Long ownerId, String rname) {
+        return roomTypeRepository.summarizeTotalByOwnerAndRoomType(ownerId, rname);
+    }
+	*/
 
     
     

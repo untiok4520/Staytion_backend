@@ -16,6 +16,8 @@ public interface RoomTypeRepository extends JpaRepository<RoomType, Long> {
 
 	Page<RoomType> findByRnameContaining(String keyword, Pageable pageable);
 
+//	查詢房型總和
+/*
 	@Query("""
 		    SELECT new com.example.demo.dto.response.RoomTypeSummaryDto(
 		        h.id,
@@ -33,4 +35,22 @@ public interface RoomTypeRepository extends JpaRepository<RoomType, Long> {
 		""")
 		List<RoomTypeSummaryDto> summarizeByOwnerAndRoomType(@Param("ownerId") Long ownerId, @Param("rname") String rname);
 
+	@Query("""
+		    SELECT new com.example.demo.dto.response.RoomTypeSummaryDto(
+		        r.rname,
+		        COUNT(r),
+		        SUM(CASE WHEN r.isCanceled = false THEN r.quantity ELSE 0 END),
+		        AVG(r.price)
+		    )
+		    FROM RoomType r
+		    WHERE r.hotel.owner.id = :ownerId AND r.rname = :rname
+		    GROUP BY r.rname
+		""")
+		RoomTypeSummaryDto summarizeTotalByOwnerAndRoomType(
+		    @Param("ownerId") Long ownerId,
+		    @Param("rname") String rname
+		);
+*/
+	
+	
 }

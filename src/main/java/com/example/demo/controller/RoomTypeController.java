@@ -67,6 +67,7 @@ public class RoomTypeController {
     }
     
 //  查詢特定使用者房型總計
+/*
     @GetMapping("/summary/owner/{ownerId}")
     public List<RoomTypeSummaryDto> getSummaryByOwner(
             @PathVariable Long ownerId,
@@ -75,4 +76,12 @@ public class RoomTypeController {
         return roomTypeService.getOwnerRoomTypeSummary(ownerId, type);
     }
 
+    @GetMapping("/summary/owner/{ownerId}/combined")
+    public RoomTypeSummaryDto getCombinedSummary(
+            @PathVariable Long ownerId,
+            @RequestParam String type
+    ) {
+        return roomTypeService.getCombinedRoomTypeSummary(ownerId, type);
+    }
+*/
 }
