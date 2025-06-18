@@ -3,8 +3,11 @@ package com.example.demo.dto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class HistoryRequestDto {
 	
+	@Schema(hidden = true)
 	private Long userId;
     private String cityName;
     private LocalDate checkInDate;
@@ -13,7 +16,7 @@ public class HistoryRequestDto {
     private Integer Kids;
     private LocalDateTime searchTime;
 
-   
+    
 	public Long getUserId() {
 		return userId;
 	}

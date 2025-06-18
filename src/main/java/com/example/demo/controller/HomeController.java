@@ -41,11 +41,16 @@ public class HomeController {
 	}
 
 	// 增加搜尋紀錄
-	@PostMapping("/histories")
-	public ResponseEntity<HistoryResponseDto> createHistory(@RequestBody HistoryRequestDto dto) {
-		HistoryResponseDto response = historyService.saveHistory(dto);
-		return ResponseEntity.ok(response);
+	@PostMapping("/histories/{userId}")
+	public ResponseEntity<HistoryResponseDto> createHistory(
+	        @PathVariable Long userId,
+	        @RequestBody HistoryRequestDto dto) {
+
+	    dto.setUserId(userId);
+	    HistoryResponseDto response = historyService.saveHistory(dto);
+	    return ResponseEntity.ok(response);
 	}
+
 
 	// 查詢精選飯店
 	@GetMapping("/top-hotels")
