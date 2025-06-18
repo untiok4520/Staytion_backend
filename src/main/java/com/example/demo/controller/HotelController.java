@@ -63,6 +63,7 @@ public class HotelController {
         return rs;
     }
 
+    //查詢符合條件飯店總數
     @GetMapping("/count")
     public Map<String, Long> getHotelCount(HotelSearchResultDTO resultDTO) {
         Long count = hotelService.searchHotels(resultDTO, 1, Integer.MAX_VALUE).getTotalElements();
@@ -71,6 +72,7 @@ public class HotelController {
         return result;
     }
 
+    //飯店詳情
     @GetMapping("/{hotelId}")
     public HotelDetailDTO getHotelDetail(@PathVariable Long hotelId) {
         return hotelService.getHotelDetail(hotelId);

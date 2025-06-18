@@ -28,8 +28,16 @@ public class RoomAvailability {
     @Column(name = "date")
     private LocalDate date;
 
-    @Column(name = "quantity_change")
-    private Integer quantityChange;
+    @Column(name = "available_quantity")
+    private Integer availableQuantity;
+
+    public Integer getAvailableQuantity() {
+        return availableQuantity;
+    }
+
+    public void setAvailableQuantity(Integer availableQuantity) {
+        this.availableQuantity = availableQuantity;
+    }
 
     public Long getId() {
         return id;
@@ -53,14 +61,6 @@ public class RoomAvailability {
 
     public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public Integer getQuantityChange() {
-        return quantityChange;
-    }
-
-    public void setQuantityChange(Integer quantityChange) {
-        this.quantityChange = quantityChange;
     }
 
 }

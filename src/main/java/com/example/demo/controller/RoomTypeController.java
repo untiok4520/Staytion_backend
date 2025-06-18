@@ -18,18 +18,16 @@ public class RoomTypeController {
     @Autowired
     private RoomTypeService roomTypeService;
 
-    @GetMapping("/{hotelId}/room_types")
+    @GetMapping("/{hotelId}/roomType")
     public List<RoomTypeDTO> getRoomTypesByHotel(@PathVariable Long hotelId) {
         return roomTypeService.findRoomTypesByHotel(hotelId);
     }
 
-    // 保留全部查詢方法
-    @GetMapping("/room_types")
+    @GetMapping("/api/roomType")
     public List<RoomTypeDTO> getAllRoomTypes() {
         return roomTypeService.getAllRoomTypeDtos();
     }
 
-    // 這段可選
     // @GetMapping("/room_types/{id}")
     // public ResponseEntity<RoomType> getRoomTypeById(@PathVariable Long id) {
     // RoomType roomType = roomTypeService.getRoomTypeById(id);
