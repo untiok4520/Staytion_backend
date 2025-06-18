@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.request.RoomTypeRequestDto;
 import com.example.demo.dto.response.RoomTypeResponseDto;
+import com.example.demo.dto.response.RoomTypeSummaryDto;
 import com.example.demo.entity.Amenity;
 import com.example.demo.entity.Hotel;
 import com.example.demo.entity.RoomType;
@@ -105,6 +106,14 @@ public class RoomTypeService {
         roomTypeRepository.deleteById(id);
     }
 
+    // 查詢房型總覽
+    public List<RoomTypeSummaryDto> getOwnerRoomTypeSummary(Long ownerId, String rname) {
+        return roomTypeRepository.summarizeByOwnerAndRoomType(ownerId, rname);
+    }
+
+
+    
+    
     // 將 RequestDto 轉換成 Entity
     private RoomType toEntity(RoomTypeRequestDto dto, Hotel hotel, Set<Amenity> amenities) {
         RoomType room = new RoomType();

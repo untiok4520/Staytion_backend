@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.RoomTypeRequestDto;
 import com.example.demo.dto.response.RoomTypeResponseDto;
+import com.example.demo.dto.response.RoomTypeSummaryDto;
 import com.example.demo.service.RoomTypeService;
 
 @RestController
@@ -63,6 +64,15 @@ public class RoomTypeController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         roomTypeService.deleteRoomType(id);
+    }
+    
+//  查詢特定使用者房型總計
+    @GetMapping("/summary/owner/{ownerId}")
+    public List<RoomTypeSummaryDto> getSummaryByOwner(
+            @PathVariable Long ownerId,
+            @RequestParam String type
+    ) {
+        return roomTypeService.getOwnerRoomTypeSummary(ownerId, type);
     }
 
 }

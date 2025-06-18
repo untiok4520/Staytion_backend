@@ -5,11 +5,32 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import com.example.demo.dto.response.RoomTypeSummaryDto;
 import com.example.demo.entity.RoomType;
 
 public interface RoomTypeRepository extends JpaRepository<RoomType, Long> {
 	List<RoomType> findByHotelId(Long hotelId);
+
 	Page<RoomType> findByRnameContaining(String keyword, Pageable pageable);
+
+	@Query("""
+		    SELECT new com.example.demo.dto.response.RoomTypeSummaryDto(
+		        h.id,
+		        h.hname,
+		        r.rname,
+		        COUNT(r),
+		        SUM(CASE WHEN r.isCanceled = false THEN r.quantity ELSE 0 END),
+		        false,
+		        AVG(r.price)
+		    )
+		    FROM RoomType r
+		    JOIN r.hotel h
+		    WHERE h.owner.id = :ownerId AND r.rname = :rname
+		    GROUP BY h.id, h.hname, r.rname
+		""")
+		List<RoomTypeSummaryDto> summarizeByOwnerAndRoomType(@Param("ownerId") Long ownerId, @Param("rname") String rname);
 
 }
