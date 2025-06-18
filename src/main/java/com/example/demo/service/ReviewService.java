@@ -1,11 +1,22 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.ReviewDto;
+import com.example.demo.dto.CreateReviewRequestDto;
+import com.example.demo.dto.ReviewResponseDto;
 import com.example.demo.entity.Review;
+import com.example.demo.entity.Order;
+import com.example.demo.entity.User;
+import com.example.demo.entity.Hotel;
 import com.example.demo.repository.ReviewRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.OrderRepository;
+import com.example.demo.repository.HotelRepository;
+import com.example.demo.repository.OrderItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,60 +26,112 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepo;
 
-    public List<ReviewDto> getByHotel(Long hotelId){
-        return reviewRepo.findByHotelId(hotelId).stream().map(this::toDto).collect(Collectors.toList());
+    @Autowired
+    private UserRepository userRepo;
+
+    @Autowired
+    private OrderRepository orderRepo;
+
+    @Autowired
+    private HotelRepository hotelRepo;
+
+    @Autowired
+    private OrderItemRepository orderItemRepo;
+
+    // 取得指定飯店評論
+    public List<ReviewResponseDto> getByHotel(Long hotelId) {
+        return reviewRepo.findByHotelId(hotelId)
+                .stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 
-    // 取得使用者中心的評論紀錄
-    public List<ReviewDto> getByUser(Long userId) {
-        return reviewRepo.findByUserId(userId).stream()
-                .map(this::toDto)
+    // 取得指定使用者的評論
+    public List<ReviewResponseDto> getByUser(Long userId) {
+        return reviewRepo.findByUserId(userId)
+                .stream()
+                .map(this::toResponse)
                 .collect(Collectors.toList());
     }
 
     // 新增評論
-    public ReviewDto create(ReviewDto dto) {
-        if (reviewRepo.existsById(dto.getOrderId())) {
-            throw new RuntimeException("該訂單已經有評論了");
+    public ReviewResponseDto createReview(Long userId, CreateReviewRequestDto req) {
+        if (reviewRepo.existsByOrderId(req.getOrderId())) {
+            throw new IllegalArgumentException("該訂單已經有評論了");
         }
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("使用者不存在"));
+        Order order = orderRepo.findById(req.getOrderId())
+                .orElseThrow(() -> new IllegalArgumentException("訂單不存在"));
 
-        Review r = new Review();
-        r.setOrderId(dto.getOrderId());
-        r.setScore(dto.getScore());
-        r.setComment(dto.getComment());
-        // 如果你需要設定 user 與 hotel 關聯，也可以在 dto 裡帶入對應 id，
-        // 然後透過 UserRepository / HotelRepository 查出實體再 setUser(…)、setHotel(…)
-        Review saved = reviewRepo.save(r);
-        return toDto(saved);
+        List<String> hotelNames = orderItemRepo.findDistinctHotelNamesByOrderId(req.getOrderId());
+        if (hotelNames.isEmpty()) {
+            throw new IllegalArgumentException("該訂單沒有任何訂單項目或未找到飯店");
+        }
+        String hname = hotelNames.get(0);
+        Hotel hotel = hotelRepo.findByHname(hname)
+                .orElseThrow(() -> new IllegalArgumentException("飯店不存在"));
+        Review review = new Review();
+        review.setOrder(order);
+        review.setUser(user);
+        review.setHotel(hotel);
+        review.setScore(req.getScore());
+        review.setComment(req.getComment());
+        review.setCreatedAt(LocalDateTime.now());
+
+        Review saved = reviewRepo.save(review);
+        return toResponse(saved);
     }
 
-    // 更新評論
-    public ReviewDto update(Long reviewId, ReviewDto dto) {
-        Review r = reviewRepo.findById(reviewId)
+    // 更新評論（只能更新自己）
+    public ReviewResponseDto updateReview(Long userId, Long reviewId, CreateReviewRequestDto req) {
+        Review review = reviewRepo.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("評論不存在"));
-        r.setScore(dto.getScore());
-        r.setComment(dto.getComment());
-        r.setReply(dto.getReply());
-        Review updated = reviewRepo.save(r);
-        return toDto(updated);
-    }
-
-    // 刪除評論
-    public void delete(Long reviewId) {
-        reviewRepo.deleteById(reviewId);
-    }
-
-    // Entity → DTO 轉換
-    private ReviewDto toDto(Review r) {
-        ReviewDto dto = new ReviewDto();
-        dto.setOrderId(r.getOrderId());
-        dto.setScore(r.getScore());
-        dto.setComment(r.getComment());
-        dto.setReply(r.getReply());
-        if (r.getUser() != null) {
-            dto.setUserName(r.getUser().getFirstName());
+        if (!review.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("無權限編輯他人評論");
         }
-        dto.setCreatedAt(r.getCreatedAt());
+        review.setScore(req.getScore());
+        review.setComment(req.getComment());
+
+        Review updated = reviewRepo.save(review);
+        return toResponse(updated);
+    }
+
+    // 刪除評論（只能刪自己）
+    public void deleteReview(Long userId, Long reviewId) {
+        Review review = reviewRepo.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("評論不存在"));
+        if (!review.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("無權限刪除他人評論");
+        }
+        reviewRepo.delete(review);
+    }
+
+    // 管理員/房東：回覆評論（依據 orderId 查找評論）
+    public ReviewResponseDto replyReview(Long orderId, String reply) {
+        Review review = reviewRepo.findByOrderId(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("找不到該訂單對應的評論"));
+        review.setReply(reply);
+        Review updated = reviewRepo.save(review);
+        return toResponse(updated);
+    }
+
+    // 後台分頁查詢所有評論
+    public Page<ReviewResponseDto> listAllReviews(Pageable pageable) {
+        return reviewRepo.findAll(pageable)
+                .map(this::toResponse);
+    }
+
+    // Entity -> Response DTO
+    private ReviewResponseDto toResponse(Review review) {
+        ReviewResponseDto dto = new ReviewResponseDto();
+        dto.setOrderId(review.getOrder().getId());
+        dto.setScore(review.getScore());
+        dto.setComment(review.getComment());
+        dto.setReply(review.getReply());
+        dto.setUserName(review.getUser().getFirstName());
+        dto.setCreatedAt(review.getCreatedAt());
+        dto.setUserId(review.getUser().getId());
         return dto;
     }
 }

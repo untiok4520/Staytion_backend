@@ -2,8 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.CreateReviewRequestDto;
 import com.example.demo.dto.ReviewDto;
+import com.example.demo.dto.ReviewReplyDto;
 import com.example.demo.dto.ReviewResponseDto;
 import com.example.demo.service.ReviewService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,34 +20,51 @@ public class ReviewController {
 
     // 房型詳情頁：取得某飯店的評論
     @GetMapping("/rooms/{hotelId}/reviews")
-    public List<ReviewDto> getRoomReviews(@PathVariable("hotelId") Long hotelId) {
+    @Operation(summary = "房型詳情頁：取得某飯店的評論")
+    public List<ReviewResponseDto> getRoomReviews(@PathVariable("hotelId") Long hotelId) {
         return reviewService.getByHotel(hotelId);
     }
 
     // 使用者中心：取得自己的評論
     @GetMapping("/users/{userId}/reviews")
-    public List<ReviewDto> getMyReviews(@PathVariable("userId") Long userId) {
+    @Operation(summary = "使用者中心：取得自己的評論")
+    public List<ReviewResponseDto> getMyReviews(@PathVariable("userId") Long userId) {
         return reviewService.getByUser(userId);
     }
 
     // 新增評論
     @PostMapping("/users/{userId}/reviews")
+    @Operation(summary = "新增房客評論")
     public ReviewResponseDto postReview(@PathVariable("userId") Long userId,
                                         @Valid @RequestBody CreateReviewRequestDto req) {
         return reviewService.createReview(userId, req);
     }
-
+    // 新增房東回覆
+    @PatchMapping("/reviews/{orderId}/reply")
+    @Operation(summary = "新增房東回覆")
+    public ReviewResponseDto replyReview(
+            @PathVariable("orderId") Long orderId,
+            @RequestBody ReviewReplyDto dto
+    ) {
+        return reviewService.replyReview(orderId, dto.getReply());
+    }
 
     // 更新評論
-    @PutMapping("/reviews/{id}")
-    public ReviewDto putReview(@PathVariable("id") Long id,
-                               @RequestBody ReviewDto dto) {
-        return reviewService.update(id, dto);
+    @PutMapping("/users/{userId}/reviews/{id}")
+    @Operation(summary = "更新評論")
+    public ReviewResponseDto putReview(@PathVariable("userId") Long userId,
+                                        @PathVariable("id") Long id,
+                               @Valid @RequestBody CreateReviewRequestDto req) {
+        return reviewService.updateReview(userId,id, req);
     }
 
     // 刪除評論
-    @DeleteMapping("/reviews/{id}")
-    public void deleteReview(@PathVariable("id") Long id) {
-        reviewService.delete(id);
+    @DeleteMapping("/users/{userId}/reviews/{id}")
+    @Operation(summary = "刪除評論")
+    public void deleteReview(
+        @PathVariable("userId") Long userId,
+        @PathVariable("id") Long id
+    ) {
+        reviewService.deleteReview(userId, id);
     }
 }

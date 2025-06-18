@@ -4,6 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.entity.Hotel;
 
-public interface HotelRepository extends JpaRepository<Hotel, Long>{
+import java.util.List;
+import java.util.Optional;
 
+public interface HotelRepository extends JpaRepository<Hotel, Long>{
+    List<Hotel> findByHnameContaining(String keyword);
+    Optional<Hotel> findByHname(String hname);
 }
