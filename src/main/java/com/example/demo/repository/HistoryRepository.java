@@ -10,10 +10,11 @@ import com.example.demo.projection.HistoryProjection;
 
 public interface HistoryRepository extends JpaRepository<History, Long> {
 	@Query(value = """
-		SELECT c.cname, c.img_url, h.check_in_date, h.check_out_date, (h.adults+h.kids) AS total
+		SELECT c.cname, c.img_url AS imgUrl, h.check_in_date AS checkInDate, h.check_out_date AS checkOutDate, (h.adults+h.kids) AS total
 		FROM histories h 
 		JOIN cities c ON h.city_id = c.id
-		WHERE user_id=:userId;
+		WHERE user_id=:userId
+		ORDER BY h.search_time DESC
 		""", nativeQuery = true)
 
 	List<HistoryProjection> findHistoriesByUserId(Long userId);

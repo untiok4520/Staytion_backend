@@ -7,9 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.HistoryRequestDto;
+import com.example.demo.dto.HistoryResponseDto;
+import com.example.demo.entity.History;
 import com.example.demo.projection.HistoryProjection;
 import com.example.demo.projection.HotelProjection;
 import com.example.demo.service.CityService;
@@ -33,6 +38,13 @@ public class HomeController {
 	@GetMapping("/histories/{userId}")
 	public List<HistoryProjection> getHistoriesByUserId(@PathVariable Long userId) {
 		return historyService.getHistoriesByUserId(userId);
+	}
+
+	// 增加搜尋紀錄
+	@PostMapping("/histories")
+	public ResponseEntity<HistoryResponseDto> createHistory(@RequestBody HistoryRequestDto dto) {
+		HistoryResponseDto response = historyService.saveHistory(dto);
+		return ResponseEntity.ok(response);
 	}
 
 	// 查詢精選飯店
