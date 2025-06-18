@@ -26,8 +26,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			      AND (:start IS NULL OR o.createdAt >= :start)
 			      AND (:end IS NULL OR o.createdAt <= :end)
 			""")
-	Page<Order> searchByStatusAndDateRange(@Param("status") String status, @Param("start") LocalDateTime start,
-			@Param("end") LocalDateTime end, Pageable pageable);
+	Page<Order> searchByStatusAndDateRange(@Param("status") Order.OrderStatus status,
+			@Param("start") LocalDateTime start, @Param("end") LocalDateTime end, Pageable pageable);
 
 //  月報表
 	@Query("""
@@ -48,5 +48,19 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			    ORDER BY o.createdAt
 			""")
 	List<Map<String, Object>> getOrderTrend(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+//	是否已經訂過「同一房型」在「某個入住期間內」的訂單
+	@Query("""
+			    SELECT COUNT(o) > 0
+			    FROM Order o
+			    JOIN o.orderItems i
+			    WHERE o.user.id = :userId
+			      AND i.roomType.id = :roomTypeId
+			      AND o.checkInDate < :checkOut
+			      AND o.checkOutDate > :checkIn
+			      AND o.status = com.example.demo.entity.Order$OrderStatus.CONFIRMED
+			""")
+	boolean existsOverlappingOrder(@Param("userId") Long userId, @Param("roomTypeId") Long roomTypeId,
+			@Param("checkIn") LocalDate checkIn, @Param("checkOut") LocalDate checkOut);
 
 }

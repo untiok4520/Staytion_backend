@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class OrderItemRequestDto {
 	private Long roomTypeId;
 	private Integer quantity;
-	private BigDecimal pricePerRoom;
+//	private BigDecimal pricePerRoom;
 
 	public Long getRoomTypeId() {
 		return roomTypeId;
@@ -23,12 +23,12 @@ public class OrderItemRequestDto {
 		this.quantity = quantity;
 	}
 
-	public BigDecimal getPricePerRoom() {
-		return pricePerRoom;
-	}
-
-	public void setPricePerRoom(BigDecimal pricePerRoom) {
-		this.pricePerRoom = pricePerRoom;
-	}
+//	public BigDecimal getPricePerRoom() {
+//		return pricePerRoom;
+//	}
+//
+//	public void setPricePerRoom(BigDecimal pricePerRoom) {
+//		this.pricePerRoom = pricePerRoom;
+//	}
 
 }

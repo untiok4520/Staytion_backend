@@ -27,12 +27,13 @@ public class HotelService {
     @Autowired
     private DistrictRepository districtRepository;
 
-    public List<HotelResponseDto> getAllHotels() {
-        return hotelRepository.findAll()
-                .stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-    }
+//    查詢全部飯店(但應該不需要?)
+//    public List<HotelResponseDto> getAllHotels() {
+//        return hotelRepository.findAll()
+//                .stream()
+//                .map(this::toDto)
+//                .collect(Collectors.toList());
+//    }
     
     // 查詢指定飯店的房型
     public List<HotelResponseDto> getHotelsByOwner(Long ownerId) {

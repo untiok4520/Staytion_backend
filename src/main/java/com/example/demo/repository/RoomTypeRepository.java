@@ -5,17 +5,26 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.demo.dto.response.RoomTypeSummaryDto;
 import com.example.demo.entity.RoomType;
+
+import jakarta.persistence.LockModeType;
 
 public interface RoomTypeRepository extends JpaRepository<RoomType, Long> {
 	List<RoomType> findByHotelId(Long hotelId);
 
 	Page<RoomType> findByRnameContaining(String keyword, Pageable pageable);
 
+//	資料庫層級鎖，避免多個交易同時搶同一房型
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("SELECT r FROM RoomType r WHERE r.id IN :ids")
+	List<RoomType> findAllByIdWithLock(@Param("ids") List<Long> ids);
+
+	
+	
 //	查詢房型總和
 /*
 	@Query("""

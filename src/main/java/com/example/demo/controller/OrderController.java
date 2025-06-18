@@ -21,10 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.OrderRequestDto;
 import com.example.demo.dto.response.OrderResponseDto;
+import com.example.demo.entity.Order;
 import com.example.demo.service.OrderService;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/admin/orders")
 @CrossOrigin
 public class OrderController {
 
@@ -63,7 +64,7 @@ public class OrderController {
 
 	// 狀態 + 日期篩選 + 分頁查詢（後台篩選）
 	@GetMapping("/filter")
-	public Page<OrderResponseDto> searchOrders(@RequestParam(required = false) String status,
+	public Page<OrderResponseDto> searchOrders(@RequestParam(required = false) Order.OrderStatus status,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
 			Pageable pageable) {

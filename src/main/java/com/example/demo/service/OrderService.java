@@ -38,16 +38,37 @@ public class OrderService {
 	private UserRepository userRepository;
 	@Autowired
 	private RoomTypeRepository roomTypeRepository;
+//	@Autowired
+//	private EmailService emailService;
 
-	// 建立訂單
+
+//	// 建立訂單V1
+//	public OrderResponseDto createOrder(OrderRequestDto dto) {
+//		User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+//		
+//		List<RoomType> roomTypes = roomTypeRepository.findAllById(
+//				dto.getItems().stream().map(OrderItemRequestDto::getRoomTypeId).collect(Collectors.toList()));
+//		
+//		Order order = toEntity(dto, user, roomTypes);
+//		return toDto(orderRepository.save(order));
+	
+	// 建立訂單V2
 	public OrderResponseDto createOrder(OrderRequestDto dto) {
 		User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
 
-		List<RoomType> roomTypes = roomTypeRepository.findAllById(
+		List<RoomType> roomTypes = roomTypeRepository.findAllByIdWithLock(
 				dto.getItems().stream().map(OrderItemRequestDto::getRoomTypeId).collect(Collectors.toList()));
 
 		Order order = toEntity(dto, user, roomTypes);
 		return toDto(orderRepository.save(order));
+		
+//		確認信
+//		Order saved = orderRepository.save(order);
+//		String content = buildOrderConfirmationHtml(saved);
+//		emailService.sendOrderConfirmation(saved.getUser().getEmail(), "Staytion 訂單已確認", content);
+//		return toDto(saved);
+
+		
 	}
 
 	// 查詢單筆訂單
@@ -71,7 +92,7 @@ public class OrderService {
 	}
 
 	// 分頁 + 狀態/時間篩選
-	public Page<OrderResponseDto> searchOrders(String status, LocalDate start, LocalDate end, Pageable pageable) {
+	public Page<OrderResponseDto> searchOrders(Order.OrderStatus status, LocalDate start, LocalDate end, Pageable pageable) {
 		LocalDateTime startDateTime = (start != null) ? start.atStartOfDay() : null;
 		LocalDateTime endDateTime = (end != null) ? end.plusDays(1).atStartOfDay() : null; // 讓查詢包含 end 當天
 
@@ -127,8 +148,8 @@ public class OrderService {
 			OrderItem item = new OrderItem();
 			item.setRoomType(room);
 			item.setQuantity(itemDto.getQuantity());
-			item.setPricePerRoom(itemDto.getPricePerRoom());
-			item.setSubtotal(itemDto.getPricePerRoom().multiply(BigDecimal.valueOf(itemDto.getQuantity())));
+//			item.setPricePerRoom(itemDto.getPricePerRoom());
+//			item.setSubtotal(itemDto.getPricePerRoom().multiply(BigDecimal.valueOf(itemDto.getQuantity())));
 			item.setOrder(order);
 
 			total = total.add(item.getSubtotal());
@@ -163,4 +184,69 @@ public class OrderService {
 		dto.setItems(itemDtos);
 		return dto;
 	}
+	
+	
+	
+//	==========
+//	訂單檢查邏輯
+//	 // ✅ 1. 檢查庫存
+//    if (room.getStock() < itemDto.getQuantity()) {
+//        throw new RuntimeException("房型庫存不足: " + room.getRname());
+//    }
+//
+//    // ✅ 2. 檢查是否已有相同用戶同房型、日期重疊的訂單（你需補上這查詢邏輯）
+//    if (hasOverlapOrder(user, room, dto.getCheckInDate(), dto.getCheckOutDate())) {
+//        throw new RuntimeException("您在該日期已預訂此房型");
+//    }
+//
+//    // ✅ 3. 使用房型價格
+//    BigDecimal price = room.getPrice();
+//
+//    // ✅ 4. 建立訂單項目並計算小計
+//    OrderItem item = new OrderItem();
+//    item.setRoomType(room);
+//    item.setQuantity(itemDto.getQuantity());
+//    item.setPricePerRoom(price);
+//    item.setSubtotal(price.multiply(BigDecimal.valueOf(itemDto.getQuantity())));
+//    item.setOrder(order);
+//
+//    // 加總
+//    total = total.add(item.getSubtotal());
+//    items.add(item);
+//
+//    // ✅ 5. 扣除庫存（這邊先記錄，實際扣庫存可交由庫存模組或額外邏輯完成）
+//    room.setStock(room.getStock() - itemDto.getQuantity());
+//}
+	
+	
+//	==========
+//	確認信內容
+//	public String buildOrderConfirmationHtml(Order order) {
+//	    return String.format("""
+//	        <html>
+//	        <body>
+//	            <h2>感謝您的訂單！</h2>
+//	            <p>親愛的 %s，您的訂單已確認：</p>
+//	            <ul>
+//	                <li>訂單編號：%d</li>
+//	                <li>入住日期：%s</li>
+//	                <li>退房日期：%s</li>
+//	                <li>總金額：NT$%s</li>
+//	                <li>狀態：%s</li>
+//	            </ul>
+//	            <p>祝您有美好的一天！</p>
+//	        </body>
+//	        </html>
+//	        """,
+//	        (order.getUser().getFirstName()+ " " + order.getUser().getLastName()),
+//	        order.getId(),
+//	        order.getCheckInDate(),
+//	        order.getCheckOutDate(),
+//	        order.getTotalPrice(),
+//	        order.getStatus().name()
+//	    );
+//	}
+//
+//	
+	
 }

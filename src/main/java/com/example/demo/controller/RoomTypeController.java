@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.RoomTypeRequestDto;
 import com.example.demo.dto.response.RoomTypeResponseDto;
-import com.example.demo.dto.response.RoomTypeSummaryDto;
 import com.example.demo.service.RoomTypeService;
 
 @RestController
@@ -32,14 +31,14 @@ public class RoomTypeController {
     public List<RoomTypeResponseDto> getAll() {
         return roomTypeService.getAllRoomTypes();
     }
-    
-//  查詢指定飯店的房型
+
+    // 查詢指定飯店的房型
     @GetMapping("/hotel/{hotelId}")
     public List<RoomTypeResponseDto> getByHotel(@PathVariable Long hotelId) {
         return roomTypeService.getRoomTypesByHotel(hotelId);
     }
 
-//  分頁與搜尋（關鍵字）
+    // 分頁與搜尋（關鍵字）
     @GetMapping("/search")
     public Page<RoomTypeResponseDto> searchRoomTypes(
             @RequestParam(defaultValue = "") String keyword,
@@ -47,41 +46,46 @@ public class RoomTypeController {
             @RequestParam(defaultValue = "10") int size) {
         return roomTypeService.search(keyword, page, size);
     }
-    
-//  新增
+
+    // 新增
     @PostMapping
     public RoomTypeResponseDto createOrUpdate(@RequestBody RoomTypeRequestDto dto) {
         return roomTypeService.saveRoomType(dto);
     }
-    
-//  更新
+
+    // 更新
     @PutMapping("/{id}")
     public RoomTypeResponseDto update(@PathVariable Long id, @RequestBody RoomTypeRequestDto dto) {
         return roomTypeService.updateRoomType(id, dto);
     }
 
-//  刪除
+    // 刪除
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         roomTypeService.deleteRoomType(id);
     }
-    
-//  查詢特定使用者房型總計
-/*
-    @GetMapping("/summary/owner/{ownerId}")
-    public List<RoomTypeSummaryDto> getSummaryByOwner(
-            @PathVariable Long ownerId,
-            @RequestParam String type
-    ) {
-        return roomTypeService.getOwnerRoomTypeSummary(ownerId, type);
-    }
 
-    @GetMapping("/summary/owner/{ownerId}/combined")
-    public RoomTypeSummaryDto getCombinedSummary(
-            @PathVariable Long ownerId,
-            @RequestParam String type
-    ) {
-        return roomTypeService.getCombinedRoomTypeSummary(ownerId, type);
-    }
-*/
+    // 查詢特定使用者房型總計
+    /*
+     * @GetMapping("/summary/owner/{ownerId}")
+     * public List<RoomTypeSummaryDto> getSummaryByOwner(
+     * 
+     * @PathVariable Long ownerId,
+     * 
+     * @RequestParam String type
+     * ) {
+     * return roomTypeService.getOwnerRoomTypeSummary(ownerId, type);
+     * }
+     * 
+     * @GetMapping("/summary/owner/{ownerId}/combined")
+     * public RoomTypeSummaryDto getCombinedSummary(
+     * 
+     * @PathVariable Long ownerId,
+     * 
+     * @RequestParam String type
+     * ) {
+     * return roomTypeService.getCombinedRoomTypeSummary(ownerId, type);
+     * }
+     */
 }
+     
