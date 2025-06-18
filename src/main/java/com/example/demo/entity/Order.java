@@ -57,6 +57,7 @@ public class Order {
 	@JoinColumn(name = "user_id")
 	private User user;
 
+
 //	-------------------------------------
 	public enum OrderStatus {
 		CONFIRMED, CANCELED

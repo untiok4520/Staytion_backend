@@ -25,14 +25,34 @@ public class Review {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
+    public Order getOrder() {
+        return order;
+    }
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @ManyToOne
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
+    public Hotel getHotel() {
+        return hotel;
+    }
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
+
+    //---------------------------
 
     public Integer getScore() {
         return score;
@@ -64,22 +84,6 @@ public class Review {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Hotel getHotel() {
-        return hotel;
-    }
-
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
     }
 
     public Long getOrderId() {

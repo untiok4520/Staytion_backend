@@ -24,11 +24,25 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @ManyToOne
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
+    public Hotel getHotel() {
+        return hotel;
+    }
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
 
+    //-----------------------------
     public Long getId() {
         return id;
     }
@@ -61,19 +75,7 @@ public class Message {
         this.sentAt = sentAt;
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 
-    public Hotel getHotel() {
-        return hotel;
-    }
 
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
-    }
 }
