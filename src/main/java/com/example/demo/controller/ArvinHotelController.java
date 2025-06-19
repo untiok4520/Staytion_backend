@@ -15,38 +15,38 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.HotelRequestDto;
 import com.example.demo.dto.response.HotelResponseDto;
-import com.example.demo.service.HotelService;
+import com.example.demo.service.ArvinHotelService;
 
 @RestController
 @RequestMapping("/api/admin/hotels")
 @CrossOrigin
-public class HotelController {
+public class ArvinHotelController {
 	@Autowired
-	private HotelService hotelService;
+	private ArvinHotelService arvinHotelService;
 
 	@GetMapping("/{id}")
 	public HotelResponseDto getById(@PathVariable Long id) {
-		return hotelService.getHotelById(id);
+		return arvinHotelService.getHotelById(id);
 	}
 	
 //	查詢指定使用者的飯店
     @GetMapping("/owner/{ownerId}")
     public List<HotelResponseDto> getByHotel(@PathVariable Long ownerId) {
-        return hotelService.getHotelsByOwner(ownerId);
+        return arvinHotelService.getHotelsByOwner(ownerId);
     }
 
 	@PostMapping
 	public HotelResponseDto create(@RequestBody HotelRequestDto dto) {
-		return hotelService.saveHotel(dto);
+		return arvinHotelService.saveHotel(dto);
 	}
 
 	@PutMapping("/{id}")
 	public HotelResponseDto update(@PathVariable Long id, @RequestBody HotelRequestDto dto) {
-		return hotelService.updateHotel(id, dto);
+		return arvinHotelService.updateHotel(id, dto);
 	}
 
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Long id) {
-		hotelService.deleteHotel(id);
+		arvinHotelService.deleteHotel(id);
 	}
 }

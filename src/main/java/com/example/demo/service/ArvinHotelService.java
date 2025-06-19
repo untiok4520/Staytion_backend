@@ -16,7 +16,7 @@ import com.example.demo.repository.HotelRepository;
 import com.example.demo.repository.UserRepository;
 
 @Service
-public class HotelService {
+public class ArvinHotelService {
 
     @Autowired
     private HotelRepository hotelRepository;

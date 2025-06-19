@@ -17,25 +17,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.RoomTypeRequestDto;
 import com.example.demo.dto.response.RoomTypeResponseDto;
-import com.example.demo.service.RoomTypeService;
+import com.example.demo.service.ArvinRoomTypeService;
 
 @RestController
 @RequestMapping("/api/admin/roomTypes")
 @CrossOrigin
-public class RoomTypeController {
+public class ArvinRoomTypeController {
 
     @Autowired
-    private RoomTypeService roomTypeService;
+    private ArvinRoomTypeService arvinRoomTypeService;
 
     @GetMapping
     public List<RoomTypeResponseDto> getAll() {
-        return roomTypeService.getAllRoomTypes();
+        return arvinRoomTypeService.getAllRoomTypes();
     }
 
     // 查詢指定飯店的房型
     @GetMapping("/hotel/{hotelId}")
     public List<RoomTypeResponseDto> getByHotel(@PathVariable Long hotelId) {
-        return roomTypeService.getRoomTypesByHotel(hotelId);
+        return arvinRoomTypeService.getRoomTypesByHotel(hotelId);
     }
 
     // 分頁與搜尋（關鍵字）
@@ -44,25 +44,25 @@ public class RoomTypeController {
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return roomTypeService.search(keyword, page, size);
+        return arvinRoomTypeService.search(keyword, page, size);
     }
 
     // 新增
     @PostMapping
     public RoomTypeResponseDto createOrUpdate(@RequestBody RoomTypeRequestDto dto) {
-        return roomTypeService.saveRoomType(dto);
+        return arvinRoomTypeService.saveRoomType(dto);
     }
 
     // 更新
     @PutMapping("/{id}")
     public RoomTypeResponseDto update(@PathVariable Long id, @RequestBody RoomTypeRequestDto dto) {
-        return roomTypeService.updateRoomType(id, dto);
+        return arvinRoomTypeService.updateRoomType(id, dto);
     }
 
     // 刪除
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        roomTypeService.deleteRoomType(id);
+        arvinRoomTypeService.deleteRoomType(id);
     }
 
     // 查詢特定使用者房型總計

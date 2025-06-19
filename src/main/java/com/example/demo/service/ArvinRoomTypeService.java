@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.request.RoomTypeRequestDto;
 import com.example.demo.dto.response.RoomTypeResponseDto;
-import com.example.demo.dto.response.RoomTypeSummaryDto;
 import com.example.demo.entity.Amenity;
 import com.example.demo.entity.Hotel;
 import com.example.demo.entity.RoomType;
@@ -22,7 +21,7 @@ import com.example.demo.repository.HotelRepository;
 import com.example.demo.repository.RoomTypeRepository;
 
 @Service
-public class RoomTypeService {
+public class ArvinRoomTypeService {
 
     @Autowired
     private RoomTypeRepository roomTypeRepository;
