@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -40,6 +42,7 @@ public class Order {
 	@Column(name = "status", columnDefinition = "ENUM('CONFIRMED','CANCELED') DEFAULT 'CONFIRMED'")
 	private OrderStatus status = OrderStatus.CONFIRMED;
 
+	// Constructor
 	public Order() {
 	}
 
@@ -52,17 +55,20 @@ public class Order {
 		this.createdAt = createdAt;
 	}
 
-//	-------------------------------------
+	// -------------------------------------
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
+	
+	@OneToMany(mappedBy = "order")
+	private List<OrderItem> orderItems;
 
-//	-------------------------------------
+	// -------------------------------------
 	public enum OrderStatus {
 		CONFIRMED, CANCELED
 	}
 
-//	-------------------------------------
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}
@@ -118,5 +124,15 @@ public class Order {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
+	}
+
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
+	}
+	
+	
 
 }

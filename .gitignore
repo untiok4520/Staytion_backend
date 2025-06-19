@@ -1,6 +1,9 @@
+# macOS 系統檔案
 .DS_Store
+
 HELP.md
 target/
+build/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -15,7 +18,7 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -32,3 +35,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Eclipse 相關檔案
+.classpath
+.project
+.settings/
+
+*.log
+logs/
