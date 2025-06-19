@@ -169,6 +169,10 @@ public class ReviewService {
         return reviewRepo.findAll(spec, pageable)
                 .map(this::toResponse);
     }
+    public Double getAverageScoreByHotel(Long hotelId) {
+        Double avg = reviewRepo.findAverageScoreByHotelId(hotelId);
+        return avg == null ? 0.0 : Math.round(avg * 10.0) / 10.0;
+    }
 
     // Entity -> Response DTO
     private ReviewResponseDto toResponse(Review review) {
