@@ -2,23 +2,22 @@ package com.example.demo.service;
 
 import com.example.demo.dto.CreateReviewRequestDto;
 import com.example.demo.dto.ReviewResponseDto;
-import com.example.demo.entity.Review;
-import com.example.demo.entity.Order;
-import com.example.demo.entity.User;
 import com.example.demo.entity.Hotel;
-import com.example.demo.repository.ReviewRepository;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.repository.OrderRepository;
-import com.example.demo.repository.HotelRepository;
-import com.example.demo.repository.OrderItemRepository;
+import com.example.demo.entity.Order;
+import com.example.demo.entity.Review;
+import com.example.demo.entity.User;
+import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -160,10 +159,13 @@ public class ReviewService {
         }
 
         if (endDate != null) {
+            LocalDateTime endOfDay = endDate.atTime(LocalTime.MAX);
             spec = spec.and((root, query, cb) ->
                     cb.lessThanOrEqualTo(root.get("createdAt"), endDate));
         }
-
+        if (pageable.getSort().isUnsorted()) {
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdAt").descending());
+        }
         return reviewRepo.findAll(spec, pageable)
                 .map(this::toResponse);
     }
@@ -175,7 +177,7 @@ public class ReviewService {
         dto.setScore(review.getScore());
         dto.setComment(review.getComment());
         dto.setReply(review.getReply());
-        dto.setUserName(review.getUser().getFirstName());
+        dto.setFirstName(review.getUser().getFirstName());
         dto.setCreatedAt(review.getCreatedAt());
         dto.setUserId(review.getUser().getId());
         return dto;

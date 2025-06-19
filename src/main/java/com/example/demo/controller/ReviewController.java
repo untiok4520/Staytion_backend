@@ -1,12 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.CreateReviewRequestDto;
-import com.example.demo.dto.ReviewDto;
 import com.example.demo.dto.ReviewReplyDto;
 import com.example.demo.dto.ReviewResponseDto;
 import com.example.demo.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +14,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -47,7 +46,7 @@ public class ReviewController {
             @RequestParam(required = false) Integer maxScore,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            Pageable pageable
+            @ParameterObject Pageable pageable
     ){
         return reviewService.searchReviewsForHost(firstName, comment, hotelName, minScore, maxScore,startDate, endDate, pageable);
     }

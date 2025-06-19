@@ -7,19 +7,19 @@ public class ReviewResponseDto {
     private Integer score;
     private String comment;
     private String reply;
-    private String userName;
+    private String firstName;
     private LocalDateTime createdAt;
     private Long userId;
 
     public ReviewResponseDto() {}
 
     public ReviewResponseDto(Long orderId, Integer score, String comment, String reply,
-                             String userName, LocalDateTime createdAt, Long userId) {
+                             String firstName, LocalDateTime createdAt, Long userId) {
         this.orderId = orderId;
         this.score = score;
         this.comment = comment;
         this.reply = reply;
-        this.userName = userName;
+        this.firstName = firstName;
         this.createdAt = createdAt;
         this.userId = userId;
     }
@@ -56,12 +56,12 @@ public class ReviewResponseDto {
         this.reply = reply;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public LocalDateTime getCreatedAt() {

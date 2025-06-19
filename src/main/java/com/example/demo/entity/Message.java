@@ -11,38 +11,47 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "sender_type")
-    private SenderType senderType;
+    @ManyToOne
+    @JoinColumn(name = "sender_id", nullable = false)
+    private User sender;
 
+    @ManyToOne
+    @JoinColumn(name = "receiver_id", nullable = false)
+    private User receiver;
+
+    @ManyToOne
+    @JoinColumn(name = "hotel_id", nullable = false)
+    private Hotel hotel;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "sent_at" )
+    @Column(name = "sent_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime sentAt;
 
-    //---------------------------
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    @Column(name = "is_read")
+    private Boolean isRead = false;
 
     @ManyToOne
-    @JoinColumn(name = "hotel_id")
-    private Hotel hotel;
-    public Hotel getHotel() {
-        return hotel;
-    }
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
+    @JoinColumn(name = "chatroom_id")
+    private ChatRoom chatRoom;
+
+    public Boolean getIsRead() {
+        return isRead;
     }
 
-    //-----------------------------
+    public void setIsRead(Boolean read) {
+        isRead = read;
+    }
+
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
+
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
+    }
+
     public Long getId() {
         return id;
     }
@@ -51,12 +60,28 @@ public class Message {
         this.id = id;
     }
 
-    public SenderType getSenderType() {
-        return senderType;
+    public User getSender() {
+        return sender;
     }
 
-    public void setSenderType(SenderType senderType) {
-        this.senderType = senderType;
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+
+    public User getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
+    }
+
+    public Hotel getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
     }
 
     public String getContent() {
@@ -74,8 +99,4 @@ public class Message {
     public void setSentAt(LocalDateTime sentAt) {
         this.sentAt = sentAt;
     }
-
-
-
-
 }
