@@ -89,8 +89,8 @@ public class RoomType {
 			inverseJoinColumns = @JoinColumn(name = "amenity_id") // 另一實體 (Amenity) 在中間表的外鍵
 	)
 	private Set<Amenity> amenities = new HashSet<>(); // 使用 Set 避免重複
-
-	@OneToMany(mappedBy = "roomType")
+	
+	@OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<RoomAvailability> availabilities;
 	
 	// Getters and Setters

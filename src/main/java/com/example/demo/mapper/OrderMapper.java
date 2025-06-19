@@ -70,6 +70,15 @@ public class OrderMapper {
         }).collect(Collectors.toList());
 
         dto.setItems(itemDtos);
+        
+        if (!order.getOrderItems().isEmpty()) {
+            String hotelName = order.getOrderItems().get(0).getRoomType().getHotel().getHname();
+            dto.setHotelName(hotelName);
+        } else {
+            dto.setHotelName(null);
+        }
+        
+        
         return dto;
     }
 }

@@ -33,12 +33,13 @@ public class AdminOrderService {
 	}
 
 	// 狀態 + 日期篩選 + 分頁
-	public Page<OrderResponseDto> searchOrders(Order.OrderStatus status, LocalDate start, LocalDate end,
-			Pageable pageable) {
+	public Page<OrderResponseDto> searchOrders(Long currentUserId, Order.OrderStatus status, LocalDate start,
+			LocalDate end, String keyword, Pageable pageable) {
 		LocalDateTime startDateTime = (start != null) ? start.atStartOfDay() : null;
 		LocalDateTime endDateTime = (end != null) ? end.plusDays(1).atStartOfDay() : null;
 
-		return orderRepository.searchByStatusAndDateRange(status, startDateTime, endDateTime, pageable)
+		return orderRepository
+				.searchAccessibleOrdersWithKeyword(currentUserId, status, startDateTime, endDateTime, keyword, pageable)
 				.map(OrderMapper::toDto);
 	}
 

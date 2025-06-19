@@ -62,14 +62,19 @@ public class OrderController {
 		return orderService.getOrdersByHotelId(hotelId);
 	}
 
-	// 狀態 + 日期篩選 + 分頁查詢（後台篩選）
+	// 狀態 + 日期 + 關鍵字篩選 + 分頁查詢（後台篩選）
 	@GetMapping("/filter")
-	public Page<OrderResponseDto> searchOrders(@RequestParam(required = false) Order.OrderStatus status,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
-			Pageable pageable) {
-		return orderService.searchOrders(status, start, end, pageable);
+	public Page<OrderResponseDto> filterOrders(
+	    @RequestParam(required = false) Order.OrderStatus status,
+	    @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+	    @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
+	    @RequestParam(required = false) String keyword,
+	    @RequestParam(required = false)Long currentUserId, // 暫時用來模擬登入
+	    Pageable pageable
+	) {
+	    return orderService.searchOrders(currentUserId, status, start, end, keyword, pageable);
 	}
+
 
 	// 修改訂單狀態（ex: CONFIRMED → CANCELED）
 	@PutMapping("/{id}/status")

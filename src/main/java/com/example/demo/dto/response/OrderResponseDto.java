@@ -8,6 +8,7 @@ import java.util.List;
 public class OrderResponseDto {
 	private Long id;
 	private String userName;
+	private String hotelName;
 	private LocalDate checkInDate;
 	private LocalDate checkOutDate;
 	private LocalDateTime createdAt;
@@ -29,6 +30,14 @@ public class OrderResponseDto {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getHotelName() {
+		return hotelName;
+	}
+
+	public void setHotelName(String hotelName) {
+		this.hotelName = hotelName;
 	}
 
 	public LocalDate getCheckInDate() {

@@ -19,15 +19,28 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	@Query("SELECT DISTINCT o FROM Order o JOIN o.orderItems i WHERE i.roomType.hotel.id = :hotelId")
 	List<Order> findByRoomTypeHotelId(@Param("hotelId") Long hotelId);
 
-//  狀態日期篩選
+//  狀態日期關鍵字篩選
 	@Query("""
-			    SELECT o FROM Order o
-			    WHERE (:status IS NULL OR o.status = :status)
-			      AND (:start IS NULL OR o.createdAt >= :start)
-			      AND (:end IS NULL OR o.createdAt <= :end)
+			    SELECT DISTINCT o FROM Order o
+			    JOIN o.orderItems i
+			    JOIN i.roomType rt
+			    JOIN rt.hotel h
+			    WHERE (
+			        o.user.id = :userId OR
+			        h.owner.id = :userId
+			    )
+			    AND (:status IS NULL OR o.status = :status)
+			    AND (:start IS NULL OR o.createdAt >= :start)
+			    AND (:end IS NULL OR o.createdAt <= :end)
+			    AND (
+			        :keyword IS NULL OR
+			        LOWER(h.hname) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+			        LOWER(rt.rname) LIKE LOWER(CONCAT('%', :keyword, '%'))
+			    )
 			""")
-	Page<Order> searchByStatusAndDateRange(@Param("status") Order.OrderStatus status,
-			@Param("start") LocalDateTime start, @Param("end") LocalDateTime end, Pageable pageable);
+	Page<Order> searchAccessibleOrdersWithKeyword(@Param("userId") Long userId,
+			@Param("status") Order.OrderStatus status, @Param("start") LocalDateTime start,
+			@Param("end") LocalDateTime end, @Param("keyword") String keyword, Pageable pageable);
 
 //  月報表
 	@Query("""

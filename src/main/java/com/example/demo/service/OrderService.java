@@ -41,7 +41,6 @@ public class OrderService {
 //	@Autowired
 //	private EmailService emailService;
 
-
 //	// 建立訂單V1
 //	public OrderResponseDto createOrder(OrderRequestDto dto) {
 //		User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
@@ -51,7 +50,7 @@ public class OrderService {
 //		
 //		Order order = toEntity(dto, user, roomTypes);
 //		return toDto(orderRepository.save(order));
-	
+
 	// 建立訂單V2
 	public OrderResponseDto createOrder(OrderRequestDto dto) {
 		User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
@@ -61,14 +60,13 @@ public class OrderService {
 
 		Order order = toEntity(dto, user, roomTypes);
 		return toDto(orderRepository.save(order));
-		
+
 //		確認信
 //		Order saved = orderRepository.save(order);
 //		String content = buildOrderConfirmationHtml(saved);
 //		emailService.sendOrderConfirmation(saved.getUser().getEmail(), "Staytion 訂單已確認", content);
 //		return toDto(saved);
 
-		
 	}
 
 	// 查詢單筆訂單
@@ -91,12 +89,14 @@ public class OrderService {
 		return orderRepository.findByRoomTypeHotelId(hotelId).stream().map(this::toDto).collect(Collectors.toList());
 	}
 
-	// 分頁 + 狀態/時間篩選
-	public Page<OrderResponseDto> searchOrders(Order.OrderStatus status, LocalDate start, LocalDate end, Pageable pageable) {
+	// 分頁 + 狀態/時間/關鍵字篩選
+	public Page<OrderResponseDto> searchOrders(Long currentUserId, Order.OrderStatus status, LocalDate start,
+			LocalDate end, String keyword, Pageable pageable) {
 		LocalDateTime startDateTime = (start != null) ? start.atStartOfDay() : null;
-		LocalDateTime endDateTime = (end != null) ? end.plusDays(1).atStartOfDay() : null; // 讓查詢包含 end 當天
+		LocalDateTime endDateTime = (end != null) ? end.plusDays(1).atStartOfDay() : null;
 
-		return orderRepository.searchByStatusAndDateRange(status, startDateTime, endDateTime, pageable)
+		return orderRepository
+				.searchAccessibleOrdersWithKeyword(currentUserId, status, startDateTime, endDateTime, keyword, pageable)
 				.map(this::toDto);
 	}
 
@@ -184,9 +184,7 @@ public class OrderService {
 		dto.setItems(itemDtos);
 		return dto;
 	}
-	
-	
-	
+
 //	==========
 //	訂單檢查邏輯
 //	 // ✅ 1. 檢查庫存
@@ -217,8 +215,7 @@ public class OrderService {
 //    // ✅ 5. 扣除庫存（這邊先記錄，實際扣庫存可交由庫存模組或額外邏輯完成）
 //    room.setStock(room.getStock() - itemDto.getQuantity());
 //}
-	
-	
+
 //	==========
 //	確認信內容
 //	public String buildOrderConfirmationHtml(Order order) {
@@ -248,5 +245,5 @@ public class OrderService {
 //	}
 //
 //	
-	
+
 }
