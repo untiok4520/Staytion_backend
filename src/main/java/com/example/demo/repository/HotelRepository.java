@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.demo.entity.Hotel;
 import com.example.demo.projection.HotelProjection;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long>{
+	List<Hotel> findByOwnerId(Long ownerId);
     List<Hotel> findByHnameContaining(String keyword);
     Optional<Hotel> findByHname(String hname);
 

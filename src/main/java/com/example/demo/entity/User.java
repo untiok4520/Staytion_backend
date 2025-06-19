@@ -1,12 +1,14 @@
 package com.example.demo.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,34 +18,36 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "first_name")
+	@Column(name = "first_Name")
 	private String firstName;
 
-	@Column(name = "last_name")
+	@Column(name = "last_Name")
 	private String lastName;
 
-	@Column(unique = true)
+	@Column(name = "email", unique = true)
 	private String email;
 
+	@Column(name = "password")
 	private String password;
 
+	@Column(name = "tel")
 	private String tel;
 
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
-	// 建構子
 	public User() {
+
 	}
 
 	public User(String firstName, String lastName, String email, String password, String tel, LocalDateTime createdAt) {
-	        this.firstName = firstName;
-	        this.lastName = lastName;
-	        this.email = email;
-	        this.password = password;
-	        this.tel = tel;
-	        this.createdAt = createdAt;
-	    }
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.tel = tel;
+		this.createdAt = createdAt;
+	}
 
 	public Long getId() {
 		return id;
@@ -100,6 +104,27 @@ public class User {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
-	
-	
+
+	// -------------------------------------
+	@OneToMany
+	// private List<Hotel> hotels = new ArrayList<>();
+	private List<Hotel> hotels;
+
+	public List<Hotel> getHotels() {
+		return hotels;
+	}
+
+	public void setHotels(List<Hotel> hotels) {
+		this.hotels = hotels;
+	}
+
+	// -------------------------------------
+	// @Override
+	// public String toString() {
+	// return "User{" + "id=" + id + ", email='" + email + '\'' + ", firstName='" +
+	// firstName + '\'' + ", lastName='"
+	// + lastName + '\'' + ", tel='" + tel + '\'' + ", createdAt=" + createdAt +
+	// '}';
+	// }
+
 }
