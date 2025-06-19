@@ -3,7 +3,9 @@ package com.example.demo.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,109 +16,136 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "orders")
 public class Order {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(name = "check_in_date")
-	private LocalDate checkInDate;
+    @Column(name = "check_in_date")
+    private LocalDate checkInDate;
 
-	@Column(name = "check_out_date")
-	private LocalDate checkOutDate;
+    @Column(name = "check_out_date")
+    private LocalDate checkOutDate;
 
-	@Column(name = "total_price")
-	private BigDecimal totalPrice;
+    @Column(name = "total_price")
+    private BigDecimal totalPrice;
 
-	@Column(name = "created_at")
-	private LocalDateTime createdAt;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-	// 枚舉類型映射
-	@Enumerated(EnumType.STRING)
-	@Column(name = "status", columnDefinition = "ENUM('CONFIRMED','CANCELED') DEFAULT 'CONFIRMED'")
-	private OrderStatus status = OrderStatus.CONFIRMED;
+    // 枚舉類型映射
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "ENUM('CONFIRMED','CANCELED') DEFAULT 'CONFIRMED'")
+    private OrderStatus status = OrderStatus.CONFIRMED;
 
-	public Order() {
-	}
+    // Constructor
+    public Order() {
+    }
 
-	public Order(LocalDate checkInDate, LocalDate checkOutDate, OrderStatus status, BigDecimal totalPrice,
-			LocalDateTime createdAt) {
-		this.checkInDate = checkInDate;
-		this.checkOutDate = checkOutDate;
-		this.status = status;
-		this.totalPrice = totalPrice;
-		this.createdAt = createdAt;
-	}
+    public Order(LocalDate checkInDate, LocalDate checkOutDate, OrderStatus status, BigDecimal totalPrice,
+                 LocalDateTime createdAt) {
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.status = status;
+        this.totalPrice = totalPrice;
+        this.createdAt = createdAt;
+    }
 
-	// -------------------------------------
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+    // -------------------------------------
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-	// -------------------------------------
-	public enum OrderStatus {
-		CONFIRMED, CANCELED
-	}
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems;
 
-	// -------------------------------------
-	public Long getId() {
-		return id;
-	}
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    private Payment payment;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
 
-	public LocalDate getCheckInDate() {
-		return checkInDate;
-	}
+    // -------------------------------------
+    public enum OrderStatus {
+        CONFIRMED, CANCELED
+    }
 
-	public void setCheckInDate(LocalDate checkInDate) {
-		this.checkInDate = checkInDate;
-	}
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
 
-	public LocalDate getCheckOutDate() {
-		return checkOutDate;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setCheckOutDate(LocalDate checkOutDate) {
-		this.checkOutDate = checkOutDate;
-	}
+    public LocalDate getCheckInDate() {
+        return checkInDate;
+    }
 
-	public BigDecimal getTotalPrice() {
-		return totalPrice;
-	}
+    public void setCheckInDate(LocalDate checkInDate) {
+        this.checkInDate = checkInDate;
+    }
 
-	public void setTotalPrice(BigDecimal totalPrice) {
-		this.totalPrice = totalPrice;
-	}
+    public LocalDate getCheckOutDate() {
+        return checkOutDate;
+    }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+    public void setCheckOutDate(LocalDate checkOutDate) {
+        this.checkOutDate = checkOutDate;
+    }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
 
-	public OrderStatus getStatus() {
-		return status;
-	}
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
-	public void setStatus(OrderStatus status) {
-		this.status = status;
-	}
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
 
 }

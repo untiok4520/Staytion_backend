@@ -26,7 +26,7 @@ public class BookingService {
     public BookingResponse createBooking(BookingRequest req, Integer userId) {
         RoomType roomType = roomTypeRepository.findById(req.getRoomTypeId())
                 .orElseThrow(() -> new RuntimeException("房型不存在"));
-        Hotel hotel = hotelRepository.findById(roomType.getHotel());
+        Hotel hotel = roomType.getHotel();
                 if (hotel == null) {
                     throw new RuntimeException("飯店不存在");
                 }

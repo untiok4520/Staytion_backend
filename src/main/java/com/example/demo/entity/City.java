@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import java.util.Set;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -51,14 +51,13 @@ public class City {
 
 	// -------------------------
 	@OneToMany(mappedBy = "city", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Set<District> districts;
+	private List<District> districts;
 
-	public Set<District> getDistricts() {
+	public List<District> getDistricts() {
 		return districts;
 	}
 
-	public void setDistricts(Set<District> districts) {
+	public void setDistricts(List<District> districts) {
 		this.districts = districts;
 	}
-
 }

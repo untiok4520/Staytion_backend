@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -109,13 +110,13 @@ public class Hotel {
 
 	// ------------------
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Set<RoomType> roomTypes;
+	private List<RoomType> roomTypes;
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Set<Image> images;
+	private List<Image> images;
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Set<Review> reviews;
+	private List<Review> reviews;
 
 	public District getDistrict() {
 		return district;
@@ -133,28 +134,27 @@ public class Hotel {
 		this.owner = owner;
 	}
 
-	public Set<RoomType> getRoomTypes() {
+	public List<RoomType> getRoomTypes() {
 		return roomTypes;
 	}
 
-	public void setRoomTypes(Set<RoomType> roomTypes) {
+	public void setRoomTypes(List<RoomType> roomTypes) {
 		this.roomTypes = roomTypes;
 	}
 
-	public Set<Image> getImages() {
+	public List<Image> getImages() {
 		return images;
 	}
 
-	public void setImages(Set<Image> images) {
+	public void setImages(List<Image> images) {
 		this.images = images;
 	}
 
-	public Set<Review> getReviews() {
+	public List<Review> getReviews() {
 		return reviews;
 	}
 
-	public void setReviews(Set<Review> reviews) {
+	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
 	}
-
 }

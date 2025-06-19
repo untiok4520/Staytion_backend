@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -33,14 +35,6 @@ public class RoomType {
     @Column(name = "rname")
     private String rname;
 
-    public String getRname() {
-        return rname;
-    }
-
-    public void setRname(String rname) {
-        this.rname = rname;
-    }
-
     @Column(name = "price")
     private BigDecimal price;
 
@@ -71,12 +65,15 @@ public class RoomType {
     @Column(name = "capacity")
     private Integer capacity;
 
-    @ManyToMany
-    @JoinTable(name = "room_amenities", joinColumns = @JoinColumn(name = "room_type_id"), inverseJoinColumns = @JoinColumn(name = "amenity_id"))
-    private Set<Amenity> amenities;
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(name = "room_amenities", // 中間表的名稱
+            joinColumns = @JoinColumn(name = "room_type_id"), // 本實體 (RoomType) 在中間表的外鍵
+            inverseJoinColumns = @JoinColumn(name = "amenity_id") // 另一實體 (Amenity) 在中間表的外鍵
+    )
+    private Set<Amenity> amenities = new HashSet<>(); // 使用 Set 避免重複
 
     @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<RoomAvailability> roomAvailabilities;
+    private List<RoomAvailability> roomAvailabilities;
 
     public Long getId() {
         return id;
@@ -92,6 +89,14 @@ public class RoomType {
 
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
+    }
+
+    public String getRname() {
+        return rname;
+    }
+
+    public void setRname(String rname) {
+        this.rname = rname;
     }
 
     public BigDecimal getPrice() {
@@ -134,12 +139,12 @@ public class RoomType {
         this.imgUrl = imgUrl;
     }
 
-    public Boolean getIsCanceled() {
+    public Boolean getCanceled() {
         return isCanceled;
     }
 
-    public void setIsCanceled(Boolean isCanceled) {
-        this.isCanceled = isCanceled;
+    public void setCanceled(Boolean canceled) {
+        isCanceled = canceled;
     }
 
     public Integer getQuantity() {
@@ -182,12 +187,11 @@ public class RoomType {
         this.amenities = amenities;
     }
 
-    public Set<RoomAvailability> getRoomAvailabilities() {
+    public List<RoomAvailability> getRoomAvailabilities() {
         return roomAvailabilities;
     }
 
-    public void setRoomAvailabilities(Set<RoomAvailability> roomAvailabilities) {
+    public void setRoomAvailabilities(List<RoomAvailability> roomAvailabilities) {
         this.roomAvailabilities = roomAvailabilities;
     }
-
 }

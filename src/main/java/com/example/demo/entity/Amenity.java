@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,8 +23,8 @@ public class Amenity {
     @Column(name = "aname", unique = true)
     private String aname;
 
-    @ManyToMany(mappedBy = "amenities") // mappedBy 指向 RoomType 中定義的 "amenities" 屬性
-    private Set<RoomType> roomTypes = new HashSet<>();
+    @ManyToMany(mappedBy = "amenities")
+    private List<RoomType> roomTypes = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -42,11 +42,11 @@ public class Amenity {
         this.aname = aname;
     }
 
-    public Set<RoomType> getRoomTypes() {
+    public List<RoomType> getRoomTypes() {
         return roomTypes;
     }
 
-    public void setRoomTypes(Set<RoomType> roomTypes) {
+    public void setRoomTypes(List<RoomType> roomTypes) {
         this.roomTypes = roomTypes;
     }
 

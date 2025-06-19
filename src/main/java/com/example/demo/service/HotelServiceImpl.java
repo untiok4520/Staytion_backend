@@ -191,7 +191,7 @@ public class HotelServiceImpl implements HotelService {
                     rtdto.setSize(roomType.getSize());
                     rtdto.setView(roomType.getView());
                     rtdto.setImgUrl(roomType.getImgUrl());
-                    rtdto.setIsCanceled(roomType.getIsCanceled());
+                    rtdto.setIsCanceled(roomType.getCanceled());
                     rtdto.setQuantity(roomType.getQuantity());
                     rtdto.setBedCount(roomType.getBedCount());
                     rtdto.setBedType(roomType.getBedType());

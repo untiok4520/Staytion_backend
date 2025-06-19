@@ -20,9 +20,6 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    // @Column(name="id")
-    // private Long id;
-
     @Column(name = "order_id")
     private Integer orderId;
 
@@ -63,14 +60,6 @@ public class Review {
 
     @Column(name = "created_at")
     private LocalDateTime crearedAt;
-
-    // public Long getId() {
-    // return id;
-    // }
-
-    // public void setId(Long id) {
-    // this.id = id;
-    // }
 
     public Hotel getHotel() {
         return hotel;
