@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,28 +18,38 @@ public class Hotel {
 
 	@Column(name = "hname")
 	private String hname;
-
-	@Column(name = "district_id")
-	private Long districtId;
-
+	
 	@Column(name = "address")
 	private String address;
-
-	@Column(name = "description")
-	private String description;
-
+	
 	@Column(name = "tel")
 	private String tel;
-
-	@Column(name = "owner_id")
-	private Integer ownerId;
-
+	
+	@Column(name = "description")
+	private String description;
+	
 	@Column(name = "latitude")
 	private Double latitude;
-
+	
 	@Column(name = "longitude")
 	private Double longitude;
 
+	// Constructor
+	public Hotel() {
+
+	}
+
+	public Hotel(String hname, String address, String tel, String description, Double latitude, Double longitude) {
+		this.hname = hname;
+		this.address = address;
+		this.tel = tel;
+		this.description = description;
+		this.latitude = latitude;
+		this.longitude = longitude;
+
+	}
+
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}
@@ -54,28 +66,12 @@ public class Hotel {
 		this.hname = hname;
 	}
 
-	public Long getDistrictId() {
-		return districtId;
-	}
-
-	public void setDistrictId(Long districtId) {
-		this.districtId = districtId;
-	}
-
 	public String getAddress() {
 		return address;
 	}
 
 	public void setAddress(String address) {
 		this.address = address;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public String getTel() {
@@ -86,12 +82,12 @@ public class Hotel {
 		this.tel = tel;
 	}
 
-	public Integer getOwnerId() {
-		return ownerId;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setOwnerId(Integer ownerId) {
-		this.ownerId = ownerId;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Double getLatitude() {
@@ -109,7 +105,65 @@ public class Hotel {
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
-	
-	
-	
+
+	// -------------------------------------
+	@ManyToOne
+	@JoinColumn(name = "district_id")
+	private District district;
+
+	public District getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(District district) {
+		this.district = district;
+	}
+
+	// -------------------------------------
+//	@ManyToOne
+//	@JoinColumn(name = "owner_id")
+//	private User owner;
+//
+//	public User getOwner() {
+//		return owner;
+//	}
+//
+//	public void setOwner(User owner) {
+//		this.owner = owner;
+//
+//	}
+//
+//	// -------------------------------------
+//	@OneToMany(mappedBy = "hotel")
+//	private List<RoomType> roomTypes;
+//
+//	public List<RoomType> getRoomTypes() {
+//		return roomTypes;
+//	}
+//
+//	public void setRoomTypes(List<RoomType> roomTypes) {
+//		this.roomTypes = roomTypes;
+//	}
+
+	// -------------------------------------
+	// // 要再討論看看要不要加
+	// private Double rating;
+	//
+	// public Double getRating() {
+	// return rating;
+	// }
+	//
+	// public void setRating(Double rating) {
+	// this.rating = rating;
+	// }
+
+	// -------------------------------------
+	// @Override
+	// public String toString() {
+	// return "Hotel{" + "id=" + id + ", hname='" + hname + '\'' + ", address='" +
+	// address + '\'' + ", tel='" + tel
+	// + '\'' + ", districtId=" + district.getId() + ", latitude=" + latitude + ",
+	// longitude=" + longitude
+	// + ", ownerId=" + owner.getId() + '}';
+	// }
 }
