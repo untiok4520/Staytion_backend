@@ -12,21 +12,23 @@ import com.example.demo.dto.RoomTypeDTO;
 import com.example.demo.service.RoomTypeService;
 
 @RestController
-@RequestMapping("/api/hotels")
+@RequestMapping("/api")
 public class RoomTypeController {
 
     @Autowired
     private RoomTypeService roomTypeService;
 
-    @GetMapping("/{hotelId}/roomType")
+    @GetMapping("/room-types")
+    public List<RoomTypeDTO> getAllRoomTypes() {
+        return roomTypeService.getAllRoomTypeDtos();
+    }
+
+    @GetMapping("/hotels/{hotelId}/room-types")
     public List<RoomTypeDTO> getRoomTypesByHotel(@PathVariable Long hotelId) {
         return roomTypeService.findRoomTypesByHotel(hotelId);
     }
 
-    @GetMapping("/api/roomType")
-    public List<RoomTypeDTO> getAllRoomTypes() {
-        return roomTypeService.getAllRoomTypeDtos();
-    }
+
 
     // @GetMapping("/room_types/{id}")
     // public ResponseEntity<RoomType> getRoomTypeById(@PathVariable Long id) {
