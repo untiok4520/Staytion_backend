@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,9 +26,13 @@ public class UserOrderController {
 		return service.createOrder(dto);
 	}
 
-	@GetMapping("/user/{userId}")
-	public List<OrderResponseDto> getUserOrders(@PathVariable Long userId) {
-		return service.getOrdersByUserId(userId);
+//	@GetMapping("/user/{userId}")
+//	public List<OrderResponseDto> getUserOrders(@PathVariable Long userId) {
+//		return service.getOrdersByUserId(userId);
+//	}
+	@GetMapping("/user/{userId}/orders")
+	public Page<OrderResponseDto> getUserOrders(@PathVariable Long userId, Pageable pageable) {
+		return service.getOrdersByUserId(userId, pageable);
 	}
 
 	@PutMapping("/{id}")
