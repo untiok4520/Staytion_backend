@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,9 +21,6 @@ public class Payment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@Column(name = "amount")
-	private BigDecimal amount;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "method", columnDefinition = "ENUM('CREDIT_CARD','CASH') DEFAULT 'CASH'")
@@ -39,28 +37,24 @@ public class Payment {
 	public Payment() {
 	}
 
-	public Payment(BigDecimal amount, PaymentMethod method, PaymentStatus status, LocalDateTime createdAt) {
-		this.amount = amount;
+	public Payment(PaymentMethod method, PaymentStatus status, LocalDateTime createdAt) {
 		this.method = method;
 		this.status = status;
 		this.createdAt = createdAt;
 	}
 
 	// -------------------------------------
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "order_id")
 	private Order order;
 
 	// -------------------------------------
 	public enum PaymentMethod {
-		CREDIT_CARD,
-		CASH
+		CREDIT_CARD, CASH
 	}
 
 	public enum PaymentStatus {
-		PAID,
-		UNPAID,
-		CANCELED
+		PAID, UNPAID, CANCELED
 	}
 
 	// Getters and Setters
@@ -70,14 +64,6 @@ public class Payment {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public BigDecimal getAmount() {
-		return amount;
-	}
-
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
 	}
 
 	public PaymentMethod getMethod() {

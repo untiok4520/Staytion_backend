@@ -78,6 +78,11 @@ public class OrderMapper {
             dto.setHotelName(null);
         }
         
+        if (order.getPayment() != null) {
+            dto.setPaymentMethod(order.getPayment().getStatus().name());
+            dto.setPaymentStatus(order.getPayment().getStatus().name());
+        }
+        
         
         return dto;
     }

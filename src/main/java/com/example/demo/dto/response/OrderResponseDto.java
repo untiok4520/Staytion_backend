@@ -14,6 +14,8 @@ public class OrderResponseDto {
 	private LocalDateTime createdAt;
 	private BigDecimal totalPrice;
 	private String status;
+	private String paymentMethod;
+	private String paymentStatus;
 	private List<OrderItemResponseDto> items;
 
 	public Long getId() {
@@ -78,6 +80,24 @@ public class OrderResponseDto {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	
+
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
 	}
 
 	public List<OrderItemResponseDto> getItems() {

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.request.OrderRequestDto;
 import com.example.demo.dto.response.OrderResponseDto;
 import com.example.demo.entity.Order;
+import com.example.demo.entity.Payment;
 import com.example.demo.service.OrderService;
 
 @RestController
@@ -69,10 +70,11 @@ public class OrderController {
 	    @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
 	    @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
 	    @RequestParam(required = false) String keyword,
+	    @RequestParam(required = false) Payment.PaymentMethod paymentMethod,
 	    @RequestParam(required = false)Long currentUserId, // 暫時用來模擬登入
 	    Pageable pageable
 	) {
-	    return orderService.searchOrders(currentUserId, status, start, end, keyword, pageable);
+	    return orderService.searchOrders(currentUserId, status, start, end, keyword, paymentMethod,pageable);
 	}
 
 

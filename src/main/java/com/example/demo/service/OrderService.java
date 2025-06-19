@@ -20,6 +20,7 @@ import com.example.demo.dto.response.OrderItemResponseDto;
 import com.example.demo.dto.response.OrderResponseDto;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.OrderItem;
+import com.example.demo.entity.Payment;
 import com.example.demo.entity.RoomType;
 import com.example.demo.entity.User;
 import com.example.demo.repository.OrderItemRepository;
@@ -91,12 +92,12 @@ public class OrderService {
 
 	// 分頁 + 狀態/時間/關鍵字篩選
 	public Page<OrderResponseDto> searchOrders(Long currentUserId, Order.OrderStatus status, LocalDate start,
-			LocalDate end, String keyword, Pageable pageable) {
+			LocalDate end, String keyword,Payment.PaymentMethod paymentMethod,Pageable pageable) {
 		LocalDateTime startDateTime = (start != null) ? start.atStartOfDay() : null;
 		LocalDateTime endDateTime = (end != null) ? end.plusDays(1).atStartOfDay() : null;
 
 		return orderRepository
-				.searchAccessibleOrdersWithKeyword(currentUserId, status, startDateTime, endDateTime, keyword, pageable)
+				.searchAccessibleOrdersWithKeyword(currentUserId, status, startDateTime, endDateTime, keyword,paymentMethod, pageable)
 				.map(this::toDto);
 	}
 

@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.demo.entity.Order;
+import com.example.demo.entity.Payment;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Order> findByUserId(Long userId);
@@ -25,6 +26,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			    JOIN o.orderItems i
 			    JOIN i.roomType rt
 			    JOIN rt.hotel h
+			    JOIN o.payment p
 			    WHERE (
 			        o.user.id = :userId OR
 			        h.owner.id = :userId
@@ -32,6 +34,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			    AND (:status IS NULL OR o.status = :status)
 			    AND (:start IS NULL OR o.createdAt >= :start)
 			    AND (:end IS NULL OR o.createdAt <= :end)
+			     AND (:paymentMethod IS NULL OR p.method = :paymentMethod)
 			    AND (
 			        :keyword IS NULL OR
 			        LOWER(h.hname) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
@@ -40,7 +43,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			""")
 	Page<Order> searchAccessibleOrdersWithKeyword(@Param("userId") Long userId,
 			@Param("status") Order.OrderStatus status, @Param("start") LocalDateTime start,
-			@Param("end") LocalDateTime end, @Param("keyword") String keyword, Pageable pageable);
+			@Param("end") LocalDateTime end, @Param("keyword") String keyword,
+			@Param("paymentMethod") Payment.PaymentMethod paymentMethod, Pageable pageable);
 
 //  月報表
 	@Query("""

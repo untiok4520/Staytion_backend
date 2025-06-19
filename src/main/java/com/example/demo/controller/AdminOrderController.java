@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.request.OrderRequestDto;
 import com.example.demo.dto.response.OrderResponseDto;
 import com.example.demo.entity.Order;
+import com.example.demo.entity.Payment;
 import com.example.demo.service.AdminOrderService;
 
 @RestController
@@ -47,8 +46,8 @@ public class AdminOrderController {
 	public Page<OrderResponseDto> filterOrders(@RequestParam(required = false) Order.OrderStatus status,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
-			@RequestParam(required = false) String keyword, @RequestParam(required = false) Long currentUserId, // 暫時用來模擬登入
+			@RequestParam(required = false) String keyword, @RequestParam(required = false) Payment.PaymentMethod paymentMethod,@RequestParam(required = false) Long currentUserId, // 暫時用來模擬登入
 			Pageable pageable) {
-		return service.searchOrders(currentUserId, status, start, end, keyword, pageable);
+		return service.searchOrders(currentUserId, status, start, end, keyword, paymentMethod,pageable);
 	}
 }
