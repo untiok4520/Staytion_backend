@@ -1,106 +1,102 @@
 package com.example.demo.entity;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "messages")
 public class Message {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @ManyToOne
+    @JoinColumn(name = "sender_id", nullable = false)
+    private User sender;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "sender_type", columnDefinition = "ENUM('USER','HOTEL')")
-	private SenderType senderType;
+    @ManyToOne
+    @JoinColumn(name = "receiver_id", nullable = false)
+    private User receiver;
 
-	@Column(name = "content", columnDefinition = "TEXT")
-	private String content;
+    @ManyToOne
+    @JoinColumn(name = "hotel_id", nullable = false)
+    private Hotel hotel;
 
-	@Column(name = "sent_at")
-	private LocalDateTime sentAt;
+    @Column(columnDefinition = "TEXT")
+    private String content;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+    @Column(name = "sent_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime sentAt;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "hotel_id")
-	private Hotel hotel;
+    @Column(name = "is_read")
+    private Boolean isRead = false;
 
-	public enum SenderType {
-		USER, HOTEL
-	}
+    @ManyToOne
+    @JoinColumn(name = "chatroom_id")
+    private ChatRoom chatRoom;
 
-	// Constructor
-	public Message() {
-	}
+    public Boolean getIsRead() {
+        return isRead;
+    }
 
-	public Message(SenderType senderType, String content, LocalDateTime sentAt) {
-		this.senderType = senderType;
-		this.content = content;
-		this.sentAt = sentAt;
-	}
+    public void setIsRead(Boolean read) {
+        isRead = read;
+    }
 
-	// Getters and Setters
-	public Long getId() {
-		return id;
-	}
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
+    }
 
-	public SenderType getSenderType() {
-		return senderType;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setSenderType(SenderType senderType) {
-		this.senderType = senderType;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public User getSender() {
+        return sender;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
 
-	public LocalDateTime getSentAt() {
-		return sentAt;
-	}
+    public User getReceiver() {
+        return receiver;
+    }
 
-	public void setSentAt(LocalDateTime sentAt) {
-		this.sentAt = sentAt;
-	}
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public Hotel getHotel() {
+        return hotel;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
 
-	public Hotel getHotel() {
-		return hotel;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public void setHotel(Hotel hotel) {
-		this.hotel = hotel;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
+    public LocalDateTime getSentAt() {
+        return sentAt;
+    }
+
+    public void setSentAt(LocalDateTime sentAt) {
+        this.sentAt = sentAt;
+    }
 }
