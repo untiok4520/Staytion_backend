@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserRecord;
 import com.google.firebase.auth.UserRecord.CreateRequest;
 
-
 @Service
 public class AuthService {
 
@@ -106,6 +105,30 @@ public class AuthService {
 		}
 
 		return ResponseEntity.ok(Map.of("message", "註冊成功，驗證郵件已發送"));
+	}
+
+	// 用於處理 Google 登入後的用戶資料
+	public ResponseEntity<Map<String,Object>> handleGoogleLogin(String email, String firstName, String lastName) {
+		// 查詢資料庫是否已存在該用戶
+		Optional<User> existingUser = userRepository.findByEmail(email);
+
+		if (existingUser.isPresent()) {
+			// 如果用戶已存在，直接返回用戶資料
+			return ResponseEntity.ok(Map.of("message", "User already exists", "user", existingUser.get()));
+		}
+
+		// 如果用戶不存在，創建新用戶
+		User newUser = new User();
+		newUser.setEmail(email);
+		newUser.setFirstName(firstName);
+		newUser.setLastName(lastName);
+		newUser.setCreatedAt(LocalDateTime.now()); // 使用當前時間來創建用戶
+		userRepository.save(newUser);
+		
+		// 發自己的 JWT token
+		String jwt = jwtService.createToken(newUser);
+
+		return ResponseEntity.ok(Map.of("message", "New user created", "user", newUser, "token", jwt));
 	}
 
 	// 發送重設密碼連結
