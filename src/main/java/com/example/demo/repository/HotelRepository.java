@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.entity.Hotel;
 
+import java.util.List;
+
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
     // Page<Hotel> findAll(Pageable pageable);
 }
