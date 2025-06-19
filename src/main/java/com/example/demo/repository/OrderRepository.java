@@ -16,6 +16,8 @@ import com.example.demo.entity.Payment;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Order> findByUserId(Long userId);
+	Page<Order> findByUserId(Long userId, Pageable pageable);
+
 
 	@Query("SELECT DISTINCT o FROM Order o JOIN o.orderItems i WHERE i.roomType.hotel.id = :hotelId")
 	List<Order> findByRoomTypeHotelId(@Param("hotelId") Long hotelId);
@@ -35,6 +37,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			    AND (:start IS NULL OR o.createdAt >= :start)
 			    AND (:end IS NULL OR o.createdAt <= :end)
 			     AND (:paymentMethod IS NULL OR p.method = :paymentMethod)
+			     AND (:paymentStatus IS NULL OR p.status = :paymentStatus)
 			    AND (
 			        :keyword IS NULL OR
 			        LOWER(h.hname) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
@@ -44,7 +47,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	Page<Order> searchAccessibleOrdersWithKeyword(@Param("userId") Long userId,
 			@Param("status") Order.OrderStatus status, @Param("start") LocalDateTime start,
 			@Param("end") LocalDateTime end, @Param("keyword") String keyword,
-			@Param("paymentMethod") Payment.PaymentMethod paymentMethod, Pageable pageable);
+			@Param("paymentMethod") Payment.PaymentMethod paymentMethod,
+			@Param("paymentStatus") Payment.PaymentStatus paymentStatus, Pageable pageable);
 
 //  月報表
 	@Query("""

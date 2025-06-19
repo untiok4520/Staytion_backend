@@ -35,12 +35,13 @@ public class AdminOrderService {
 
 	// 狀態 + 日期篩選 + 分頁
 	public Page<OrderResponseDto> searchOrders(Long currentUserId, Order.OrderStatus status, LocalDate start,
-			LocalDate end, String keyword, Payment.PaymentMethod paymentMethod, Pageable pageable) {
+			LocalDate end, String keyword, Payment.PaymentMethod paymentMethod, Payment.PaymentStatus paymentStatus,
+			Pageable pageable) {
 		LocalDateTime startDateTime = (start != null) ? start.atStartOfDay() : null;
 		LocalDateTime endDateTime = (end != null) ? end.plusDays(1).atStartOfDay() : null;
 
 		return orderRepository.searchAccessibleOrdersWithKeyword(currentUserId, status, startDateTime, endDateTime,
-				keyword, paymentMethod, pageable).map(OrderMapper::toDto);
+				keyword, paymentMethod, paymentStatus, pageable).map(OrderMapper::toDto);
 	}
 
 	// 修改訂單狀態

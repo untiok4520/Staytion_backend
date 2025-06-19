@@ -46,8 +46,11 @@ public class AdminOrderController {
 	public Page<OrderResponseDto> filterOrders(@RequestParam(required = false) Order.OrderStatus status,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
-			@RequestParam(required = false) String keyword, @RequestParam(required = false) Payment.PaymentMethod paymentMethod,@RequestParam(required = false) Long currentUserId, // 暫時用來模擬登入
+			@RequestParam(required = false) String keyword,
+			@RequestParam(required = false) Payment.PaymentMethod paymentMethod,
+			@RequestParam(required = false) Payment.PaymentStatus paymentStatus,
+			@RequestParam(required = false) Long currentUserId, // 暫時用來模擬登入
 			Pageable pageable) {
-		return service.searchOrders(currentUserId, status, start, end, keyword, paymentMethod,pageable);
+		return service.searchOrders(currentUserId, status, start, end, keyword, paymentMethod, paymentStatus, pageable);
 	}
 }

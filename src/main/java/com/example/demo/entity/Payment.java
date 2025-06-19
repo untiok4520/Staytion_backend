@@ -23,7 +23,7 @@ public class Payment {
 	private Long id;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "method", columnDefinition = "ENUM('CREDIT_CARD','CASH') DEFAULT 'CASH'")
+	@Column(name = "method", columnDefinition = "ENUM('CREDIT_CARD','CASH','ECPAY') DEFAULT 'CASH'")
 	private PaymentMethod method = PaymentMethod.CASH;
 
 	@Enumerated(EnumType.STRING)
@@ -50,7 +50,7 @@ public class Payment {
 
 	// -------------------------------------
 	public enum PaymentMethod {
-		CREDIT_CARD, CASH
+		CREDIT_CARD, CASH, ECPAY
 	}
 
 	public enum PaymentStatus {

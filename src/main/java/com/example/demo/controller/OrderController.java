@@ -65,18 +65,17 @@ public class OrderController {
 
 	// 狀態 + 日期 + 關鍵字篩選 + 分頁查詢（後台篩選）
 	@GetMapping("/filter")
-	public Page<OrderResponseDto> filterOrders(
-	    @RequestParam(required = false) Order.OrderStatus status,
-	    @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-	    @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
-	    @RequestParam(required = false) String keyword,
-	    @RequestParam(required = false) Payment.PaymentMethod paymentMethod,
-	    @RequestParam(required = false)Long currentUserId, // 暫時用來模擬登入
-	    Pageable pageable
-	) {
-	    return orderService.searchOrders(currentUserId, status, start, end, keyword, paymentMethod,pageable);
+	public Page<OrderResponseDto> filterOrders(@RequestParam(required = false) Order.OrderStatus status,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
+			@RequestParam(required = false) String keyword,
+			@RequestParam(required = false) Payment.PaymentMethod paymentMethod,
+			@RequestParam(required = false) Payment.PaymentStatus paymentStatus,
+			@RequestParam(required = false) Long currentUserId, // 暫時用來模擬登入
+			Pageable pageable) {
+		return orderService.searchOrders(currentUserId, status, start, end, keyword, paymentMethod, paymentStatus,
+				pageable);
 	}
-
 
 	// 修改訂單狀態（ex: CONFIRMED → CANCELED）
 	@PutMapping("/{id}/status")

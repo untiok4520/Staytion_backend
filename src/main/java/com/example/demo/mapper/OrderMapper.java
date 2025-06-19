@@ -79,7 +79,7 @@ public class OrderMapper {
         }
         
         if (order.getPayment() != null) {
-            dto.setPaymentMethod(order.getPayment().getStatus().name());
+            dto.setPaymentMethod(order.getPayment().getMethod().name());
             dto.setPaymentStatus(order.getPayment().getStatus().name());
         }
         
