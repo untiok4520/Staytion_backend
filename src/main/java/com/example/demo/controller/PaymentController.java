@@ -2,16 +2,17 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.PaymentRequest;
 import com.example.demo.dto.WebhookData;
+import com.example.demo.dto.EcpayRequest;
 import com.example.demo.entity.Payment;
-import com.example.demo.enums.PaymentStatus;
+import com.example.demo.service.PaymentService;
 import com.example.demo.repository.PaymentRepository;
-import com.example.demo.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/payments")
@@ -19,39 +20,66 @@ import java.util.Map;
 public class PaymentController {
 
     @Autowired
-    private PaymentRepository paymentRepository;
+    private PaymentService paymentService;
 
     @Autowired
-    private EmailService emailService;
+    private PaymentRepository paymentRepository;
 
-    // ✅ 處理付款建立
+    // ✅ 建立付款請求（非綠界測試流程）
     @PostMapping("/process")
     public ResponseEntity<?> processPayment(@RequestBody PaymentRequest request) {
-        Payment payment = new Payment();
-        payment.setOrderId(request.getOrderId());
-        payment.setMethod(request.getMethod());
-        payment.setStatus(PaymentStatus.UNPAID); // 預設未付款
-        payment.setCreatedAt(LocalDateTime.now());
-
-        paymentRepository.save(payment);
-
-        // 模擬金流連結（之後可換綠界）
-        String fakePaymentUrl = "https://fakepay.com/pay?orderId=" + request.getOrderId();
-
-        return ResponseEntity.ok(Map.of("paymentUrl", fakePaymentUrl));
+        String paymentUrl = paymentService.processPayment(request);
+        return ResponseEntity.ok(Map.of("paymentUrl", paymentUrl));
     }
 
-    // ✅ 模擬綠界付款完成 + 自動寄信
+    // ✅ 處理金流 webhook 回傳（綠界付款成功會呼叫這裡）
     @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(@RequestBody WebhookData data) {
-        Payment payment = paymentRepository.findByOrderId(data.getOrderId());
-        if (payment != null) {
-            payment.setStatus(PaymentStatus.PAID);
-            paymentRepository.save(payment);
-
-            // 寄出訂單確認信
-            emailService.sendOrderConfirmation(data.getEmail(), data.getOrderId());
-        }
+        paymentService.handleWebhook(data);
         return ResponseEntity.ok("✅ Webhook received");
+    }
+
+    // ✅ 查詢所有付款
+    @GetMapping
+    public List<Payment> getAllPayments() {
+        return paymentRepository.findAll();
+    }
+
+    // ✅ 查詢單筆付款
+    @GetMapping("/{id}")
+    public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
+        Optional<Payment> payment = paymentRepository.findById(id);
+        return payment.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // ✅ 修改付款資訊
+    @PutMapping("/{id}")
+    public ResponseEntity<Payment> updatePayment(@PathVariable Long id, @RequestBody Payment updated) {
+        return paymentRepository.findById(id).map(p -> {
+            p.setStatus(updated.getStatus());
+            p.setMethod(updated.getMethod());
+            return ResponseEntity.ok(paymentRepository.save(p));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // ✅ 刪除付款紀錄
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePayment(@PathVariable Long id) {
+        if (paymentRepository.existsById(id)) {
+            paymentRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // ✅ 🔥 新增綠界付款 API（產生表單並自動跳轉）
+    @PostMapping("/ecpay")
+    public ResponseEntity<String> ecpay(@RequestBody EcpayRequest request) {
+        String htmlForm = paymentService.generateEcpayForm(request);
+        return ResponseEntity.ok()
+                .header("Content-Type", "text/html")
+                .body(htmlForm);
     }
 }

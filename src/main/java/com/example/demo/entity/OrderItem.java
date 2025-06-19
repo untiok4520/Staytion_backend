@@ -1,8 +1,17 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "order_items")
@@ -10,67 +19,45 @@ public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // 明細主鍵
+    private Long id;
 
-    @Column(name = "order_id")
-    private Integer orderId;  // 對應主訂單 ID
-
-    @Column(name = "user_id")
-    private Integer userId;  // 使用者 ID（便於查詢使用者訂單）
-
-    @Column(name = "hotel_id")
-    private Integer hotelId;  // 飯店 ID（便於查詢飯店所有明細）
-
-    @Column(name = "room_type_id")
-    private Integer roomTypeId;
-
+    @Column(name = "quantity")
     private Integer quantity;
 
     @Column(name = "price_per_room")
     private BigDecimal pricePerRoom;
 
+    @Column(name = "subtotal")
     private BigDecimal subtotal;
 
-    // 🔻 Getter / Setter 🔻
+    // Constructor
+    public OrderItem() {
+    }
 
+    public OrderItem(Integer quantity, BigDecimal pricePerRoom, BigDecimal subtotal) {
+        this.quantity = quantity;
+        this.pricePerRoom = pricePerRoom;
+        this.subtotal = subtotal;
+    }
+
+    // -------------------------------------
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    @JsonIgnore
+    private Order order;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_type_id")
+    @JsonIgnore
+    private RoomType roomType;
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getHotelId() {
-        return hotelId;
-    }
-
-    public void setHotelId(Integer hotelId) {
-        this.hotelId = hotelId;
-    }
-
-    public Integer getRoomTypeId() {
-        return roomTypeId;
-    }
-
-    public void setRoomTypeId(Integer roomTypeId) {
-        this.roomTypeId = roomTypeId;
     }
 
     public Integer getQuantity() {
@@ -96,4 +83,21 @@ public class OrderItem {
     public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
     }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+
 }
