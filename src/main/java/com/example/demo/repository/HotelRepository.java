@@ -8,7 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.demo.entity.Hotel;
 import com.example.demo.projection.HotelProjection;
 
-public interface HotelRepository extends JpaRepository<Hotel, Long> {
+import java.util.List;
+import java.util.Optional;
+
+public interface HotelRepository extends JpaRepository<Hotel, Long>{
+    List<Hotel> findByHnameContaining(String keyword);
+    Optional<Hotel> findByHname(String hname);
+
 	@Query(value = """
 			SELECT
 			    h.id AS hotelId,
@@ -28,9 +34,9 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
 			LIMIT 10;
 			      
 			""", nativeQuery = true)
-	
+
 	List<HotelProjection> findTopHotels();
-	
-	
+
+
 
 }
