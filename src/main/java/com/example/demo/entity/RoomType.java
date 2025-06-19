@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -14,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -87,7 +89,10 @@ public class RoomType {
 			inverseJoinColumns = @JoinColumn(name = "amenity_id") // 另一實體 (Amenity) 在中間表的外鍵
 	)
 	private Set<Amenity> amenities = new HashSet<>(); // 使用 Set 避免重複
-
+	
+	@OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<RoomAvailability> availabilities;
+	
 	// Getters and Setters
 	public Long getId() {
 		return id;
@@ -200,8 +205,16 @@ public class RoomType {
 	public void setAmenities(Set<Amenity> amenities) {
 		this.amenities = amenities;
 	}
-	
 
+	public List<RoomAvailability> getAvailabilities() {
+		return availabilities;
+	}
+
+	public void setAvailabilities(List<RoomAvailability> availabilities) {
+		this.availabilities = availabilities;
+	}
+	
+	
 	// -------------------------------------
 	// @Override
 	// public String toString() {

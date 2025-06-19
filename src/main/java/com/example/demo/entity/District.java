@@ -1,21 +1,26 @@
 package com.example.demo.entity;
 
+import java.util.List;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table (name="districts")
+@Table(name = "districts")
 public class District {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String dname;
+	@Column(name = "dname")
+	private String dname;
 
 	public Long getId() {
 		return id;
@@ -33,13 +38,19 @@ public class District {
 		this.dname = dname;
 	}
 
-// -----------------------------------------
+	public District() {
 
-    @ManyToOne
-    @JoinColumn(name = "city_id")
-    private City city;
-	
-	
+	}
+
+	public District(String dname) {
+		this.dname = dname;
+	}
+
+	// -------------------------------------
+	@ManyToOne
+	@JoinColumn(name = "city_id")
+	private City city;
+
 	public City getCity() {
 		return city;
 	}
@@ -47,6 +58,24 @@ public class District {
 	public void setCity(City city) {
 		this.city = city;
 	}
-    
-    
+
+	// -------------------------------------
+	@OneToMany(mappedBy = "district")
+	private List<Hotel> hotels;
+
+	public List<Hotel> getHotels() {
+		return hotels;
+	}
+
+	public void setHotels(List<Hotel> hotels) {
+		this.hotels = hotels;
+	}
+
+	// -------------------------------------
+	// @Override
+	// public String toString() {
+	// return "District{" + "id=" + id + ", dname='" + dname + '\'' + ", cityId=" +
+	// city.getId() + '}';
+	// }
+
 }

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -14,7 +15,7 @@ import jakarta.persistence.Table;
 @Table(name = "room_availability")
 public class RoomAvailability {
 	@Id
-	@GeneratedValue()
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(name = "date")
@@ -22,8 +23,9 @@ public class RoomAvailability {
 
 	@Column(name = "available_quantity")
 	private Integer availableQuantity;
-	
-//	-------------------------------------
+
+	// -------------------------------------
+	// Constructor
 	public RoomAvailability() {
 
 	}
@@ -32,13 +34,13 @@ public class RoomAvailability {
 		this.date = date;
 		this.availableQuantity = availableQuantity;
 	}
-	
-//	-------------------------------------
+
+	// -------------------------------------
 	@ManyToOne
 	@JoinColumn(name = "room_type_id")
-//	private RoomType roomType;
+	private RoomType roomType;
 
-//	-------------------------------------
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}
@@ -63,12 +65,12 @@ public class RoomAvailability {
 		this.availableQuantity = availableQuantity;
 	}
 
-//	public RoomType getRoomType() {
-//		return roomType;
-//	}
-//
-//	public void setRoomType(RoomType roomType) {
-//		this.roomType = roomType;
-//	}
+	public RoomType getRoomType() {
+		return roomType;
+	}
+
+	public void setRoomType(RoomType roomType) {
+		this.roomType = roomType;
+	}
 
 }
