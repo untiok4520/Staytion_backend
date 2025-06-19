@@ -86,4 +86,10 @@ public class ReviewController {
     ) {
         reviewService.deleteReview(userId, id);
     }
+    // 查詢飯店平均分數
+    @GetMapping("/rooms/{hotelId}/reviews/average-score")
+    @Operation(summary = "取得某飯店的平均評分")
+    public  Double getAverageScoreByHotel(@PathVariable("hotelId") Long hotelId){
+        return reviewService.getAverageScoreByHotel(hotelId);
+    }
 }
