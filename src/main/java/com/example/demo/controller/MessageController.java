@@ -58,7 +58,7 @@ public class MessageController {
     }
     @GetMapping("/{chatRoomId}/messages")
     public List<Message> getMessages(@PathVariable Long chatRoomId, @RequestParam Long userId) {
-        List<Message> messages = messageRepository.findByChatRoomOrderBySentAt(chatRoomId);
+        List<Message> messages = messageRepository.findByChatRoomIdOrderBySentAt(chatRoomId);
 
         // 標記為已讀
         messages.stream()

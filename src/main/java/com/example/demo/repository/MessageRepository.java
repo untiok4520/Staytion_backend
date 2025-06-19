@@ -9,13 +9,17 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long>{
     @Query("""
-            select m from message m 
-            where(m.senderId = :user1 and m.receiverId = :user2
-            OR m.senderId = :user2 AND m.receiverId = :user1)
-            and m.hotel = :hotelId
-            order by m.sentAt
-            
-            """)
-    List<Message>findChatHistory(@Param("user1") Long user1, @Param("user2") Long user2, @Param("hotelId") Long hotelId);
-    List<Message> findByChatRoomOrderBySentAt(Long chatRoom);
+    SELECT m FROM Message m
+    WHERE 
+        (m.sender.id = :user1 AND m.receiver.id = :user2 
+        OR m.sender.id = :user2 AND m.receiver.id = :user1)
+        AND m.hotel.id = :hotelId
+    ORDER BY m.sentAt
+""")
+    List<Message> findChatHistory(@Param("user1") Long user1,
+                                  @Param("user2") Long user2,
+                                  @Param("hotelId") Long hotelId);
+
+    @Query("SELECT m FROM Message m WHERE m.chatRoom.id = :chatRoomId ORDER BY m.sentAt")
+    List<Message> findByChatRoomIdOrderBySentAt(@Param("chatRoomId") Long chatRoomId);
 }

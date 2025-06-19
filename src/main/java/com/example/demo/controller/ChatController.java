@@ -10,12 +10,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Controller
 public class ChatController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -26,9 +28,11 @@ public class ChatController {
 
     @MessageMapping("/send")
     public void sendMessage(Message message) {
+        System.out.println("收到訊息：" + message.getContent());
         message.setSentAt(LocalDateTime.now());
         messageRepository.save(message);
-        messagingTemplate.convertAndSend("/topic/chat/" + message.getHotel(), message);
+        //廣播出去
+        messagingTemplate.convertAndSend("/topic/chat/" + message.getHotel().getId(), message);
     }
     @GetMapping("/user/{userId}")
     @Operation(summary = "某使用者的所有聊天室")
