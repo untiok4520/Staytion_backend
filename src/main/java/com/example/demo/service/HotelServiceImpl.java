@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.demo.projection.HotelProjection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -198,7 +199,7 @@ public class HotelServiceImpl implements HotelService {
                     rtdto.setSize(roomType.getSize());
                     rtdto.setView(roomType.getView());
                     rtdto.setImgUrl(roomType.getImgUrl());
-                    rtdto.setIsCanceled(roomType.getCanceled());
+                    rtdto.setIsCanceled(roomType.getIsCanceled());
                     rtdto.setQuantity(roomType.getQuantity());
                     rtdto.setBedCount(roomType.getBedCount());
                     rtdto.setBedType(roomType.getBedType());
@@ -230,6 +231,11 @@ public class HotelServiceImpl implements HotelService {
         dto.setRoomTypes(roomTypeDTOs);
 
         return dto;
+    }
+
+    @Override
+    public List<HotelProjection> getTopHotels() {
+        return hotelRepository.findTopHotels();
     }
 
     // 共用工具

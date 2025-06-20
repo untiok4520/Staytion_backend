@@ -84,9 +84,9 @@ public class RoomType {
 	}
 
 	// -------------------------------------
-	@ManyToOne
-	@JoinColumn(name = "hotel_id")
-	private Hotel hotel;
+//	@ManyToOne
+//	@JoinColumn(name = "hotel_id")
+//	private Hotel hotel;
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "room_amenities", // 中間表的名稱
