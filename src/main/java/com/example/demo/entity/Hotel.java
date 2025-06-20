@@ -2,8 +2,10 @@ package com.example.demo.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,19 +23,19 @@ public class Hotel {
 
 	@Column(name = "hname")
 	private String hname;
-	
+
 	@Column(name = "address")
 	private String address;
-	
+
 	@Column(name = "tel")
 	private String tel;
-	
+
 	@Column(name = "description")
 	private String description;
-	
+
 	@Column(name = "latitude")
 	private Double latitude;
-	
+
 	@Column(name = "longitude")
 	private Double longitude;
 
@@ -109,10 +111,25 @@ public class Hotel {
 		this.longitude = longitude;
 	}
 
-	// -------------------------------------
-	@ManyToOne
+	// ------------------------------
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "district_id")
 	private District district;
+
+	// -------------------------------
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "owner_id")
+	private User owner;
+
+	// ------------------
+	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<RoomType> roomTypes;
+
+	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Image> images;
+
+	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Review> reviews;
 
 	public District getDistrict() {
 		return district;
@@ -122,23 +139,13 @@ public class Hotel {
 		this.district = district;
 	}
 
-	// -------------------------------------
-	@ManyToOne
-	@JoinColumn(name = "owner_id")
-	private User owner;
-
 	public User getOwner() {
 		return owner;
 	}
 
 	public void setOwner(User owner) {
 		this.owner = owner;
-
 	}
-
-	// -------------------------------------
-	@OneToMany(mappedBy = "hotel")
-	private List<RoomType> roomTypes;
 
 	public List<RoomType> getRoomTypes() {
 		return roomTypes;
@@ -148,25 +155,19 @@ public class Hotel {
 		this.roomTypes = roomTypes;
 	}
 
-	// -------------------------------------
-	// // 要再討論看看要不要加
-	// private Double rating;
-	//
-	// public Double getRating() {
-	// return rating;
-	// }
-	//
-	// public void setRating(Double rating) {
-	// this.rating = rating;
-	// }
+	public List<Image> getImages() {
+		return images;
+	}
 
-	// -------------------------------------
-	// @Override
-	// public String toString() {
-	// return "Hotel{" + "id=" + id + ", hname='" + hname + '\'' + ", address='" +
-	// address + '\'' + ", tel='" + tel
-	// + '\'' + ", districtId=" + district.getId() + ", latitude=" + latitude + ",
-	// longitude=" + longitude
-	// + ", ownerId=" + owner.getId() + '}';
-	// }
+	public void setImages(List<Image> images) {
+		this.images = images;
+	}
+
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
 }
