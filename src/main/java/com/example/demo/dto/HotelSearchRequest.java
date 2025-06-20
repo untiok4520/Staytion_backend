@@ -1,6 +1,6 @@
 package com.example.demo.dto;
 
-public class HotelSearchRequestDTO {
+public class HotelSearchRequest {
     private Long id;
     private String name;
     private String imgUrl;

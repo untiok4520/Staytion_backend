@@ -3,11 +3,11 @@ package com.example.demo.service;
 import org.springframework.data.domain.Page;
 
 import com.example.demo.dto.HotelDetailDTO;
-import com.example.demo.dto.HotelSearchRequestDTO;
-import com.example.demo.dto.HotelSearchResultDTO;
+import com.example.demo.dto.HotelSearchRequest;
+import com.example.demo.dto.HotelSearchResult;
 
 public interface HotelService {
-    Page<HotelSearchRequestDTO> searchHotels(HotelSearchResultDTO dto, int page, int size);
+    Page<HotelSearchRequest> searchHotels(HotelSearchResult dto, int page, int size);
 
     HotelDetailDTO getHotelDetail(Long hotelId);
 }

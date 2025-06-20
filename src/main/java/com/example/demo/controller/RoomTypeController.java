@@ -3,10 +3,7 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.dto.RoomTypeDTO;
 import com.example.demo.service.RoomTypeService;
@@ -28,6 +25,15 @@ public class RoomTypeController {
         return roomTypeService.findRoomTypesByHotel(hotelId);
     }
 
+    @GetMapping("/hotels/{hotelId}/room-types/filter")
+    public List<RoomTypeDTO> getRoomTypesByHotelAndCapacity(
+            @PathVariable Long hotelId,
+            @RequestParam Integer adults,
+            @RequestParam(required = false, defaultValue = "0") Integer children
+    ) {
+        int people = adults + children;
+        return roomTypeService.findRoomTypesByHotelAndCapacity(hotelId, people);
+    }
 
 
     // @GetMapping("/room_types/{id}")

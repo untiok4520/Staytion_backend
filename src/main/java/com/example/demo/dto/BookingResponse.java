@@ -1,24 +1,23 @@
 package com.example.demo.dto;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 public class BookingResponse {
-    private Long bookingId;
+    private Long orderId;
     private String status;
-    private String hotelName;
-    private String roomType;
-    private String roomImgUrl;
     private String checkInDate;
     private String checkOutDate;
-    private Integer quantity;
-    private Double pricePerRoom;
-    private Double totalPrice;
+    private BigDecimal totalPrice;
+    private List<OrderItemResponse> items;
     private String message;
 
-    public Long getBookingId() {
-        return bookingId;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setBookingId(Long bookingId) {
-        this.bookingId = bookingId;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public String getStatus() {
@@ -27,30 +26,6 @@ public class BookingResponse {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getHotelName() {
-        return hotelName;
-    }
-
-    public void setHotelName(String hotelName) {
-        this.hotelName = hotelName;
-    }
-
-    public String getRoomType() {
-        return roomType;
-    }
-
-    public void setRoomType(String roomType) {
-        this.roomType = roomType;
-    }
-
-    public String getRoomImgUrl() {
-        return roomImgUrl;
-    }
-
-    public void setRoomImgUrl(String roomImgUrl) {
-        this.roomImgUrl = roomImgUrl;
     }
 
     public String getCheckInDate() {
@@ -69,28 +44,20 @@ public class BookingResponse {
         this.checkOutDate = checkOutDate;
     }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Double getPricePerRoom() {
-        return pricePerRoom;
-    }
-
-    public void setPricePerRoom(Double pricePerRoom) {
-        this.pricePerRoom = pricePerRoom;
-    }
-
-    public Double getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(Double totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public List<OrderItemResponse> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItemResponse> items) {
+        this.items = items;
     }
 
     public String getMessage() {

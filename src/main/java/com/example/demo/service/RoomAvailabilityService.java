@@ -35,4 +35,17 @@ public class RoomAvailabilityService {
                 ))
                 .collect(java.util.stream.Collectors.toList());
     }
+
+    public int getAvailableCount(Long roomTypeId, LocalDate checkInDate, LocalDate checkOutDate) {
+        List<RoomAvailability> availList = roomAvailabilityRepository.findByRoomType_IdAndDateBetween(
+                roomTypeId, checkInDate, checkOutDate.minusDays(1)); // checkout 不含最後一天
+
+        if (availList.isEmpty()) {
+            return 0;
+        }
+        return availList.stream()
+                .mapToInt(RoomAvailability::getAvailableQuantity)
+                .min()
+                .orElse(0);
+    }
 }

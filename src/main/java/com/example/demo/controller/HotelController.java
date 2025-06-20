@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.HotelDetailDTO;
-import com.example.demo.dto.HotelSearchRequestDTO;
-import com.example.demo.dto.HotelSearchResultDTO;
+import com.example.demo.dto.HotelSearchRequest;
+import com.example.demo.dto.HotelSearchResult;
 import com.example.demo.service.HotelService;
 
 @RestController
@@ -41,7 +41,7 @@ public class HotelController {
             @RequestParam(required = false) String sort,
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
-        HotelSearchResultDTO resultDTO = new HotelSearchResultDTO();
+        HotelSearchResult resultDTO = new HotelSearchResult();
         resultDTO.setCity(city);
         resultDTO.setArea(area);
         resultDTO.setCheckin(checkin);
@@ -54,7 +54,7 @@ public class HotelController {
         resultDTO.setScore(score);
         resultDTO.setSort(sort);
 
-        Page<HotelSearchRequestDTO> hotelsPage = hotelService.searchHotels(resultDTO, page, size);
+        Page<HotelSearchRequest> hotelsPage = hotelService.searchHotels(resultDTO, page, size);
         Map<String, Object> rs = new HashMap<>();
         rs.put("hotels", hotelsPage.getContent());
         rs.put("total", hotelsPage.getTotalElements());
@@ -65,7 +65,7 @@ public class HotelController {
 
     //查詢符合條件飯店總數
     @GetMapping("/count")
-    public Map<String, Long> getHotelCount(HotelSearchResultDTO resultDTO) {
+    public Map<String, Long> getHotelCount(HotelSearchResult resultDTO) {
         Long count = hotelService.searchHotels(resultDTO, 1, Integer.MAX_VALUE).getTotalElements();
         Map<String, Long> result = new HashMap<>();
         result.put("count", count);

@@ -18,7 +18,6 @@ public class RoomTypeService {
     @Autowired
     private RoomTypeRepository roomTypeRepository;
 
-    // 查詢特定飯店的所有房型
     public List<RoomTypeDTO> findRoomTypesByHotel(Long hotelId) {
         List<RoomType> entities = roomTypeRepository.findByHotelId(hotelId);
         List<RoomTypeDTO> dtos = new ArrayList<>();
@@ -38,7 +37,6 @@ public class RoomTypeService {
             dto.setBedType(room.getBedType());
             dto.setCapacity(room.getCapacity());
 
-            // 正確：轉成 List<AmenityDTO>
             List<AmenityDTO> amenityDTOs = room.getAmenities().stream()
                     .map(a -> {
                         AmenityDTO adto = new AmenityDTO();
@@ -81,7 +79,6 @@ public class RoomTypeService {
             dto.setBedType(room.getBedType());
             dto.setCapacity(room.getCapacity());
 
-            // 這邊也一樣用 List<AmenityDTO>
             List<AmenityDTO> amenityDTOs = room.getAmenities().stream()
                     .map(a -> {
                         AmenityDTO adto = new AmenityDTO();
@@ -94,5 +91,9 @@ public class RoomTypeService {
             dtos.add(dto);
         }
         return dtos;
+    }
+    public List<RoomTypeDTO> findRoomTypesByHotelAndCapacity(Long hotelId, int people) {
+        List<RoomType> roomTypes = roomTypeRepository.findByHotelIdAndCapacityGreaterThanEqual(hotelId, people);
+        return roomTypes.stream().map(RoomTypeDTO::from).collect(Collectors.toList());
     }
 }

@@ -1,17 +1,19 @@
 package com.example.demo.dto;
 
+import java.util.List;
+
 public class BookingRequest {
-    private Long roomTypeId;
+    private Long userId;
     private String checkInDate;
     private String checkOutDate;
-    private Integer quantity;
+    private List<OrderItemRequest> items;
 
-    public Long getRoomTypeId() {
-        return roomTypeId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setRoomTypeId(Long roomTypeId) {
-        this.roomTypeId = roomTypeId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getCheckInDate() {
@@ -30,11 +32,11 @@ public class BookingRequest {
         this.checkOutDate = checkOutDate;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public List<OrderItemRequest> getItems() {
+        return items;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setItems(List<OrderItemRequest> items) {
+        this.items = items;
     }
 }

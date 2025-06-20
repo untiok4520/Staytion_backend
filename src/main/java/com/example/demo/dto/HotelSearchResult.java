@@ -2,7 +2,7 @@ package com.example.demo.dto;
 
 import java.util.List;
 
-public class HotelSearchResultDTO {
+public class HotelSearchResult {
     private String city;
     private String area;
     private String checkin;

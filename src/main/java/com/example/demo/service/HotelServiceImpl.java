@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.AmenityDTO;
 import com.example.demo.dto.HotelDetailDTO;
-import com.example.demo.dto.HotelSearchRequestDTO;
-import com.example.demo.dto.HotelSearchResultDTO;
+import com.example.demo.dto.HotelSearchRequest;
+import com.example.demo.dto.HotelSearchResult;
 import com.example.demo.dto.ImageDTO;
 import com.example.demo.dto.RoomTypeDTO;
 import com.example.demo.entity.Hotel;
@@ -35,11 +35,18 @@ public class HotelServiceImpl implements HotelService {
     private ImageRepository imageRepository;
 
     @Override
-    public Page<HotelSearchRequestDTO> searchHotels(HotelSearchResultDTO dto, int page, int size) {
+    public Page<HotelSearchRequest> searchHotels(HotelSearchResult dto, int page, int size) {
         List<Hotel> hotels = hotelRepository.findAll();
 
-        List<HotelSearchRequestDTO> filtered = hotels.stream()
+        List<HotelSearchRequest> filtered = hotels.stream()
                 .filter(hotel -> {
+                    if (dto.getAdult() != null || dto.getChild() != null) {
+                        int totalPeople = (dto.getAdult() != null ? dto.getAdult() : 0)
+                                + (dto.getChild() != null ? dto.getChild() : 0);
+                        boolean hasRoom = hotel.getRoomTypes().stream()
+                                .anyMatch(rt -> rt.getCapacity() >= totalPeople);
+                        if (!hasRoom) return false;
+                    }
                     // 城市
                     if (dto.getCity() != null && !dto.getCity().isEmpty()) {
                         String cityValue = hotel.getDistrict().getCity().getCname();
@@ -108,7 +115,7 @@ public class HotelServiceImpl implements HotelService {
                     return 0;
                 })
                 .map(hotel -> {
-                    HotelSearchRequestDTO out = new HotelSearchRequestDTO();
+                    HotelSearchRequest out = new HotelSearchRequest();
                     out.setId(hotel.getId());
                     out.setName(hotel.getHname());
                     out.setCity(hotel.getDistrict().getCity().getCname());
@@ -145,7 +152,7 @@ public class HotelServiceImpl implements HotelService {
         // 分頁
         int fromIndex = Math.max((page - 1) * size, 0);
         int toIndex = Math.min(fromIndex + size, filtered.size());
-        List<HotelSearchRequestDTO> pagedList = fromIndex >= filtered.size()
+        List<HotelSearchRequest> pagedList = fromIndex >= filtered.size()
                 ? java.util.Collections.emptyList()
                 : filtered.subList(fromIndex, toIndex);
 

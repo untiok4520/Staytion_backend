@@ -1,7 +1,10 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.RoomType;
+
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RoomTypeDTO {
 	private Long id;
@@ -19,6 +22,35 @@ public class RoomTypeDTO {
 	private Integer capacity;
 	private List<ImageDTO> images;
 	private List<AmenityDTO> amenities;
+
+	public static RoomTypeDTO from(RoomType entity) {
+		RoomTypeDTO dto = new RoomTypeDTO();
+		dto.setId(entity.getId());
+		dto.setHotelId(entity.getHotel() != null ? entity.getHotel().getId() : null);
+		dto.setRname(entity.getRname());
+		dto.setPrice(entity.getPrice());
+		dto.setDescription(entity.getDescription());
+		dto.setSize(entity.getSize());
+		dto.setView(entity.getView());
+		dto.setImgUrl(entity.getImgUrl());
+		dto.setIsCanceled(entity.getCanceled());
+		dto.setQuantity(entity.getQuantity());
+		dto.setBedCount(entity.getBedCount());
+		dto.setBedType(entity.getBedType());
+		dto.setCapacity(entity.getCapacity());
+
+		if (entity.getAmenities() != null) {
+			dto.setAmenities(
+					entity.getAmenities().stream()
+							.map(AmenityDTO::from)
+							.collect(java.util.stream.Collectors.toList())
+			);
+		} else {
+			dto.setAmenities(null);
+		}
+		//只有 imgUrl（一張主圖）
+		return dto;
+	}
 
 	public Long getId() {
 		return id;
