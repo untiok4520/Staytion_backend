@@ -13,10 +13,9 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "images")
 public class Image {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name = "id")
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,10 +32,17 @@ public class Image {
     @JoinColumn(name = "room_type_id")
     private RoomType roomType;
 
+	// Constructor
+	public Image() {
+	}
     public RoomType getRoomType() {
         return roomType;
     }
 
+	public Image(String imgUrl, Boolean isCover) {
+		this.imgUrl = imgUrl;
+		this.isCover = isCover;
+	}
     public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
     }
