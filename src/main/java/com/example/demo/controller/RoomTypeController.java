@@ -15,16 +15,19 @@ public class RoomTypeController {
     @Autowired
     private RoomTypeService roomTypeService;
 
+    //所有房型
     @GetMapping("/room-types")
     public List<RoomTypeDTO> getAllRoomTypes() {
         return roomTypeService.getAllRoomTypeDtos();
     }
 
+    //單一飯店所有房型
     @GetMapping("/hotels/{hotelId}/room-types")
     public List<RoomTypeDTO> getRoomTypesByHotel(@PathVariable Long hotelId) {
         return roomTypeService.findRoomTypesByHotel(hotelId);
     }
 
+    //單一飯店所有房型經過人數篩選
     @GetMapping("/hotels/{hotelId}/room-types/filter")
     public List<RoomTypeDTO> getRoomTypesByHotelAndCapacity(
             @PathVariable Long hotelId,

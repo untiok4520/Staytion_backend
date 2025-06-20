@@ -26,6 +26,7 @@ public class LocationController {
     @Autowired
     private DistrictRepository districtRepository;
 
+    //所有城市
     @GetMapping("/cities")
     public List<Map<String, String>> getCities() {
         List<City> cities = cityRepository.findAll();

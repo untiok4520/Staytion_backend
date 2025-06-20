@@ -26,6 +26,7 @@ public class HotelController {
     @Autowired
     private HotelService hotelService;
 
+    //飯店列表所有所需資訊
     @GetMapping
     public Map<String, Object> searchHotels(
             @RequestParam(required = false) String city,

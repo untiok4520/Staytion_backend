@@ -18,6 +18,7 @@ public class AmenityController {
     @Autowired
     private AmenityService amenityService;
 
+    //所有設施
     @GetMapping
     public List<AmenityDTO> getAllAmenities() {
         return amenityService.getAllAmenities();
