@@ -15,9 +15,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecif
     boolean existsByOrderId(Long orderId);
     Optional<Review> findByOrderId(Long orderId);
 
-    //飯店平均分數
-    @Query("SELECT AVG(r.score) FROM Review r WHERE r.hotel.id = :hotelId")
+    //飯店平均分數（用在房間詳情頁）
+    @Query(value = "SELECT ROUND(AVG(score), 1) FROM reviews WHERE hotel_id = :hotelId", nativeQuery = true)
     Double findAverageScoreByHotelId(@Param("hotelId") Long hotelId);
-
 
 }
