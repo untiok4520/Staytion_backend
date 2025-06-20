@@ -33,7 +33,7 @@ public class RoomTypeDTO {
 		dto.setSize(entity.getSize());
 		dto.setView(entity.getView());
 		dto.setImgUrl(entity.getImgUrl());
-		dto.setIsCanceled(entity.getCanceled());
+		dto.setIsCanceled(entity.getIsCanceled());
 		dto.setQuantity(entity.getQuantity());
 		dto.setBedCount(entity.getBedCount());
 		dto.setBedType(entity.getBedType());
