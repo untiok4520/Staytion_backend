@@ -12,10 +12,10 @@ import com.example.demo.repository.CityRepository;
 
 @Service
 public class CityService {
-	
+
 	@Autowired
 	private CityRepository cityRepository;
-	
+
 	public Map<String, Object> getCityHotelCount(Long cityId) {
 		CityProjection data = cityRepository.findHotelCountByCityId(cityId);
 
@@ -25,5 +25,4 @@ public class CityService {
 		result.put("hotelCount", data.getHotelCount());
 		return result;
 	}
-
 }
