@@ -171,7 +171,7 @@ public class ReviewService {
     }
     public Double getAverageScoreByHotel(Long hotelId) {
         Double avg = reviewRepo.findAverageScoreByHotelId(hotelId);
-        return avg == null ? 0.0 : Math.round(avg * 10.0) / 10.0;
+        return avg == null ? 0.0 : avg;
     }
 
     // Entity -> Response DTO
