@@ -31,7 +31,7 @@ public class RoomTypeService {
             dto.setSize(room.getSize());
             dto.setView(room.getView());
             dto.setImgUrl(room.getImgUrl());
-            dto.setIsCanceled(room.getCanceled());
+            dto.setIsCanceled(room.getIsCanceled());
             dto.setQuantity(room.getQuantity());
             dto.setBedCount(room.getBedCount());
             dto.setBedType(room.getBedType());
@@ -73,7 +73,7 @@ public class RoomTypeService {
             dto.setSize(room.getSize());
             dto.setView(room.getView());
             dto.setImgUrl(room.getImgUrl());
-            dto.setIsCanceled(room.getCanceled());
+            dto.setIsCanceled(room.getIsCanceled());
             dto.setQuantity(room.getQuantity());
             dto.setBedCount(room.getBedCount());
             dto.setBedType(room.getBedType());
