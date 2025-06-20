@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.CreateReviewRequestDto;
 import com.example.demo.dto.ReviewReplyDto;
-import com.example.demo.dto.ReviewResponseDto;
+import com.example.demo.dto.request.CreateReviewRequestDto;
+import com.example.demo.dto.response.ReviewResponseDto;
 import com.example.demo.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
