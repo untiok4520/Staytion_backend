@@ -43,3 +43,5 @@ build/
 
 *.log
 logs/
+
+src/main/java/com/example/demo/service/FakeDataService.java

@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.CreateReviewRequestDto;
-import com.example.demo.dto.ReviewResponseDto;
+import com.example.demo.dto.request.CreateReviewRequestDto;
+import com.example.demo.dto.response.ReviewResponseDto;
 import com.example.demo.entity.Hotel;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.Review;
