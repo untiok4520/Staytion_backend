@@ -16,8 +16,6 @@ import jakarta.persistence.Table;
 public class Amenity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    @Column(name = "id")
     private Long id;
 
     @Column(name = "aname", unique = true)
@@ -25,6 +23,13 @@ public class Amenity {
 
     @ManyToMany(mappedBy = "amenities")
     private List<RoomType> roomTypes = new ArrayList<>();
+	public Amenity() {
+
+	}
+
+	public Amenity(String aname) {
+		this.aname = aname;
+	}
 
     public Long getId() {
         return id;

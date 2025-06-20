@@ -20,10 +20,20 @@ public class City {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "cname")
 	private String cname;
-
-	@Column(name = "img_url")
+	
+	@Column (name="img_url")
 	private String imgUrl;
+
+	public City() {
+
+	}
+
+	public City(String cname, String imgUrl) {
+		this.cname = cname;
+		this.imgUrl = imgUrl;
+	}
 
 	public Long getId() {
 		return id;
@@ -60,4 +70,12 @@ public class City {
 	public void setDistricts(List<District> districts) {
 		this.districts = districts;
 	}
+
+	// -------------------------------------
+	// @Override
+	// public String toString() {
+	// return "City{" + "id=" + id + ", cname='" + cname + '\'' + ", imgUrl='" +
+	// imgUrl + '\'' + '}';
+	// }
+
 }

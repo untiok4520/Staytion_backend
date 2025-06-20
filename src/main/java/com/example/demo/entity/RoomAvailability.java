@@ -15,11 +15,9 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "room_availability")
 public class RoomAvailability {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    @Column(name = "id")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_type_id")
@@ -31,6 +29,11 @@ public class RoomAvailability {
     @Column(name = "available_quantity")
     private Integer availableQuantity;
 
+	// -------------------------------------
+	// Constructor
+	public RoomAvailability() {
+
+	}
     public Integer getAvailableQuantity() {
         return availableQuantity;
     }
@@ -38,6 +41,10 @@ public class RoomAvailability {
     public void setAvailableQuantity(Integer availableQuantity) {
         this.availableQuantity = availableQuantity;
     }
+	public RoomAvailability(LocalDate date, Integer availableQuantity) {
+		this.date = date;
+		this.availableQuantity = availableQuantity;
+	}
 
     public Long getId() {
         return id;

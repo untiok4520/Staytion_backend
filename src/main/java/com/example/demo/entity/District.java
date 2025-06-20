@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import java.util.List;
-import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -16,16 +15,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "districts")
+@Table (name="districts")
 public class District {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-
-	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "dname")
-	private String dname;
+    private String dname;
 
 	public Long getId() {
 		return id;
@@ -43,8 +39,15 @@ public class District {
 		this.dname = dname;
 	}
 
-	// -----------------------------------------
+	public District() {
 
+	}
+
+	public District(String dname) {
+		this.dname = dname;
+	}
+
+	// -------------------------------------
 	@ManyToOne
 	@JoinColumn(name = "city_id")
 	private City city;

@@ -22,11 +22,9 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "room_types")
 public class RoomType {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    @Column(name = "id")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
@@ -41,8 +39,8 @@ public class RoomType {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "size")
-    private Integer size;
+	@Column(name = "size")
+	private Integer size; // 平方公尺
 
     @Column(name = "view")
     private String view;
@@ -53,8 +51,8 @@ public class RoomType {
     @Column(name = "is_canceled")
     private Boolean isCanceled;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+	@Column(name = "quantity")
+	private Integer quantity; // 該房型總數量
 
     @Column(name = "bed_count")
     private Integer bedCount;
@@ -62,22 +60,48 @@ public class RoomType {
     @Column(name = "bed_type")
     private String bedType;
 
-    @Column(name = "capacity")
-    private Integer capacity;
+	@Column(name = "capacity")
+	private Integer capacity; // 容納人數
 
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinTable(name = "room_amenities", // 中間表的名稱
-            joinColumns = @JoinColumn(name = "room_type_id"), // 本實體 (RoomType) 在中間表的外鍵
-            inverseJoinColumns = @JoinColumn(name = "amenity_id") // 另一實體 (Amenity) 在中間表的外鍵
-    )
-    private Set<Amenity> amenities = new HashSet<>(); // 使用 Set 避免重複
+	// Constructor
+	public RoomType() {
 
-    @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<RoomAvailability> roomAvailabilities;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public RoomType(String rname, BigDecimal price, String description, Integer size, String view, String imgUrl,
+			Boolean isCanceled, Integer quantity, Integer bedCount, String bedType, Integer capacity) {
+		this.rname = rname;
+		this.price = price;
+		this.description = description;
+		this.size = size;
+		this.view = view;
+		this.imgUrl = imgUrl;
+		this.isCanceled = isCanceled;
+		this.quantity = quantity;
+		this.bedCount = bedCount;
+		this.bedType = bedType;
+		this.capacity = capacity;
+	}
+
+	// -------------------------------------
+	@ManyToOne
+	@JoinColumn(name = "hotel_id")
+	private Hotel hotel;
+
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "room_amenities", // 中間表的名稱
+			joinColumns = @JoinColumn(name = "room_type_id"), // 本實體 (RoomType) 在中間表的外鍵
+			inverseJoinColumns = @JoinColumn(name = "amenity_id") // 另一實體 (Amenity) 在中間表的外鍵
+	)
+	private Set<Amenity> amenities = new HashSet<>(); // 使用 Set 避免重複
+
+	@OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<RoomAvailability> availabilities;
+
+	// Getters and Setters
+	public Long getId() {
+		return id;
+	}
 
     public void setId(Long id) {
         this.id = id;
@@ -139,13 +163,13 @@ public class RoomType {
         this.imgUrl = imgUrl;
     }
 
-    public Boolean getCanceled() {
-        return isCanceled;
-    }
+	public Boolean getIsCanceled() {
+		return isCanceled;
+	}
 
-    public void setCanceled(Boolean canceled) {
-        isCanceled = canceled;
-    }
+	public void setIsCanceled(Boolean isCanceled) {
+		this.isCanceled = isCanceled;
+	}
 
     public Integer getQuantity() {
         return quantity;
@@ -187,11 +211,20 @@ public class RoomType {
         this.amenities = amenities;
     }
 
-    public List<RoomAvailability> getRoomAvailabilities() {
-        return roomAvailabilities;
-    }
 
-    public void setRoomAvailabilities(List<RoomAvailability> roomAvailabilities) {
-        this.roomAvailabilities = roomAvailabilities;
-    }
+	public List<RoomAvailability> getAvailabilities() {
+		return availabilities;
+	}
+	public void setAvailabilities(List<RoomAvailability> availabilities) {
+		this.availabilities = availabilities;
+	}
+
+
+	// -------------------------------------
+	// @Override
+	// public String toString() {
+	// return "RoomType{" + "id=" + id + ", hotelId=" + hotel + ", rname='" + rname
+	// + '\'' + ", price=" + price
+	// + ", size=" + size + ", quantity=" + quantity + '}';
+	// }
 }

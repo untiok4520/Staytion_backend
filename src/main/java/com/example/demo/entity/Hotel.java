@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import java.util.List;
-import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -20,8 +19,6 @@ import jakarta.persistence.Table;
 public class Hotel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-
-	@Column(name = "id")
 	private Long id;
 
 	@Column(name = "hname")
@@ -30,11 +27,11 @@ public class Hotel {
 	@Column(name = "address")
 	private String address;
 
-	@Column(name = "description")
-	private String description;
-
 	@Column(name = "tel")
 	private String tel;
+
+	@Column(name = "description")
+	private String description;
 
 	@Column(name = "latitude")
 	private Double latitude;
@@ -42,6 +39,22 @@ public class Hotel {
 	@Column(name = "longitude")
 	private Double longitude;
 
+	// Constructor
+	public Hotel() {
+
+	}
+
+	public Hotel(String hname, String address, String tel, String description, Double latitude, Double longitude) {
+		this.hname = hname;
+		this.address = address;
+		this.tel = tel;
+		this.description = description;
+		this.latitude = latitude;
+		this.longitude = longitude;
+
+	}
+
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}
@@ -66,20 +79,20 @@ public class Hotel {
 		this.address = address;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public String getTel() {
 		return tel;
 	}
 
 	public void setTel(String tel) {
 		this.tel = tel;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Double getLatitude() {
