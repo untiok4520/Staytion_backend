@@ -19,26 +19,42 @@ import com.example.demo.dto.request.RoomTypeRequestDto;
 import com.example.demo.dto.response.RoomTypeResponseDto;
 import com.example.demo.service.ArvinRoomTypeService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/api/admin/roomTypes")
 @CrossOrigin
+@Tag(name = "Admin RoomType Management", description = "後台房型管理 API")
 public class ArvinRoomTypeController {
 
     @Autowired
     private ArvinRoomTypeService arvinRoomTypeService;
 
+    @Operation(
+        summary = "取得所有房型",
+        description = "回傳所有房型的清單，不包含分頁或過濾條件",
+        operationId = "getAllRoomTypes"
+    )
     @GetMapping
     public List<RoomTypeResponseDto> getAll() {
         return arvinRoomTypeService.getAllRoomTypes();
     }
 
-    // 查詢指定飯店的房型
+    @Operation(
+        summary = "取得指定飯店的房型清單",
+        description = "根據飯店 ID，回傳該飯店所擁有的所有房型",
+        operationId = "getRoomTypesByHotelId"
+    )
     @GetMapping("/hotel/{hotelId}")
     public List<RoomTypeResponseDto> getByHotel(@PathVariable Long hotelId) {
         return arvinRoomTypeService.getRoomTypesByHotel(hotelId);
     }
 
-    // 分頁與搜尋（關鍵字）
+    @Operation(
+        summary = "搜尋房型（關鍵字 + 分頁）",
+        description = "可根據關鍵字搜尋房型名稱，並支援分頁查詢功能",
+        operationId = "searchRoomTypes"
+    )
     @GetMapping("/search")
     public Page<RoomTypeResponseDto> searchRoomTypes(
             @RequestParam(defaultValue = "") String keyword,
@@ -47,45 +63,62 @@ public class ArvinRoomTypeController {
         return arvinRoomTypeService.search(keyword, page, size);
     }
 
-    // 新增
+    @Operation(
+        summary = "新增房型",
+        description = "建立一筆新的房型資料，需提供飯店 ID、房型名稱、價格、床型等必要欄位",
+        operationId = "createRoomType"
+    )
     @PostMapping
     public RoomTypeResponseDto createOrUpdate(@RequestBody RoomTypeRequestDto dto) {
         return arvinRoomTypeService.saveRoomType(dto);
     }
 
-    // 更新
+    @Operation(
+        summary = "更新房型",
+        description = "根據房型 ID 修改現有房型的資訊，如價格、床型、數量等",
+        operationId = "updateRoomType"
+    )
     @PutMapping("/{id}")
     public RoomTypeResponseDto update(@PathVariable Long id, @RequestBody RoomTypeRequestDto dto) {
         return arvinRoomTypeService.updateRoomType(id, dto);
     }
 
-    // 刪除
+    @Operation(
+        summary = "刪除房型",
+        description = "根據房型 ID 刪除對應的房型資料，資料將從資料庫中移除",
+        operationId = "deleteRoomTypeById"
+    )
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         arvinRoomTypeService.deleteRoomType(id);
     }
 
-    // 查詢特定使用者房型總計
     /*
-     * @GetMapping("/summary/owner/{ownerId}")
-     * public List<RoomTypeSummaryDto> getSummaryByOwner(
-     * 
-     * @PathVariable Long ownerId,
-     * 
-     * @RequestParam String type
-     * ) {
-     * return roomTypeService.getOwnerRoomTypeSummary(ownerId, type);
-     * }
-     * 
-     * @GetMapping("/summary/owner/{ownerId}/combined")
-     * public RoomTypeSummaryDto getCombinedSummary(
-     * 
-     * @PathVariable Long ownerId,
-     * 
-     * @RequestParam String type
-     * ) {
-     * return roomTypeService.getCombinedRoomTypeSummary(ownerId, type);
-     * }
-     */
+    @Operation(
+        summary = "取得指定使用者的房型統計",
+        description = "根據擁有者 ID 以及統計類型，回傳房型的統計資訊",
+        operationId = "getRoomTypeSummaryByOwner"
+    )
+    @GetMapping("/summary/owner/{ownerId}")
+    public List<RoomTypeSummaryDto> getSummaryByOwner(
+        @PathVariable Long ownerId,
+        @RequestParam String type
+    ) {
+        return roomTypeService.getOwnerRoomTypeSummary(ownerId, type);
+    }
+
+    @Operation(
+        summary = "取得指定使用者的綜合房型統計",
+        description = "根據擁有者 ID 以及統計類型，回傳統整的房型統計資訊",
+        operationId = "getCombinedRoomTypeSummaryByOwner"
+    )
+    @GetMapping("/summary/owner/{ownerId}/combined")
+    public RoomTypeSummaryDto getCombinedSummary(
+        @PathVariable Long ownerId,
+        @RequestParam String type
+    ) {
+        return roomTypeService.getCombinedRoomTypeSummary(ownerId, type);
+    }
+    */
 }
      
