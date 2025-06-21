@@ -14,6 +14,9 @@ public class UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private FirebaseService firebaseService;
 
 	// 更新個人資料
 	public User updateUserProfile(String email, String firstName, String lastName, String password, String tel) {
@@ -29,13 +32,19 @@ public class UserService {
 		return userRepository.save(user);
 	}
 	
-	// 刪除使用者資料
 	public String deleteUser(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("找不到使用者"));
+	    User user = userRepository.findByEmail(email)
+	            .orElseThrow(() -> new RuntimeException("找不到使用者"));
 
-        // 刪除用戶
-        userRepository.delete(user);
-        return "用戶已刪除";
-    }
+	    // 刪除 Firebase 帳號（如有）
+	    firebaseService.deleteFirebaseUser(email); // 可選
+
+	    // 刪除資料庫中的使用者
+	    userRepository.delete(user);
+
+	    return "用戶已刪除";
+	}
+
+	
+	
 }

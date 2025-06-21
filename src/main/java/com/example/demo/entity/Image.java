@@ -16,17 +16,17 @@ public class Image {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+    private Long id;
 
-	@Column(name = "img_url")
-	private String imgUrl;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hotel_id")
+    private Hotel hotel;
 
-	@Column(name = "is_cover")
-	private Boolean isCover;
+    @Column(name = "img_url")
+    private String imgUrl;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "hotel_id")
-	private Hotel hotel;
+    @Column(name = "is_cover")
+    private Boolean isCover;
 
 	// Constructor
 	public Image() {
@@ -37,43 +37,36 @@ public class Image {
 		this.isCover = isCover;
 	}
 
-	// Getters and Setters
-	public Integer getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getImgUrl() {
-		return imgUrl;
-	}
+    public Hotel getHotel() {
+        return hotel;
+    }
 
-	public void setImgUrl(String imgUrl) {
-		this.imgUrl = imgUrl;
-	}
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
 
-	public Boolean getIsCover() {
-		return isCover;
-	}
+    public String getImgUrl() {
+        return imgUrl;
+    }
 
-	public void setIsCover(Boolean isCover) {
-		this.isCover = isCover;
-	}
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 
-	public Hotel getHotel() {
-		return hotel;
-	}
+    public Boolean getIsCover() {
+        return isCover;
+    }
 
-	public void setHotel(Hotel hotel) {
-		this.hotel = hotel;
-	}
+    public void setIsCover(Boolean isCover) {
+        this.isCover = isCover;
+    }
 
-	// @Override
-	// public String toString() {
-	// return "Image{" + "id=" + id + ", hotelId=" + hotel.getId() + ", imgUrl='" +
-	// imgUrl + '\'' + ", isCover=" + isCover
-	// + '}';
-	// }
 }

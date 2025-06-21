@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,13 +14,15 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "amenities")
 public class Amenity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(name = "aname", unique = true)
-	private String aname;
+    @Column(name = "aname", unique = true)
+    private String aname;
 
+    @ManyToMany(mappedBy = "amenities")
+    private List<RoomType> roomTypes = new ArrayList<>();
 	public Amenity() {
 
 	}
@@ -29,38 +31,34 @@ public class Amenity {
 		this.aname = aname;
 	}
 
-	@ManyToMany(mappedBy = "amenities") // mappedBy 指向 RoomType 中定義的 "amenities" 屬性
-	private Set<RoomType> roomTypes = new HashSet<>();
+    public Long getId() {
+        return id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public String getAname() {
+        return aname;
+    }
 
-	public String getAname() {
-		return aname;
-	}
+    public void setAname(String aname) {
+        this.aname = aname;
+    }
 
-	public void setAname(String aname) {
-		this.aname = aname;
-	}
+    public List<RoomType> getRoomTypes() {
+        return roomTypes;
+    }
 
-	public Set<RoomType> getRoomTypes() {
-		return roomTypes;
-	}
+    public void setRoomTypes(List<RoomType> roomTypes) {
+        this.roomTypes = roomTypes;
+    }
 
-	public void setRoomTypes(Set<RoomType> roomTypes) {
-		this.roomTypes = roomTypes;
-	}
-	
-
-	// -------------------------------------
-	// @Override
-	// public String toString() {
-	// return "Amenity{" + "id=" + id + ", aname='" + aname + '\'' + '}';
-	// }
+    // -------------------------------------
+    // @Override
+    // public String toString() {
+    // return "Amenity{" + "id=" + id + ", aname='" + aname + '\'' + '}';
+    // }
 
 }

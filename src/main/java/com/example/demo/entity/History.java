@@ -19,18 +19,18 @@ public class History {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column (name="check_in_date")
+
+	@Column(name = "check_in_date")
 	private LocalDate checkInDate;
 
-	@Column (name="check_out_date")
+	@Column(name = "check_out_date")
 	private LocalDate checkOutDate;
-	
+
 	private Integer adults;
-	
+
 	private Integer kids;
-	
-	@Column (name="search_time")
+
+	@Column(name = "search_time")
 	private LocalDateTime searchTime;
 
 	public Long getId() {
@@ -80,16 +80,15 @@ public class History {
 	public void setSearchTime(LocalDateTime searchTime) {
 		this.searchTime = searchTime;
 	}
-	
-	
-// -------------------------------------------------------	
-	
+
+	// -------------------------------------------------------
+
 	@ManyToOne
-	@JoinColumn (name="user_id")
+	@JoinColumn(name = "user_id")
 	private User user;
-	
+
 	@ManyToOne
-	@JoinColumn (name="city_id")
+	@JoinColumn(name = "city_id")
 	private City city;
 
 	public User getUser() {
@@ -107,6 +106,5 @@ public class History {
 	public void setCity(City city) {
 		this.city = city;
 	}
-	
-	
+
 }

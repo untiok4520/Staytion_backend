@@ -1,10 +1,11 @@
 package com.example.demo.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,8 +58,11 @@ public class UserOrderService {
 	}
 
 	// 查某使用者的訂單（前台）
-	public List<OrderResponseDto> getOrdersByUserId(Long userId) {
-		return orderRepository.findByUserId(userId).stream().map(OrderMapper::toDto).toList();
+//	public List<OrderResponseDto> getOrdersByUserId(Long userId) {
+//		return orderRepository.findByUserId(userId).stream().map(OrderMapper::toDto).toList();
+//	}
+	public Page<OrderResponseDto> getOrdersByUserId(Long userId, Pageable pageable) {
+		return orderRepository.findByUserId(userId, pageable).map(OrderMapper::toDto);
 	}
 
 	// 查詢單筆訂單（個人訂單）
