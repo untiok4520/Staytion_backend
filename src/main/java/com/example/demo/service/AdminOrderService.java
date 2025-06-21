@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ import com.example.demo.entity.Order;
 import com.example.demo.entity.Payment;
 import com.example.demo.mapper.OrderMapper;
 import com.example.demo.repository.OrderRepository;
+import com.example.demo.repository.PaymentRepository;
 
 @Service
 public class AdminOrderService {
@@ -26,6 +29,11 @@ public class AdminOrderService {
 	// 查全部訂單
 	public List<OrderResponseDto> getAllOrders() {
 		return orderRepository.findAll().stream().map(OrderMapper::toDto).toList();
+	}
+
+	// 查某使用者的訂單（後台）
+	public Page<OrderResponseDto> getOrdersByHotelOwner(Long ownerId, Pageable pageable) {
+		return orderRepository.findOrdersByHotelOwner(ownerId, pageable).map(OrderMapper::toDto);
 	}
 
 	// 查某飯店所有訂單（後台）
@@ -46,10 +54,25 @@ public class AdminOrderService {
 
 	// 修改訂單狀態
 	@Transactional
-	public OrderResponseDto updateStatus(Long id, String status) {
+	public OrderResponseDto updateStatus(Long id, Order.OrderStatus status) {
 		Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
 
-		order.setStatus(Order.OrderStatus.valueOf(status));
+		order.setStatus(status);
+		return OrderMapper.toDto(order);
+	}
+
+	// 修改訂單付款狀態
+	@Transactional
+	public OrderResponseDto updatePaymentStatus(Long orderId, Payment.PaymentStatus status) {
+		Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+
+		Payment payment = order.getPayment();
+		if (payment == null) {
+			throw new RuntimeException("No payment found for this order");
+		}
+
+		payment.setStatus(status);
+
 		return OrderMapper.toDto(order);
 	}
 
@@ -69,6 +92,32 @@ public class AdminOrderService {
 
 	// 訂單趨勢
 	public List<Map<String, Object>> getOrderTrend(LocalDate start, LocalDate end) {
-		return orderRepository.getOrderTrend(start.atStartOfDay(), end.plusDays(1).atStartOfDay());
+		LocalDateTime startDateTime = start.atStartOfDay();
+		LocalDateTime endDateTime = end.plusDays(1).atStartOfDay(); // 包含整天
+
+		List<Map<String, Object>> rawData = orderRepository.getOrderTrend(startDateTime, endDateTime);
+
+		// 將資料轉為 Map<LocalDate, Long>
+		Map<LocalDate, Long> trendMap = new HashMap<>();
+		for (Map<String, Object> row : rawData) {
+			LocalDate date = ((java.sql.Date) row.get("date")).toLocalDate();
+			Long count = (Long) row.get("orderCount");
+			trendMap.put(date, count);
+		}
+
+		// 建立完整日期範圍，補 0
+		List<Map<String, Object>> result = new ArrayList<>();
+		LocalDate current = start;
+		while (!current.isAfter(end)) {
+			Long count = trendMap.getOrDefault(current, 0L);
+			Map<String, Object> entry = new HashMap<>();
+			entry.put("date", current);
+			entry.put("orderCount", count);
+			result.add(entry);
+			current = current.plusDays(1);
+		}
+
+		return result;
 	}
+
 }

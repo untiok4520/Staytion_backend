@@ -16,9 +16,20 @@ import com.example.demo.entity.Payment;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Order> findByUserId(Long userId);
+
 	Page<Order> findByUserId(Long userId, Pageable pageable);
 
+//	取得擁有飯店的所有訂單
+	@Query("""
+			    SELECT DISTINCT o FROM Order o
+			    JOIN o.orderItems i
+			    JOIN i.roomType rt
+			    JOIN rt.hotel h
+			    WHERE h.owner.id = :ownerId
+			""")
+	Page<Order> findOrdersByHotelOwner(@Param("ownerId") Long ownerId, Pageable pageable);
 
+//	取得某飯店所有訂單
 	@Query("SELECT DISTINCT o FROM Order o JOIN o.orderItems i WHERE i.roomType.hotel.id = :hotelId")
 	List<Order> findByRoomTypeHotelId(@Param("hotelId") Long hotelId);
 
@@ -62,11 +73,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 //  訂單趨勢
 	@Query("""
-			    SELECT NEW map(o.createdAt as date, COUNT(o.id) as orderCount)
+			    SELECT NEW map(FUNCTION('DATE', o.createdAt) as date, COUNT(o.id) as orderCount)
 			    FROM Order o
 			    WHERE o.createdAt BETWEEN :start AND :end
-			    GROUP BY o.createdAt
-			    ORDER BY o.createdAt
+			    GROUP BY FUNCTION('DATE', o.createdAt)
+			    ORDER BY FUNCTION('DATE', o.createdAt)
 			""")
 	List<Map<String, Object>> getOrderTrend(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 

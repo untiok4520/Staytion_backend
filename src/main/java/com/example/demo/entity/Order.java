@@ -41,7 +41,7 @@ public class Order {
 
 	// 枚舉類型映射
 	@Enumerated(EnumType.STRING)
-	@Column(name = "status", columnDefinition = "ENUM('CONFIRMED','CANCELED') DEFAULT 'CONFIRMED'")
+	@Column(name = "status", columnDefinition = "ENUM('CONFIRMED','CANCELED','PENDING') DEFAULT 'PENDING'")
 	private OrderStatus status = OrderStatus.CONFIRMED;
 
 	// Constructor
@@ -64,14 +64,13 @@ public class Order {
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OrderItem> orderItems;
-	
+
 	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
 	private Payment payment;
 
-
 	// -------------------------------------
 	public enum OrderStatus {
-		CONFIRMED, CANCELED
+		CONFIRMED, CANCELED, PENDING
 	}
 
 	// Getters and Setters
@@ -145,7 +144,9 @@ public class Order {
 
 	public void setPayment(Payment payment) {
 		this.payment = payment;
+		if (payment != null) {
+			payment.setOrder(this);
+		}
 	}
 
-	
 }
