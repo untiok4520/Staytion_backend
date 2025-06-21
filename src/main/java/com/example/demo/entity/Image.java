@@ -28,24 +28,14 @@ public class Image {
     @Column(name = "is_cover")
     private Boolean isCover;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_type_id")
-    private RoomType roomType;
-
 	// Constructor
 	public Image() {
 	}
-    public RoomType getRoomType() {
-        return roomType;
-    }
 
 	public Image(String imgUrl, Boolean isCover) {
 		this.imgUrl = imgUrl;
 		this.isCover = isCover;
 	}
-    public void setRoomType(RoomType roomType) {
-        this.roomType = roomType;
-    }
 
     public Long getId() {
         return id;

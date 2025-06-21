@@ -178,7 +178,7 @@ public class HotelServiceImpl implements HotelService {
         dto.setScore(score);
 
         // 查飯店圖片
-        List<ImageDTO> imageDTOs = imageRepository.findByHotelId(hotelId)
+        List<ImageDTO> imageDTOs = imageRepository.findByHotelIdAndIsCover(hotelId, false)
                 .stream().map(img -> {
                     ImageDTO imgDTO = new ImageDTO();
                     imgDTO.setId(img.getId());
@@ -206,7 +206,7 @@ public class HotelServiceImpl implements HotelService {
                     rtdto.setCapacity(roomType.getCapacity());
 
                     // 查房型圖片
-                    List<ImageDTO> roomImages = imageRepository.findByRoomTypeId(roomType.getId())
+                    List<ImageDTO> roomImages = imageRepository.findByHotelIdAndIsCover(hotelId, true)
                             .stream().map(img -> {
                                 ImageDTO imgDTO = new ImageDTO();
                                 imgDTO.setId(img.getId());
