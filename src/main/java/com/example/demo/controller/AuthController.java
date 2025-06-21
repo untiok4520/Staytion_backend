@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -137,5 +139,14 @@ public class AuthController {
 				request.getPassword(), request.getTel());
 		return ResponseEntity.ok(updatedUser);
 	}
+	
+	// 刪除使用者
+	@DeleteMapping("/auth/delete-account")
+	public ResponseEntity<?> deleteAccount(@RequestHeader("Authorization") String token) {
+	    String email = jwtService.parseToken(token.substring(7));
+	    String message = userService.deleteUser(email);
+	    return ResponseEntity.ok(Map.of("message", message));
+	}
 
+	
 }

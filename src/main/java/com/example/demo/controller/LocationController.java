@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +27,10 @@ public class LocationController {
     @Autowired
     private DistrictRepository districtRepository;
 
-    //所有城市
-    @GetMapping("/cities")
+    @Operation(
+            summary = "查詢所有城市",
+            description = "取得所有城市清單,內容包含:label(城市名稱)、value(城市名稱)"
+    )    @GetMapping("/cities")
     public List<Map<String, String>> getCities() {
         List<City> cities = cityRepository.findAll();
 
@@ -39,6 +42,10 @@ public class LocationController {
         }).collect(Collectors.toList());
     }
 
+    @Operation(
+            summary = "查詢指定城市的所有區域",
+            description = "根據城市名稱查詢該城市的所有區域,內容包含:label(區域名稱)、value(區域名稱)"
+    )
     @GetMapping("/areas")
     public List<Map<String, String>> getAreaByCity(@RequestParam("city") String cityName) {
         List<District> districts = districtRepository.findByCity_Cname(cityName);
