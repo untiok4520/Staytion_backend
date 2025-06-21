@@ -1,16 +1,8 @@
 package com.example.demo.entity;
 
-import java.util.List;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "hotels")
@@ -147,7 +139,16 @@ public class Hotel {
 	public void setRoomTypes(List<RoomType> roomTypes) {
 		this.roomTypes = roomTypes;
 	}
+	@OneToMany(mappedBy = "hotel")
+	private List<Image> images;
 
+	public List<Image> getImages() {
+		return images;
+	}
+
+	public void setImages(List<Image> images) {
+		this.images = images;
+	}
 	// -------------------------------------
 	// // 要再討論看看要不要加
 	// private Double rating;

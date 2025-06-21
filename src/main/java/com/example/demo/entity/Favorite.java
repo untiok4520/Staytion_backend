@@ -12,7 +12,7 @@ public class Favorite {
 
     @Id // 標記為主鍵
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 設定主鍵的生成策略為自增
-    private Integer id; // 單一主鍵
+    private Long id; // 單一主鍵
 
     @Column(name = "user_id", nullable = false) // 映射到 user_id 欄位，且不允許為空
     private Long userId; // 外鍵，但在此 Entity 中僅作為普通屬性
@@ -57,11 +57,11 @@ public class Favorite {
 
 
     // --- Getters and Setters ---
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
