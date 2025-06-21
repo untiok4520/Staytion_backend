@@ -2,20 +2,21 @@ package com.example.demo.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.dto.HotelDetailDTO;
+import com.example.demo.dto.HotelSearchRequest;
+import com.example.demo.dto.HotelSearchResult;
+import org.springframework.data.domain.Page;import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.projection.HotelProjection;
 import com.example.demo.repository.HotelRepository;
 
 @Service
-public class HotelService {
+public interface HotelService {
+    List<HotelProjection> getTopHotels();
 
-	@Autowired
-	private HotelRepository hotelRepository;
-	
-	// 查詢精選飯店資料
-	public List<HotelProjection> getTopHotels() {
-		return hotelRepository.findTopHotels();
-	}
+    Page<HotelSearchRequest> searchHotels(HotelSearchResult dto, int page, int size);
+
+    HotelDetailDTO getHotelDetail(Long hotelId);
+    // ... 其他方法
 }

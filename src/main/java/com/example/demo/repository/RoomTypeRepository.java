@@ -14,7 +14,7 @@ import com.example.demo.entity.RoomType;
 import jakarta.persistence.LockModeType;
 
 public interface RoomTypeRepository extends JpaRepository<RoomType, Long> {
-	List<RoomType> findByHotelId(Long hotelId);
+    List<RoomType> findByHotelId(Long hotelId);
 
 	Page<RoomType> findByRnameContaining(String keyword, Pageable pageable);
 
@@ -23,8 +23,8 @@ public interface RoomTypeRepository extends JpaRepository<RoomType, Long> {
 	@Query("SELECT r FROM RoomType r WHERE r.id IN :ids")
 	List<RoomType> findAllByIdWithLock(@Param("ids") List<Long> ids);
 
-	
-	
+
+
 //	查詢房型總和
 /*
 	@Query("""
@@ -60,6 +60,7 @@ public interface RoomTypeRepository extends JpaRepository<RoomType, Long> {
 		    @Param("rname") String rname
 		);
 */
-	
-	
+
+
+    List<RoomType> findByHotelIdAndCapacityGreaterThanEqual(Long hotelId, Integer capacity);
 }
