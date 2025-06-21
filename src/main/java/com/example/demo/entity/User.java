@@ -3,8 +3,10 @@ package com.example.demo.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,10 +20,10 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "first_Name")
+	@Column(name = "first_name")
 	private String firstName;
 
-	@Column(name = "last_Name")
+	@Column(name = "last_name")
 	private String lastName;
 
 	@Column(name = "email", unique = true)
@@ -106,8 +108,7 @@ public class User {
 	}
 
 	// -------------------------------------
-	@OneToMany
-	// private List<Hotel> hotels = new ArrayList<>();
+	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Hotel> hotels;
 
 	public List<Hotel> getHotels() {
