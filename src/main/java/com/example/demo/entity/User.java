@@ -3,8 +3,11 @@ package com.example.demo.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,13 +21,13 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "first_Name")
+	@Column(name = "first_name")
 	private String firstName;
 
-	@Column(name = "last_Name")
+	@Column(name = "last_name")
 	private String lastName;
 
-	@Column(name = "email", unique = true)
+	@Column(unique = true)
 	private String email;
 
 	@Column(name = "password")
@@ -36,18 +39,18 @@ public class User {
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
+	// 建構子
 	public User() {
-
 	}
 
 	public User(String firstName, String lastName, String email, String password, String tel, LocalDateTime createdAt) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.password = password;
-		this.tel = tel;
-		this.createdAt = createdAt;
-	}
+	        this.firstName = firstName;
+	        this.lastName = lastName;
+	        this.email = email;
+	        this.password = password;
+	        this.tel = tel;
+	        this.createdAt = createdAt;
+	    }
 
 	public Long getId() {
 		return id;
@@ -106,8 +109,8 @@ public class User {
 	}
 
 	// -------------------------------------
-	@OneToMany
-	// private List<Hotel> hotels = new ArrayList<>();
+
+	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Hotel> hotels;
 
 	public List<Hotel> getHotels() {

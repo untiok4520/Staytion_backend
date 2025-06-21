@@ -13,19 +13,19 @@ public class Hotel {
 
 	@Column(name = "hname")
 	private String hname;
-	
+
 	@Column(name = "address")
 	private String address;
-	
+
 	@Column(name = "tel")
 	private String tel;
-	
+
 	@Column(name = "description")
 	private String description;
-	
+
 	@Column(name = "latitude")
 	private Double latitude;
-	
+
 	@Column(name = "longitude")
 	private Double longitude;
 
@@ -101,10 +101,25 @@ public class Hotel {
 		this.longitude = longitude;
 	}
 
-	// -------------------------------------
-	@ManyToOne
+	// ------------------------------
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "district_id")
 	private District district;
+
+	// -------------------------------
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "owner_id")
+	private User owner;
+
+	// ------------------
+	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<RoomType> roomTypes;
+
+	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Image> images;
+
+	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Review> reviews;
 
 	public District getDistrict() {
 		return district;
@@ -114,23 +129,13 @@ public class Hotel {
 		this.district = district;
 	}
 
-	// -------------------------------------
-	@ManyToOne
-	@JoinColumn(name = "owner_id")
-	private User owner;
-
 	public User getOwner() {
 		return owner;
 	}
 
 	public void setOwner(User owner) {
 		this.owner = owner;
-
 	}
-
-	// -------------------------------------
-	@OneToMany(mappedBy = "hotel")
-	private List<RoomType> roomTypes;
 
 	public List<RoomType> getRoomTypes() {
 		return roomTypes;
@@ -139,8 +144,6 @@ public class Hotel {
 	public void setRoomTypes(List<RoomType> roomTypes) {
 		this.roomTypes = roomTypes;
 	}
-	@OneToMany(mappedBy = "hotel")
-	private List<Image> images;
 
 	public List<Image> getImages() {
 		return images;
@@ -161,6 +164,7 @@ public class Hotel {
 	// this.rating = rating;
 	// }
 
+
 	// -------------------------------------
 	// @Override
 	// public String toString() {
@@ -170,4 +174,13 @@ public class Hotel {
 	// longitude=" + longitude
 	// + ", ownerId=" + owner.getId() + '}';
 	// }
+
+
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
 }

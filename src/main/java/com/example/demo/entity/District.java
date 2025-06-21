@@ -2,8 +2,10 @@ package com.example.demo.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,14 +15,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "districts")
+@Table (name="districts")
 public class District {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "dname")
-	private String dname;
+    private String dname;
 
 	public Long getId() {
 		return id;
@@ -59,8 +60,8 @@ public class District {
 		this.city = city;
 	}
 
-	// -------------------------------------
-	@OneToMany(mappedBy = "district")
+	// -------------------------
+	@OneToMany(mappedBy = "district", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Hotel> hotels;
 
 	public List<Hotel> getHotels() {
@@ -70,12 +71,4 @@ public class District {
 	public void setHotels(List<Hotel> hotels) {
 		this.hotels = hotels;
 	}
-
-	// -------------------------------------
-	// @Override
-	// public String toString() {
-	// return "District{" + "id=" + id + ", dname='" + dname + '\'' + ", cityId=" +
-	// city.getId() + '}';
-	// }
-
 }
