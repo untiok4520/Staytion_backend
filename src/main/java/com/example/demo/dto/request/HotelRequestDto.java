@@ -1,15 +1,16 @@
 package com.example.demo.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class HotelRequestDto {
 	private String hotelname;
+
+	@Schema(description = "地址（後端自動轉換為經緯度）")
 	private String address;
+
 	private String tel;
 	private String description;
-	private Double latitude;
-	private Double longitude;
-
 	private Long ownerId;
-	private Long districtId;
 
 	public String getHotelname() {
 		return hotelname;
@@ -43,36 +44,12 @@ public class HotelRequestDto {
 		this.description = description;
 	}
 
-	public Double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
-
-	public Double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
-	}
-
 	public Long getOwnerId() {
 		return ownerId;
 	}
 
 	public void setOwnerId(Long ownerId) {
 		this.ownerId = ownerId;
-	}
-
-	public Long getDistrictId() {
-		return districtId;
-	}
-
-	public void setDistrictId(Long districtId) {
-		this.districtId = districtId;
 	}
 
 }
