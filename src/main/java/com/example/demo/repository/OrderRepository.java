@@ -15,7 +15,7 @@ import com.example.demo.entity.Order;
 import com.example.demo.entity.Payment;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-	List<Order> findByUserId(Long userId);
+    List<Order> findByUserId(Long userId);
 
 	Page<Order> findByUserId(Long userId, Pageable pageable);
 
@@ -33,8 +33,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	@Query("SELECT DISTINCT o FROM Order o JOIN o.orderItems i WHERE i.roomType.hotel.id = :hotelId")
 	List<Order> findByRoomTypeHotelId(@Param("hotelId") Long hotelId);
 
-//  狀態日期關鍵字篩選
-	@Query("""
+    //  狀態日期關鍵字篩選
+    @Query("""
 			    SELECT DISTINCT o FROM Order o
 			    JOIN o.orderItems i
 			    JOIN i.roomType rt
@@ -61,15 +61,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			@Param("paymentMethod") Payment.PaymentMethod paymentMethod,
 			@Param("paymentStatus") Payment.PaymentStatus paymentStatus, Pageable pageable);
 
-//  月報表
-	@Query("""
+    //  月報表
+    @Query("""
 			    SELECT NEW map(FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') as month, SUM(o.totalPrice) as totalRevenue)
 			    FROM Order o
 			    WHERE FUNCTION('YEAR', o.createdAt) = :year
 			    GROUP BY FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m')
 			    ORDER BY FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m')
 			""")
-	List<Map<String, Object>> getMonthlyRevenue(@Param("year") int year);
+    List<Map<String, Object>> getMonthlyRevenue(@Param("year") int year);
 
 //  訂單趨勢
 	@Query("""
@@ -79,10 +79,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			    GROUP BY FUNCTION('DATE', o.createdAt)
 			    ORDER BY FUNCTION('DATE', o.createdAt)
 			""")
-	List<Map<String, Object>> getOrderTrend(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+    List<Map<String, Object>> getOrderTrend(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-//	是否已經訂過「同一房型」在「某個入住期間內」的訂單
-	@Query("""
+    //	是否已經訂過「同一房型」在「某個入住期間內」的訂單
+    @Query("""
 			    SELECT COUNT(o) > 0
 			    FROM Order o
 			    JOIN o.orderItems i
@@ -92,7 +92,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			      AND o.checkOutDate > :checkIn
 			      AND o.status = com.example.demo.entity.Order$OrderStatus.CONFIRMED
 			""")
-	boolean existsOverlappingOrder(@Param("userId") Long userId, @Param("roomTypeId") Long roomTypeId,
-			@Param("checkIn") LocalDate checkIn, @Param("checkOut") LocalDate checkOut);
+    boolean existsOverlappingOrder(@Param("userId") Long userId, @Param("roomTypeId") Long roomTypeId,
+                                   @Param("checkIn") LocalDate checkIn, @Param("checkOut") LocalDate checkOut);
 
 }
