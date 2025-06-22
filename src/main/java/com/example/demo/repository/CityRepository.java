@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,5 +24,7 @@ public interface CityRepository extends JpaRepository<City, Long> {
 	CityProjection findHotelCountByCityId(@Param("cid") Long cid);
 
 	Optional<City> findByCname(String cname);
+
+	List<City> findByCnameContainingIgnoreCase(String cname);
 
 }
