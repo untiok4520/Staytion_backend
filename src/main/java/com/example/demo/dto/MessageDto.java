@@ -1,11 +1,32 @@
 package com.example.demo.dto;
 
+import java.time.LocalDateTime;
+
 public class MessageDto {
+    private Long id;
+
     private Long senderId;
+    private String senderName;
+
     private Long receiverId;
-    private Long userId;
+
+    private Long chatRoomId;
+
     private Long hotelId;
+
     private String content;
+
+    private Boolean isRead;
+
+    private LocalDateTime sentAt;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getSenderId() {
         return senderId;
@@ -13,6 +34,14 @@ public class MessageDto {
 
     public void setSenderId(Long senderId) {
         this.senderId = senderId;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 
     public Long getReceiverId() {
@@ -23,12 +52,12 @@ public class MessageDto {
         this.receiverId = receiverId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getChatRoomId() {
+        return chatRoomId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setChatRoomId(Long chatRoomId) {
+        this.chatRoomId = chatRoomId;
     }
 
     public Long getHotelId() {
@@ -45,5 +74,21 @@ public class MessageDto {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Boolean getRead() {
+        return isRead;
+    }
+
+    public void setRead(Boolean read) {
+        isRead = read;
+    }
+
+    public LocalDateTime getSentAt() {
+        return sentAt;
+    }
+
+    public void setSentAt(LocalDateTime sentAt) {
+        this.sentAt = sentAt;
     }
 }
