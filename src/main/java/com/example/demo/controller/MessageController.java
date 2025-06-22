@@ -74,12 +74,33 @@ public class MessageController {
             MessageDto dto = new MessageDto();
             dto.setId(m.getId());
             dto.setSenderId(m.getSender().getId());
-            dto.setSenderName(m.getSender().getFirstName());
             dto.setReceiverId(m.getReceiver().getId());
             dto.setHotelId(m.getHotel().getId());
             dto.setChatRoomId(m.getChatRoom().getId());
             dto.setContent(m.getContent());
             dto.setSentAt(m.getSentAt());
+            dto.setRead(m.getIsRead());
+
+            //displayName邏輯
+            Long currentUserId = userId;
+            String displayName;
+            if (m.getSender().getId().equals(currentUserId)) {
+                // 我是發訊者 → 顯示對方資訊
+                if (m.getReceiver().getId().equals(m.getHotel().getOwner().getId())) {
+                    displayName = m.getHotel().getHname();
+                } else {
+                    displayName = m.getReceiver().getFirstName();
+                }
+            } else {
+                // 我是接收者 → 顯示發送者資訊
+                if (m.getSender().getId().equals(m.getHotel().getOwner().getId())) {
+                    displayName = m.getHotel().getHname();
+                } else {
+                    displayName = m.getSender().getFirstName();
+                }
+            }
+
+            dto.setDisplayName(displayName);
             return dto;
         }).toList();
     }

@@ -20,6 +20,8 @@ public class MessageDto {
 
     private LocalDateTime sentAt;
 
+    private String displayName;
+
     public Long getId() {
         return id;
     }
@@ -90,5 +92,13 @@ public class MessageDto {
 
     public void setSentAt(LocalDateTime sentAt) {
         this.sentAt = sentAt;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 }
