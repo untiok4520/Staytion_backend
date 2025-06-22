@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -126,7 +127,7 @@ public class Hotel {
 	private List<RoomType> roomTypes;
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Image> images;
+	private List<Image> images = new ArrayList<>();
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Review> reviews;

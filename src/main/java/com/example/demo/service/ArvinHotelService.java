@@ -5,14 +5,18 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.dto.ImageDTO;
 import com.example.demo.dto.request.HotelRequestDto;
 import com.example.demo.dto.response.HotelResponseDto;
 import com.example.demo.entity.District;
 import com.example.demo.entity.Hotel;
+import com.example.demo.entity.Image;
 import com.example.demo.entity.User;
 import com.example.demo.repository.DistrictRepository;
 import com.example.demo.repository.HotelRepository;
+import com.example.demo.repository.ImageRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.util.AddressParserService;
 import com.example.demo.util.GeocodingService;
@@ -30,6 +34,9 @@ public class ArvinHotelService {
     private DistrictRepository districtRepository;
     
     @Autowired
+    private ImageRepository imageRepository;
+    
+    @Autowired
     private AddressParserService addressParserService;
     
     @Autowired
@@ -43,7 +50,7 @@ public class ArvinHotelService {
 //                .collect(Collectors.toList());
 //    }
     
-    // 查詢指定飯店的房型
+    // 查詢指定使用者的飯店
     public List<HotelResponseDto> getHotelsByOwner(Long ownerId) {
         return hotelRepository.findByOwnerId(ownerId)
                 .stream()
@@ -72,6 +79,7 @@ public class ArvinHotelService {
         hotelRepository.deleteById(id);
     }
 
+    @Transactional
     private HotelResponseDto saveOrUpdate(Hotel hotel, HotelRequestDto dto) {
         hotel.setHname(dto.getHotelname());
         hotel.setAddress(dto.getAddress());
@@ -92,10 +100,30 @@ public class ArvinHotelService {
                     .orElseThrow(() -> new RuntimeException("Owner not found"));
             hotel.setOwner(owner);
         }
-
         
+        hotel = hotelRepository.save(hotel); // 先儲存 hotel 以便關聯
+        final Hotel savedHotel = hotel;
 
-        return toDto(hotelRepository.save(hotel));
+        hotel.getImages().clear();
+
+        if (dto.getImages() != null && !dto.getImages().isEmpty()) {
+            List<Image> newImages = dto.getImages().stream()
+                .map(imgDto -> {
+                    Image img = new Image();
+                    img.setHotel(savedHotel);
+                    img.setImgUrl(imgDto.getImgUrl());
+                    img.setIsCover(imgDto.getIsCover() != null && imgDto.getIsCover());
+                    return img;
+                })
+                .collect(Collectors.toList());
+            hotel.getImages().addAll(newImages);
+        }
+
+        // 再存一次 hotel，JPA 會 cascade persist 新的圖片
+        hotel = hotelRepository.save(hotel);
+
+//        return toDto(hotelRepository.save(hotel));
+        return toDto(hotel);
     }
 
     private HotelResponseDto toDto(Hotel hotel) {
@@ -118,6 +146,34 @@ public class ArvinHotelService {
             dto.setDistrictName(hotel.getDistrict().getDname());
         }
 
+        if (hotel.getImages() != null && !hotel.getImages().isEmpty()) {
+            List<ImageDTO> imageDtos = hotel.getImages().stream()
+                    .map(img -> {
+                        ImageDTO i = new ImageDTO();
+                        i.setId(img.getId());
+                        if (img.getHotel() != null) {
+                            i.setHotelId(img.getHotel().getId());
+                        }
+                        i.setImgUrl(img.getImgUrl());
+                        i.setIsCover(img.getIsCover());
+                        return i;
+                    })
+                    .collect(Collectors.toList());
+            dto.setImages(imageDtos);
+
+            // 額外處理：轉為 imgUrls (List<String>) 及主圖 mainImgUrl
+            List<String> imgUrls = imageDtos.stream()
+                    .map(ImageDTO::getImgUrl)
+                    .collect(Collectors.toList());
+            dto.setImgUrls(imgUrls);
+
+            imageDtos.stream()
+                    .filter(ImageDTO::getIsCover)
+                    .findFirst()
+                    .ifPresent(mainImg -> dto.setMainImgUrl(mainImg.getImgUrl()));
+        }
+
+        
         return dto;
     }
 }

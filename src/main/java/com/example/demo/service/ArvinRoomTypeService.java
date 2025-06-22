@@ -39,6 +39,13 @@ public class ArvinRoomTypeService {
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
+    // 查詢指定房型
+    public RoomTypeResponseDto getRoomTypeById(Long id) {
+        RoomType roomType = roomTypeRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("RoomType not found"));
+
+        return toDto(roomType); 
+    }
 
     // 查詢指定飯店的房型
     public List<RoomTypeResponseDto> getRoomTypesByHotel(Long hotelId) {
