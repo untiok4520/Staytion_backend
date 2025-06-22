@@ -1,5 +1,10 @@
 package com.example.demo.dto.request;
 
+import java.util.List;
+
+import com.example.demo.dto.AmenityDTO;
+import com.example.demo.dto.ImageDTO;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class HotelRequestDto {
@@ -11,6 +16,8 @@ public class HotelRequestDto {
 	private String tel;
 	private String description;
 	private Long ownerId;
+	private List<ImageDTO> images;
+//	private List<AmenityDTO> amenities;
 
 	public String getHotelname() {
 		return hotelname;
@@ -52,4 +59,12 @@ public class HotelRequestDto {
 		this.ownerId = ownerId;
 	}
 
+	public List<ImageDTO> getImages() {
+		return images;
+	}
+
+	public void setImages(List<ImageDTO> images) {
+		this.images = images;
+	}
+	
 }

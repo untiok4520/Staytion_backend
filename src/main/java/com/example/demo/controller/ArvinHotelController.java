@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/admin/hotels")
-@CrossOrigin
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @Tag(name = "Admin Hotel Management", description = "後台飯店管理 API")
 public class ArvinHotelController {
 
