@@ -69,6 +69,7 @@ public class ArvinHotelService {
         return saveOrUpdate(hotel, dto);
     }
 
+    @Transactional
     public HotelResponseDto updateHotel(Long id, HotelRequestDto dto) {
         Hotel hotel = hotelRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Hotel not found"));
@@ -103,6 +104,8 @@ public class ArvinHotelService {
         
         hotel = hotelRepository.save(hotel); // 先儲存 hotel 以便關聯
         final Hotel savedHotel = hotel;
+
+        imageRepository.deleteByHotel(hotel);
 
         hotel.getImages().clear();
 
