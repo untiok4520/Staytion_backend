@@ -35,12 +35,13 @@ public class MessageController {
     public List<Message> getChatHistory(@RequestParam Long senderId,
                                         @RequestParam Long receiverId,
                                         @RequestParam Long hotelId
-                                        ){
+    ) {
         return messageRepository.findChatHistory(senderId, receiverId, hotelId);
     }
+
     @PostMapping
     public Message sendMessage(@RequestBody MessageDto dto) {
-        ChatRoom chatRoom = chatRoomService.findOrCreate(dto.getUserId(), dto.getHotelId());
+        ChatRoom chatRoom = chatRoomService.findOrCreateChatRoom(dto.getSenderId(), dto.getReceiverId(), dto.getHotelId());
 
         Message message = new Message();
         message.setSender(userRepository.findById(dto.getSenderId()).orElseThrow());
@@ -56,8 +57,9 @@ public class MessageController {
         chatRoomRepository.save(chatRoom);
         return messageRepository.save(message);
     }
+
     @GetMapping("/{chatRoomId}/messages")
-    public List<Message> getMessages(@PathVariable Long chatRoomId, @RequestParam Long userId) {
+    public List<MessageDto> getMessages(@PathVariable Long chatRoomId, @RequestParam Long userId) {
         List<Message> messages = messageRepository.findByChatRoomIdOrderBySentAt(chatRoomId);
 
         // 標記為已讀
@@ -68,6 +70,17 @@ public class MessageController {
                     messageRepository.save(m);
                 });
 
-        return messages;
+        return messages.stream().map(m -> {
+            MessageDto dto = new MessageDto();
+            dto.setId(m.getId());
+            dto.setSenderId(m.getSender().getId());
+            dto.setSenderName(m.getSender().getFirstName());
+            dto.setReceiverId(m.getReceiver().getId());
+            dto.setHotelId(m.getHotel().getId());
+            dto.setChatRoomId(m.getChatRoom().getId());
+            dto.setContent(m.getContent());
+            dto.setSentAt(m.getSentAt());
+            return dto;
+        }).toList();
     }
 }
