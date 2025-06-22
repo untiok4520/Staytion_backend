@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.HotelReviewSummaryDto;
 import com.example.demo.dto.request.CreateReviewRequestDto;
 import com.example.demo.dto.response.ReviewResponseDto;
 import com.example.demo.entity.Hotel;
@@ -40,11 +41,19 @@ public class ReviewService {
     private OrderItemRepository orderItemRepo;
 
     // 取得指定飯店評論
-    public List<ReviewResponseDto> getByHotel(Long hotelId) {
-        return reviewRepo.findByHotelId(hotelId)
-                .stream()
+    public HotelReviewSummaryDto getByHotel(Long hotelId) {
+        List<ReviewResponseDto> reviews = reviewRepo.findByHotelId(hotelId).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+
+        Double avg = reviewRepo.findAverageScoreByHotelId(hotelId);
+        Long count = reviewRepo.countByHotelId(hotelId);
+        return new HotelReviewSummaryDto(
+                avg != null ? avg : 0.0,
+                count != null ? count : 0L,
+                reviews
+        );
+
     }
 
     // 取得指定使用者的評論

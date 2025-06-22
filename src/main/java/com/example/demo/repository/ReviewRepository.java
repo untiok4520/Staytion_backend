@@ -19,4 +19,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecif
     @Query(value = "SELECT ROUND(AVG(score), 1) FROM reviews WHERE hotel_id = :hotelId", nativeQuery = true)
     Double findAverageScoreByHotelId(@Param("hotelId") Long hotelId);
 
+    //統計飯店評論則數
+    @Query("SELECT COUNT(r) FROM Review r WHERE r.hotel.id = :hotelId")
+    Long countByHotelId(@Param("hotelId") Long hotelId);
+
 }
