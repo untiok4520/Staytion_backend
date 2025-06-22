@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,7 +15,6 @@ import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
-import com.google.api.client.util.Value;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserRecord;
 import com.google.firebase.auth.UserRecord.CreateRequest;
@@ -35,6 +33,8 @@ public class AuthService {
 
 	@Autowired
 	private JwtService jwtService;
+	
+	@Autowired FirebaseService firebaseService;
 
 	// 檢查 email 是否存在
 	public ResponseEntity<String> checkEmail(String email) {
@@ -108,58 +108,69 @@ public class AuthService {
 	}
 
 	// 用於處理 Google 登入後的用戶資料
-	public ResponseEntity<Map<String,Object>> handleGoogleLogin(String email, String firstName, String lastName) {
-		// 查詢資料庫是否已存在該用戶
-		Optional<User> existingUser = userRepository.findByEmail(email);
+	public ResponseEntity<Map<String, Object>> handleGoogleLogin(String email, String firstName, String lastName) {
+		Optional<User> userOptional = userRepository.findByEmail(email);
+		User user;
 
-		if (existingUser.isPresent()) {
-			// 如果用戶已存在，直接返回用戶資料
-			return ResponseEntity.ok(Map.of("message", "User already exists", "user", existingUser.get()));
+		if (userOptional.isPresent()) {
+			user = userOptional.get();
+		} else {
+			user = new User();
+			user.setEmail(email);
+			user.setFirstName(firstName);
+			user.setLastName(lastName);
+			user.setCreatedAt(LocalDateTime.now());
+			userRepository.save(user);
 		}
 
-		// 如果用戶不存在，創建新用戶
-		User newUser = new User();
-		newUser.setEmail(email);
-		newUser.setFirstName(firstName);
-		newUser.setLastName(lastName);
-		newUser.setCreatedAt(LocalDateTime.now()); // 使用當前時間來創建用戶
-		userRepository.save(newUser);
-		
-		// 發自己的 JWT token
-		String jwt = jwtService.createToken(newUser);
+		// Firebase 同步可選擇性抽出或加參數控制
+		firebaseService.createFirebaseUser(email, firstName, lastName);
 
-		return ResponseEntity.ok(Map.of("message", "New user created", "user", newUser, "token", jwt));
+		String token = jwtService.createToken(user);
+
+		return ResponseEntity.ok(Map.of("message",
+				userOptional.isPresent() ? "User already exists" : "New user created", "user", user, "token", token));
 	}
 
 	// 發送重設密碼連結
-	public ResponseEntity<?> sendResetPasswordEmail(String email) {
+	public ResponseEntity<Map<String, String>> sendResetPasswordEmail(String email) {
 		Optional<User> userOpt = userRepository.findByEmail(email);
 		if (userOpt.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("該 email 不存在");
+			// 返回 404 錯誤，並將錯誤訊息包裝成 JSON 格式
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "該 email 不存在"));
 		}
 
 		User user = userOpt.get();
 		String token = jwtService.createToken(user); // JWT: 含 email、15 分鐘有效
-		String resetLink = "http://localhost:8080/reset-password.html?token=" + token;
+		String resetLink = "http://127.0.0.1:5500/pages/homepage/change-passwd.html?token=" + token;
 
 		String html = "<p>請點擊以下連結重設密碼：</p><a href=\"" + resetLink + "\">重設密碼</a>";
 		mailService.sendHtmlMail(email, "重設密碼", html);
 
-		return ResponseEntity.ok("重設密碼連結已寄出");
+		// 返回 200 OK，並將成功訊息包裝成 JSON 格式
+		return ResponseEntity.ok(Map.of("message", "重設密碼連結已寄出"));
 	}
 
 	// 重設密碼
-	public ResponseEntity<?> resetPassword(String token, String newPassword) {
+	public ResponseEntity<Map<String, String>> resetPassword(String token, String newPassword, String confirmPassword) {
+		// 檢查新密碼和確認密碼是否一致
+	    if (!newPassword.equals(confirmPassword)) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body(Map.of("message", "密碼與確認密碼不一致"));
+	    }
+		
 		try {
 			String email = jwtService.getEmailFromToken(token);
 			User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("找不到使用者"));
 
 			user.setPassword(passwordEncoder.encode(newPassword));
 			userRepository.save(user);
-
-			return ResponseEntity.ok("密碼已更新");
+			
+			// 返回成功訊息
+			return ResponseEntity.ok(Map.of("message", "密碼已更新，請重新登入！"));
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token 錯誤或已過期");
+			// 返回錯誤訊息
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Token 錯誤或已過期"));
 		}
 	}
 

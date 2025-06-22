@@ -9,7 +9,11 @@ public class ResetPasswordRequest {
 
     @NotBlank
     private String newPassword;
-
+    
+    @NotBlank
+    private String confirmPassword;
+    
+    @NotBlank
     public String getToken() {
         return token;
     }
@@ -25,4 +29,14 @@ public class ResetPasswordRequest {
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
     }
+
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
+    
+    
 }

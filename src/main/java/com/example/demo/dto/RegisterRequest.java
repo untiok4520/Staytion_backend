@@ -2,9 +2,10 @@ package com.example.demo.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public class RegisterRequest {
-	
+
 	@NotBlank
 	@Email
 	private String email;
@@ -13,12 +14,14 @@ public class RegisterRequest {
 	private String password;
 
 	@NotBlank
+	@Pattern(regexp = "^[a-zA-Z]+$", message = "First name must contain only English letters")
 	private String firstName;
 
 	@NotBlank
+	@Pattern(regexp = "^[a-zA-Z]+$", message = "Last name must contain only English letters")
 	private String lastName;
 	
-	@NotBlank
+	@Pattern(regexp = "^\\d{10}$", message = "Telephone number must be 10 digits")
 	private String tel;
 
 	public String getEmail() {
@@ -60,6 +63,5 @@ public class RegisterRequest {
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
-	
-	
+
 }
