@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.HotelReviewSummaryDto;
 import com.example.demo.dto.request.CreateReviewRequestDto;
 import com.example.demo.dto.ReviewReplyDto;
 import com.example.demo.dto.response.ReviewResponseDto;
@@ -24,8 +25,8 @@ public class ReviewController {
 
     // 房型詳情頁：取得某飯店的評論
     @GetMapping("/rooms/{hotelId}/reviews")
-    @Operation(summary = "房型詳情頁：取得某飯店的評論")
-    public List<ReviewResponseDto> getRoomReviews(@PathVariable("hotelId") Long hotelId) {
+    @Operation(summary = "房型詳情頁：取得某飯店的評論+平均評分與評論總數")
+    public HotelReviewSummaryDto getRoomReviews(@PathVariable("hotelId") Long hotelId) {
         return reviewService.getByHotel(hotelId);
     }
 
