@@ -23,10 +23,12 @@ public interface HotelRepository extends JpaRepository<Hotel, Long>{
 			    d.dname AS districtName,
 			    COUNT(DISTINCT r.user_id) AS reviewCount,
 			    MIN(ro.price) AS lowestPrice,
-			    ROUND(AVG(r.score), 1) AS averageRating
+			    ROUND(AVG(r.score), 1) AS averageRating,
+			    i.img_url AS coverImageUrl
 			FROM hotels h
 			JOIN districts d ON h.district_id = d.id
 			JOIN cities c ON c.id = d.city_id
+			LEFT JOIN images i ON i.hotel_id = h.id AND i.is_cover = 1
 			LEFT JOIN reviews r ON r.hotel_id = h.id
 			LEFT JOIN room_types ro ON ro.hotel_id = h.id
 			GROUP BY h.id, h.hname, c.cname, d.dname

@@ -14,4 +14,6 @@ public interface HotelProjection {
 	Double getLowestPrice();
 
 	Double getAverageRating();
+	
+	String getCoverImageUrl();
 }
