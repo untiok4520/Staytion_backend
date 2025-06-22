@@ -36,7 +36,7 @@ public class Image {
 		this.imgUrl = imgUrl;
 		this.isCover = isCover;
 	}
-   
+
     public Long getId() {
         return id;
     }
