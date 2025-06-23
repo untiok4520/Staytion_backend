@@ -56,4 +56,13 @@ public class StatisticsController {
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
 		return service.getOrderTrend(ownerId, start, end);
 	}
+
+	@Operation(summary = "入住率趨勢圖", description = "回傳每日入住率(%)，依 ownerId 與日期區間過濾", operationId = "occupancyRateTrend")
+	@GetMapping("/summary/occupancy-rate-trend")
+	public List<Map<String, Object>> getOccupancyRateTrend(
+			@RequestParam Long ownerId,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
+		return service.getOccupancyRateTrend(ownerId, start, end);
+	}
 }
