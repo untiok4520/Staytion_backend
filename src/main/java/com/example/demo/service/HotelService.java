@@ -18,5 +18,4 @@ public interface HotelService {
     Page<HotelSearchRequest> searchHotels(HotelSearchResult dto, int page, int size);
 
     HotelDetailDTO getHotelDetail(Long hotelId);
-    // ... 其他方法
 }

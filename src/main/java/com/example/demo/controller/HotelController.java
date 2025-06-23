@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,7 +27,11 @@ public class HotelController {
     @Autowired
     private HotelService hotelService;
 
-    //飯店列表所有所需資訊
+    @Operation(
+            summary = "查詢飯店列表",
+            description = "依照城市、區域、入住/退房、入住人數、設施、價格、評分等條件查詢飯店列表" +
+                    "內容包含:飯店ID、名稱、城市、區域、封面圖、經緯度、地圖連結、房型名稱、最低價格、平均評分、住宿晚數與入住人數、分頁資訊等"
+    )
     @GetMapping
     public Map<String, Object> searchHotels(
             @RequestParam(required = false) String city,
@@ -64,7 +69,10 @@ public class HotelController {
         return rs;
     }
 
-    //查詢符合條件飯店總數
+    @Operation(
+            summary = "查詢符合條件的飯店總數",
+            description = "依照查詢條件(城市、區域、入住/退房、設施、價格、評分等)統計符合條件的飯店數量,內容包含:篩選過的count(數量)"
+    )
     @GetMapping("/count")
     public Map<String, Long> getHotelCount(HotelSearchResult resultDTO) {
         Long count = hotelService.searchHotels(resultDTO, 1, Integer.MAX_VALUE).getTotalElements();
@@ -73,7 +81,10 @@ public class HotelController {
         return result;
     }
 
-    //飯店詳情
+    @Operation(
+            summary = "查詢飯店詳情",
+            description = "依飯店ID查詢該飯店的完整詳細資料,內容包含:飯店ID、名稱、地址、描述、平均評分、所有圖片、各房型資訊(名稱、描述、價格、床型、大小、設施、各房型圖片)"
+    )
     @GetMapping("/{hotelId}")
     public HotelDetailDTO getHotelDetail(@PathVariable Long hotelId) {
         return hotelService.getHotelDetail(hotelId);

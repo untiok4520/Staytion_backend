@@ -14,6 +14,8 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.DistrictRepository;
 import com.example.demo.repository.HotelRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.util.AddressParserService;
+import com.example.demo.util.GeocodingService;
 
 @Service
 public class ArvinHotelService {
@@ -26,6 +28,12 @@ public class ArvinHotelService {
 
     @Autowired
     private DistrictRepository districtRepository;
+    
+    @Autowired
+    private AddressParserService addressParserService;
+    
+    @Autowired
+    private GeocodingService geocodingService;
 
 //    查詢全部飯店(但應該不需要?)
 //    public List<HotelResponseDto> getAllHotels() {
@@ -69,8 +77,15 @@ public class ArvinHotelService {
         hotel.setAddress(dto.getAddress());
         hotel.setTel(dto.getTel());
         hotel.setDescription(dto.getDescription());
-        hotel.setLatitude(dto.getLatitude());
-        hotel.setLongitude(dto.getLongitude());
+        
+        // 自動解析地址 → District
+        District district = addressParserService.parseDistrictFromAddress(dto.getAddress());
+        hotel.setDistrict(district);
+       
+        // 自動轉換地址 → 經緯度
+        double[] latLng = geocodingService.getLatLng(dto.getAddress());
+        hotel.setLatitude(latLng[0]);
+        hotel.setLongitude(latLng[1]);
 
         if (dto.getOwnerId() != null) {
             User owner = userRepository.findById(dto.getOwnerId())
@@ -78,11 +93,7 @@ public class ArvinHotelService {
             hotel.setOwner(owner);
         }
 
-        if (dto.getDistrictId() != null) {
-            District district = districtRepository.findById(dto.getDistrictId())
-                    .orElseThrow(() -> new RuntimeException("District not found"));
-            hotel.setDistrict(district);
-        }
+        
 
         return toDto(hotelRepository.save(hotel));
     }
