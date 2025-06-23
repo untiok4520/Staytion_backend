@@ -9,5 +9,5 @@ import com.example.demo.entity.Image;
 public interface ImageRepository extends JpaRepository<Image, Long> {
     List<Image> findByHotelId(Long hotelId);
 
-    List<Image> findByRoomTypeId(Long roomTypeId);
+    List<Image> findByHotelIdAndIsCover(Long hotelId, Boolean isCover);
 }

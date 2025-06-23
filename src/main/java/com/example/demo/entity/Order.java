@@ -39,10 +39,10 @@ public class Order {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    // 枚舉類型映射
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", columnDefinition = "ENUM('CONFIRMED','CANCELED') DEFAULT 'CONFIRMED'")
-    private OrderStatus status = OrderStatus.CONFIRMED;
+	// 枚舉類型映射
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", columnDefinition = "ENUM('CONFIRMED','CANCELED','PENDING') DEFAULT 'PENDING'")
+	private OrderStatus status = OrderStatus.CONFIRMED;
 
     // Constructor
     public Order() {
@@ -62,17 +62,16 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> orderItems;
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<OrderItem> orderItems;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
-    private Payment payment;
+	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+	private Payment payment;
 
-
-    // -------------------------------------
-    public enum OrderStatus {
-        CONFIRMED, CANCELED
-    }
+	// -------------------------------------
+	public enum OrderStatus {
+		CONFIRMED, CANCELED, PENDING
+	}
 
     // Getters and Setters
     public Long getId() {
@@ -143,9 +142,11 @@ public class Order {
         return payment;
     }
 
-    public void setPayment(Payment payment) {
-        this.payment = payment;
-    }
-
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+		if (payment != null) {
+			payment.setOrder(this);
+		}
+	}
 
 }
