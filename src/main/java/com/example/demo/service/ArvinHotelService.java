@@ -3,6 +3,8 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,14 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.dto.ImageDTO;
 import com.example.demo.dto.request.HotelRequestDto;
 import com.example.demo.dto.response.HotelResponseDto;
-import com.example.demo.entity.District;
-import com.example.demo.entity.Hotel;
-import com.example.demo.entity.Image;
-import com.example.demo.entity.User;
-import com.example.demo.repository.DistrictRepository;
-import com.example.demo.repository.HotelRepository;
-import com.example.demo.repository.ImageRepository;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.util.AddressParserService;
 import com.example.demo.util.GeocodingService;
 
@@ -41,6 +35,9 @@ public class ArvinHotelService {
     
     @Autowired
     private GeocodingService geocodingService;
+
+    @Autowired
+    private AmenityRepository amenityRepository;
 
 //    查詢全部飯店(但應該不需要?)
 //    public List<HotelResponseDto> getAllHotels() {
@@ -122,6 +119,12 @@ public class ArvinHotelService {
             hotel.getImages().addAll(newImages);
         }
 
+        if (dto.getAmenities() != null) {
+            hotel.getAmenities().clear();
+            List<Amenity> amenities = amenityRepository.findAllById(dto.getAmenities());
+            hotel.getAmenities().addAll(amenities);
+        }
+
         // 再存一次 hotel，JPA 會 cascade persist 新的圖片
         hotel = hotelRepository.save(hotel);
 
@@ -174,6 +177,11 @@ public class ArvinHotelService {
                     .filter(ImageDTO::getIsCover)
                     .findFirst()
                     .ifPresent(mainImg -> dto.setMainImgUrl(mainImg.getImgUrl()));
+        }
+
+        if (hotel.getAmenities() != null) {
+            List<Long> ids = hotel.getAmenities().stream().map(Amenity::getId).collect(Collectors.toList());
+            dto.setAmenityIds(ids);
         }
 
         

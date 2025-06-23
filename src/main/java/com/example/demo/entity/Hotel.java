@@ -3,17 +3,7 @@ package com.example.demo.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "hotels")
@@ -170,5 +160,22 @@ public class Hotel {
 
 	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
+	}
+
+	//----------------
+	@ManyToMany
+	@JoinTable(
+			name = "hotel_amenities",
+			joinColumns = @JoinColumn(name = "hotel_id"),
+			inverseJoinColumns = @JoinColumn(name = "amenities_id")
+	)
+	private List<Amenity> amenities = new ArrayList<>();
+
+	public List<Amenity> getAmenities() {
+		return amenities;
+	}
+
+	public void setAmenities(List<Amenity> amenities) {
+		this.amenities = amenities;
 	}
 }

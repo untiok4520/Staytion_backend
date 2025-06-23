@@ -17,7 +17,7 @@ public class HotelRequestDto {
 	private String description;
 	private Long ownerId;
 	private List<ImageDTO> images;
-//	private List<AmenityDTO> amenities;
+	private List<Long> amenities;
 
 	public String getHotelname() {
 		return hotelname;
@@ -65,6 +65,13 @@ public class HotelRequestDto {
 
 	public void setImages(List<ImageDTO> images) {
 		this.images = images;
+	}
+
+	public List<Long> getAmenities() {
+		return amenities;
+	}
+	public void setAmenities(List<Long> amenities) {
+		this.amenities = amenities;
 	}
 	
 }

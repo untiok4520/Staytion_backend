@@ -23,6 +23,7 @@ public class HotelResponseDto {
 	private List<ImageDTO> images;
 	private List<String> imgUrls;
 	private String mainImgUrl;
+	private List<Long> amenityIds;
 
 
 	public Long getId() {
@@ -135,6 +136,13 @@ public class HotelResponseDto {
 
 	public void setMainImgUrl(String mainImgUrl) {
 		this.mainImgUrl = mainImgUrl;
+	}
+
+	public List<Long> getAmenityIds() {
+		return amenityIds;
+	}
+	public void setAmenityIds(List<Long> amenityIds) {
+		this.amenityIds = amenityIds;
 	}
 	
 }
