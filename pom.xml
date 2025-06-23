@@ -138,6 +138,20 @@
     		<artifactId>json</artifactId>
     		<version>20240303</version>
 		</dependency>
+		<!-- Apache POI Core for Excel -->
+		<dependency>
+    		<groupId>org.apache.poi</groupId>
+    		<artifactId>poi</artifactId>
+    		<version>5.2.5</version> <!-- 可用最新版本 -->
+		</dependency>
+
+		<!-- Apache POI for Excel XSSF (for .xlsx files) -->
+		<dependency>
+    		<groupId>org.apache.poi</groupId>
+    		<artifactId>poi-ooxml</artifactId>
+    		<version>5.2.5</version>
+		</dependency>
+
     </dependencies>
 
     <build>
