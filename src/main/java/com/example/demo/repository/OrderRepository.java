@@ -189,4 +189,42 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Map<String, Object>> getOrderTrend(@Param("ownerId") Long ownerId, @Param("start") LocalDateTime start,
 			@Param("end") LocalDateTime end);
 
+	@Query("""
+    SELECT COALESCE(SUM(o.totalPrice), 0)
+    FROM Order o
+    JOIN o.orderItems oi
+    JOIN oi.roomType rt
+    JOIN rt.hotel h
+    WHERE h.owner.id = :ownerId
+      AND YEAR(o.checkInDate) = :year
+""")
+	Integer sumYearRevenue(@Param("ownerId") Long ownerId, @Param("year") int year);
+
+	@Query("""
+    SELECT COALESCE(SUM(o.totalPrice), 0)
+    FROM Order o
+    JOIN o.orderItems oi
+    JOIN oi.roomType rt
+    JOIN rt.hotel h
+    WHERE h.owner.id = :ownerId
+""")
+	Integer sumTotalRevenue(@Param("ownerId") Long ownerId);
+
+	@Query("""
+    SELECT o.checkInDate AS date, SUM(oi.quantity) AS bookedRooms
+    FROM Order o
+    JOIN o.orderItems oi
+    JOIN oi.roomType rt
+    JOIN rt.hotel h
+    WHERE h.owner.id = :ownerId
+      AND o.checkInDate BETWEEN :start AND :end
+    GROUP BY o.checkInDate
+    ORDER BY o.checkInDate
+""")
+	List<Map<String, Object>> findDailyBookedRooms(
+			@Param("ownerId") Long ownerId,
+			@Param("start") LocalDate start,
+			@Param("end") LocalDate end
+	);
+
 }
