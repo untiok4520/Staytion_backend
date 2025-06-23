@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +41,7 @@ public class AdminOrderController {
 
 	@GetMapping
 	@Operation(summary = "取得自己飯店的訂單", description = "根據登入的飯店擁有者（ownerId），以分頁形式取得所有所屬飯店的訂單資料", operationId = "getPagedOrdersByOwner")
-	public Page<OrderResponseDto> getOrdersByOwnerPaged(@RequestParam Long ownerId, Pageable pageable) {
+	public Page<OrderResponseDto> getOrdersByOwnerPaged(@RequestParam Long ownerId, @ParameterObject Pageable pageable) {
 		return service.getOrdersByHotelOwner(ownerId, pageable);
 	}
 
@@ -71,7 +72,7 @@ public class AdminOrderController {
 			@RequestParam(required = false) String keyword,
 			@RequestParam(required = false) Payment.PaymentMethod paymentMethod,
 			@RequestParam(required = false) Payment.PaymentStatus paymentStatus,
-			@RequestParam(required = false) Long currentUserId, Pageable pageable) {
+			@RequestParam(required = true) Long currentUserId, @ParameterObject Pageable pageable) {
 		return service.searchOrders(currentUserId, status, start, end, keyword, paymentMethod, paymentStatus, pageable);
 	}
 
