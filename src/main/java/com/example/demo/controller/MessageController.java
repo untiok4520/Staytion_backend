@@ -35,12 +35,13 @@ public class MessageController {
     public List<Message> getChatHistory(@RequestParam Long senderId,
                                         @RequestParam Long receiverId,
                                         @RequestParam Long hotelId
-                                        ){
+    ) {
         return messageRepository.findChatHistory(senderId, receiverId, hotelId);
     }
+
     @PostMapping
     public Message sendMessage(@RequestBody MessageDto dto) {
-        ChatRoom chatRoom = chatRoomService.findOrCreate(dto.getUserId(), dto.getHotelId());
+        ChatRoom chatRoom = chatRoomService.findOrCreateChatRoom(dto.getSenderId(), dto.getReceiverId(), dto.getHotelId());
 
         Message message = new Message();
         message.setSender(userRepository.findById(dto.getSenderId()).orElseThrow());
@@ -56,8 +57,9 @@ public class MessageController {
         chatRoomRepository.save(chatRoom);
         return messageRepository.save(message);
     }
+
     @GetMapping("/{chatRoomId}/messages")
-    public List<Message> getMessages(@PathVariable Long chatRoomId, @RequestParam Long userId) {
+    public List<MessageDto> getMessages(@PathVariable Long chatRoomId, @RequestParam Long userId) {
         List<Message> messages = messageRepository.findByChatRoomIdOrderBySentAt(chatRoomId);
 
         // 標記為已讀
@@ -68,6 +70,38 @@ public class MessageController {
                     messageRepository.save(m);
                 });
 
-        return messages;
+        return messages.stream().map(m -> {
+            MessageDto dto = new MessageDto();
+            dto.setId(m.getId());
+            dto.setSenderId(m.getSender().getId());
+            dto.setReceiverId(m.getReceiver().getId());
+            dto.setHotelId(m.getHotel().getId());
+            dto.setChatRoomId(m.getChatRoom().getId());
+            dto.setContent(m.getContent());
+            dto.setSentAt(m.getSentAt());
+            dto.setRead(m.getIsRead());
+
+            //displayName邏輯
+            Long currentUserId = userId;
+            String displayName;
+            if (m.getSender().getId().equals(currentUserId)) {
+                // 我是發訊者 → 顯示對方資訊
+                if (m.getReceiver().getId().equals(m.getHotel().getOwner().getId())) {
+                    displayName = m.getHotel().getHname();
+                } else {
+                    displayName = m.getReceiver().getFirstName();
+                }
+            } else {
+                // 我是接收者 → 顯示發送者資訊
+                if (m.getSender().getId().equals(m.getHotel().getOwner().getId())) {
+                    displayName = m.getHotel().getHname();
+                } else {
+                    displayName = m.getSender().getFirstName();
+                }
+            }
+
+            dto.setDisplayName(displayName);
+            return dto;
+        }).toList();
     }
 }
