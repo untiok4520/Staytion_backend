@@ -99,6 +99,7 @@ public class AuthService {
 			String link = FirebaseAuth.getInstance().generateEmailVerificationLink(request.getEmail());
 			String html = "<p>請點擊以下連結完成帳號驗證：</p><a href=\"" + link + "\">驗證帳號</a>";
 			mailService.sendHtmlMail(request.getEmail(), "帳號驗證信", html);
+			System.out.println(link);
 
 		} catch (Exception e) {
 			throw new RuntimeException("Firebase 建立用戶或發送驗證信失敗: " + e.getMessage());
@@ -143,7 +144,7 @@ public class AuthService {
 		User user = userOpt.get();
 		String token = jwtService.createToken(user); // JWT: 含 email、15 分鐘有效
 		String resetLink = "http://127.0.0.1:5500/pages/homepage/change-passwd.html?token=" + token;
-
+		System.out.println(resetLink);
 		String html = "<p>請點擊以下連結重設密碼：</p><a href=\"" + resetLink + "\">重設密碼</a>";
 		mailService.sendHtmlMail(email, "重設密碼", html);
 

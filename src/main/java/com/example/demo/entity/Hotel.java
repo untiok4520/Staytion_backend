@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "hotels")
 public class Hotel {
@@ -109,6 +111,7 @@ public class Hotel {
 	// -------------------------------
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner_id")
+	@JsonBackReference
 	private User owner;
 
 	// ------------------
