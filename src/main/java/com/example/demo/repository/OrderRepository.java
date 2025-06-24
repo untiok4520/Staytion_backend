@@ -45,18 +45,19 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			        o.user.id = :userId OR
 			        h.owner.id = :userId
 			    )
+			    AND (:hotelId IS NULL OR h.id = :hotelId)
 			    AND (:status IS NULL OR o.status = :status)
 			    AND (:start IS NULL OR o.createdAt >= :start)
 			    AND (:end IS NULL OR o.createdAt <= :end)
-			     AND (:paymentMethod IS NULL OR p.method = :paymentMethod)
-			     AND (:paymentStatus IS NULL OR p.status = :paymentStatus)
+			    AND (:paymentMethod IS NULL OR p.method = :paymentMethod)
+			    AND (:paymentStatus IS NULL OR p.status = :paymentStatus)
 			    AND (
 			        :keyword IS NULL OR
 			        LOWER(h.hname) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
 			        LOWER(rt.rname) LIKE LOWER(CONCAT('%', :keyword, '%'))
 			    )
 			""")
-	Page<Order> searchAccessibleOrdersWithKeyword(@Param("userId") Long userId,
+	Page<Order> searchAccessibleOrdersWithKeyword(@Param("userId") Long userId, @Param("hotelId") Long hotelId,
 			@Param("status") Order.OrderStatus status, @Param("start") LocalDateTime start,
 			@Param("end") LocalDateTime end, @Param("keyword") String keyword,
 			@Param("paymentMethod") Payment.PaymentMethod paymentMethod,
