@@ -114,7 +114,7 @@ public class Hotel {
 
 	// ------------------
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<RoomType> roomTypes;
+	private List<RoomType> roomTypes  = new ArrayList<>();
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Image> images = new ArrayList<>();
