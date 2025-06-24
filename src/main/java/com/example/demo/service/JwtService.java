@@ -2,10 +2,13 @@ package com.example.demo.service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.entity.Hotel;
 import com.example.demo.entity.User;
 
 import io.jsonwebtoken.Claims;
@@ -19,12 +22,17 @@ public class JwtService {
 	@Value("${jwt.secret}")
 	private String jwtSecret;
 
-	private final long EXP_TIME = 15 * 60 * 1000; // 15 分鐘
+	private final long EXP_TIME = 60 * 60 * 1000; // 60 分鐘
 
 	public String createToken(User user) {
 		Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+		
+		// 提取酒店名稱
+	    List<String> hotelNames = user.getHotels().stream()
+	        .map(Hotel::getHname)  // 假設 Hotel 類有 getName() 方法
+	        .collect(Collectors.toList());
 
-		return Jwts.builder().setSubject(user.getEmail()).claim("id", user.getId()).setIssuedAt(new Date())
+		return Jwts.builder().setSubject(user.getEmail()).claim("id", user.getId()).claim("hotels", hotelNames).setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis() + EXP_TIME)).signWith(key, SignatureAlgorithm.HS256)
 				.compact();
 	}
