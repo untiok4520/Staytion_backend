@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.ChatRoomDto;
 import com.example.demo.dto.MessageDto;
 import com.example.demo.entity.ChatRoom;
 import com.example.demo.entity.Message;
@@ -80,5 +81,35 @@ public class ChatRoomService {
         dto.setContent(message.getContent());
         dto.setSentAt(message.getSentAt());
         return dto;
+    }
+
+    // 取得某用戶相關的聊天室列表
+    public List<ChatRoomDto> getChatRoomsForUser(Long userId) {
+        System.out.println("🔍 準備查詢聊天室，使用者 userId = " + userId);
+
+        List<ChatRoom> chatRooms = chatRoomRepository.findByUser1_IdOrUser2_Id(userId, userId);
+        System.out.println("📦 查到聊天室筆數: " + chatRooms.size());
+        return chatRooms.stream().map(room -> {
+            ChatRoomDto dto = new ChatRoomDto();
+            dto.setChatRoomId(room.getId());
+            dto.setUpdatedAt(room.getUpdatedAt());
+            dto.setLastMessage(room.getLastMessage());
+            dto.setHotelId(room.getHotel().getId());
+
+            Long ownerId = room.getHotel().getOwner().getId();
+            if (userId.equals(ownerId)) {
+                Long guestId = room.getUser1().getId().equals(ownerId)
+                        ? room.getUser2().getId() : room.getUser1().getId();
+                dto.setReceiverId(guestId);
+                dto.setDisplayName(userRepository.findById(guestId)
+                        .map(u -> u.getFirstName())
+                        .orElse("未知房客"));
+            } else {
+                Long owner = room.getHotel().getOwner().getId();
+                dto.setReceiverId(owner);
+                dto.setDisplayName(room.getHotel().getHname());
+            }
+            return dto;
+        }).collect(Collectors.toList());
     }
 }
