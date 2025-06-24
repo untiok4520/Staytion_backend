@@ -8,8 +8,13 @@ import com.example.demo.repository.HotelRepository;
 import com.example.demo.repository.MessageRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.ChatRoomService;
+import com.example.demo.service.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,20 +36,32 @@ public class MessageController {
     @Autowired
     private ChatRoomRepository chatRoomRepository;
 
+    @Autowired
+    private JwtService jwtService;
+
     @GetMapping
-    public List<Message> getChatHistory(@RequestParam Long senderId,
-                                        @RequestParam Long receiverId,
-                                        @RequestParam Long hotelId
-    ) {
+    public List<Message> getChatHistory(@RequestParam Long receiverId,
+                                        @RequestParam Long hotelId,
+                                        HttpServletRequest request) {
+        Long senderId = (Long) request.getAttribute("userId");
+        if (senderId == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "JWT 驗證失敗");
+        }
         return messageRepository.findChatHistory(senderId, receiverId, hotelId);
     }
 
+    @Transactional
     @PostMapping
-    public Message sendMessage(@RequestBody MessageDto dto) {
-        ChatRoom chatRoom = chatRoomService.findOrCreateChatRoom(dto.getSenderId(), dto.getReceiverId(), dto.getHotelId());
+    public Message sendMessage(@RequestBody MessageDto dto, HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "JWT 驗證失敗");
+        }
+
+        ChatRoom chatRoom = chatRoomService.findOrCreateChatRoom(userId, dto.getReceiverId(), dto.getHotelId());
 
         Message message = new Message();
-        message.setSender(userRepository.findById(dto.getSenderId()).orElseThrow());
+        message.setSender(userRepository.findById(userId).orElseThrow());
         message.setReceiver(userRepository.findById(dto.getReceiverId()).orElseThrow());
         message.setChatRoom(chatRoom);
         message.setContent(dto.getContent());
@@ -59,7 +76,12 @@ public class MessageController {
     }
 
     @GetMapping("/{chatRoomId}/messages")
-    public List<MessageDto> getMessages(@PathVariable Long chatRoomId, @RequestParam Long userId) {
+    public List<MessageDto> getMessages(@PathVariable Long chatRoomId, HttpServletRequest request) {
+
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "JWT 驗證失敗");
+        }
         List<Message> messages = messageRepository.findByChatRoomIdOrderBySentAt(chatRoomId);
 
         // 標記為已讀
