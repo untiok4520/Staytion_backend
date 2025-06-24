@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/admins/orders")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @Tag(name = "Admin Order Management", description = "後台訂單管理 API")
 public class AdminOrderController {
 
@@ -41,7 +43,8 @@ public class AdminOrderController {
 
 	@GetMapping
 	@Operation(summary = "取得自己飯店的訂單", description = "根據登入的飯店擁有者（ownerId），以分頁形式取得所有所屬飯店的訂單資料", operationId = "getPagedOrdersByOwner")
-	public Page<OrderResponseDto> getOrdersByOwnerPaged(@RequestParam Long ownerId, @ParameterObject Pageable pageable) {
+	public Page<OrderResponseDto> getOrdersByOwnerPaged(@RequestParam Long ownerId,
+			@ParameterObject Pageable pageable) {
 		return service.getOrdersByHotelOwner(ownerId, pageable);
 	}
 
@@ -69,11 +72,12 @@ public class AdminOrderController {
 	public Page<OrderResponseDto> filterOrders(@RequestParam(required = false) Order.OrderStatus status,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
-			@RequestParam(required = false) String keyword,
+			@RequestParam(required = false) String keyword, @RequestParam(required = false) Long hotelId,
 			@RequestParam(required = false) Payment.PaymentMethod paymentMethod,
 			@RequestParam(required = false) Payment.PaymentStatus paymentStatus,
 			@RequestParam(required = true) Long currentUserId, @ParameterObject Pageable pageable) {
-		return service.searchOrders(currentUserId, status, start, end, keyword, paymentMethod, paymentStatus, pageable);
+		return service.searchOrders(currentUserId, hotelId, status, start, end, keyword, paymentMethod, paymentStatus,
+				pageable);
 	}
 
 //	@GetMapping("/summary/monthly-revenue")
