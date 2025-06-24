@@ -67,7 +67,8 @@ public class ArvinRoomTypeService {
         Hotel hotel = hotelRepository.findById(dto.getHotelId())
                 .orElseThrow(() -> new RuntimeException("Hotel not found with id: " + dto.getHotelId()));
 
-        Set<Amenity> amenities = dto.getAmenityIds() == null ? new HashSet<>()
+        Set<Amenity> amenities = dto.getAmenityIds() == null
+                ? new HashSet<>()
                 : new HashSet<>(amenityRepository.findAllById(dto.getAmenityIds()));
 
         RoomType room = toEntity(dto, hotel, amenities);
@@ -83,8 +84,12 @@ public class ArvinRoomTypeService {
         Hotel hotel = hotelRepository.findById(dto.getHotelId())
                 .orElseThrow(() -> new RuntimeException("Hotel not found with id: " + dto.getHotelId()));
 
-        Set<Amenity> amenities = dto.getAmenityIds() == null ? Set.of()
+        Set<Amenity> amenities = dto.getAmenityIds() == null
+                ? new HashSet<>()
                 : new HashSet<>(amenityRepository.findAllById(dto.getAmenityIds()));
+
+        System.out.println("amenityIds: " + dto.getAmenityIds());
+        System.out.println("查到的Amenity: " + amenities.size());
 
         room.setRname(dto.getRname());
         room.setPrice(dto.getPrice());
@@ -101,6 +106,7 @@ public class ArvinRoomTypeService {
         room.setAmenities(amenities);
 
         RoomType saved = roomTypeRepository.save(room);
+        System.out.println("儲存後 amenities: " + saved.getAmenities().size());
         return toDto(saved);
     }
 
