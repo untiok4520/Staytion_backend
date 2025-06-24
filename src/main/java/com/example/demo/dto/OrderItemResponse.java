@@ -1,43 +1,79 @@
 package com.example.demo.dto;
 
-import com.example.demo.entity.RoomType; // ⚠️ 別忘了加這行 import
+import java.math.BigDecimal;
+
 
 public class OrderItemResponse {
-    private Integer id;
+    private Long roomTypeId;
+    private String roomTypeName;
+    private String roomImgUrl;
+    private Long hotelId;
+    private String hotelName;
     private Integer quantity;
-    private Integer pricePerRoom;
-    private Integer subtotal;
-    private String paymentStatus;
-    private String paymentMethod;
+    private BigDecimal pricePerRoom;
+    private BigDecimal subtotal;
 
-    // ✅ 新增欄位：roomType（包含 id、name 等）
-    private RoomType roomType;
-
-    // === Getters & Setters ===
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
-
-    public Integer getPricePerRoom() { return pricePerRoom; }
-    public void setPricePerRoom(Integer pricePerRoom) { this.pricePerRoom = pricePerRoom; }
-
-    public Integer getSubtotal() { return subtotal; }
-    public void setSubtotal(Integer subtotal) { this.subtotal = subtotal; }
-
-    public String getPaymentStatus() { return paymentStatus; }
-    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
-
-    public String getPaymentMethod() { return paymentMethod; }
-    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
-
-    public RoomType getRoomType() {
-        return roomType;
+    public Long getRoomTypeId() {
+        return roomTypeId;
     }
 
-    public void setRoomType(RoomType roomType) {
-        this.roomType = roomType;
+    public void setRoomTypeId(Long roomTypeId) {
+        this.roomTypeId = roomTypeId;
+    }
+
+    public String getRoomTypeName() {
+        return roomTypeName;
+    }
+
+    public void setRoomTypeName(String roomTypeName) {
+        this.roomTypeName = roomTypeName;
+    }
+
+    public String getRoomImgUrl() {
+        return roomImgUrl;
+    }
+
+    public void setRoomImgUrl(String roomImgUrl) {
+        this.roomImgUrl = roomImgUrl;
+    }
+
+    public Long getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(Long hotelId) {
+        this.hotelId = hotelId;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public BigDecimal getPricePerRoom() {
+        return pricePerRoom;
+    }
+
+    public void setPricePerRoom(BigDecimal pricePerRoom) {
+        this.pricePerRoom = pricePerRoom;
+    }
+
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(BigDecimal subtotal) {
+        this.subtotal = subtotal;
     }
 }

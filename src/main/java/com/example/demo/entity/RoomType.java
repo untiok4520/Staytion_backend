@@ -8,6 +8,7 @@ import java.util.Set;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,9 +22,13 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "room_types")
 public class RoomType {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hotel_id")
+    private Hotel hotel;
 
     @Column(name = "rname")
     private String rname;
@@ -34,8 +39,8 @@ public class RoomType {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "size")
-    private Integer size; // 平方公尺
+	@Column(name = "size")
+	private Integer size; // 平方公尺
 
     @Column(name = "view")
     private String view;
@@ -46,8 +51,8 @@ public class RoomType {
     @Column(name = "is_canceled")
     private Boolean isCanceled;
 
-    @Column(name = "quantity")
-    private Integer quantity; // 該房型總數量
+	@Column(name = "quantity")
+	private Integer quantity; // 該房型總數量
 
     @Column(name = "bed_count")
     private Integer bedCount;
@@ -55,51 +60,59 @@ public class RoomType {
     @Column(name = "bed_type")
     private String bedType;
 
-    @Column(name = "capacity")
-    private Integer capacity; // 容納人數
+	@Column(name = "capacity")
+	private Integer capacity; // 容納人數
 
-    // Constructor
-    public RoomType() {
+	// Constructor
+	public RoomType() {
 
-    }
+	}
 
-    public RoomType(String rname, BigDecimal price, String description, Integer size, String view, String imgUrl,
-                    Boolean isCanceled, Integer quantity, Integer bedCount, String bedType, Integer capacity) {
-        this.rname = rname;
-        this.price = price;
-        this.description = description;
-        this.size = size;
-        this.view = view;
-        this.imgUrl = imgUrl;
-        this.isCanceled = isCanceled;
-        this.quantity = quantity;
-        this.bedCount = bedCount;
-        this.bedType = bedType;
-        this.capacity = capacity;
-    }
+	public RoomType(String rname, BigDecimal price, String description, Integer size, String view, String imgUrl,
+			Boolean isCanceled, Integer quantity, Integer bedCount, String bedType, Integer capacity) {
+		this.rname = rname;
+		this.price = price;
+		this.description = description;
+		this.size = size;
+		this.view = view;
+		this.imgUrl = imgUrl;
+		this.isCanceled = isCanceled;
+		this.quantity = quantity;
+		this.bedCount = bedCount;
+		this.bedType = bedType;
+		this.capacity = capacity;
+	}
 
-    // -------------------------------------
-    @ManyToOne
-    @JoinColumn(name = "hotel_id")
-    private Hotel hotel;
+	// -------------------------------------
+//	@ManyToOne
+//	@JoinColumn(name = "hotel_id")
+//	private Hotel hotel;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "room_amenities", // 中間表的名稱
-            joinColumns = @JoinColumn(name = "room_type_id"), // 本實體 (RoomType) 在中間表的外鍵
-            inverseJoinColumns = @JoinColumn(name = "amenity_id") // 另一實體 (Amenity) 在中間表的外鍵
-    )
-    private Set<Amenity> amenities = new HashSet<>(); // 使用 Set 避免重複
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "room_amenities", // 中間表的名稱
+			joinColumns = @JoinColumn(name = "room_type_id"), // 本實體 (RoomType) 在中間表的外鍵
+			inverseJoinColumns = @JoinColumn(name = "amenity_id") // 另一實體 (Amenity) 在中間表的外鍵
+	)
+	private Set<Amenity> amenities = new HashSet<>(); // 使用 Set 避免重複
 
-    @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RoomAvailability> availabilities;
+	@OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<RoomAvailability> availabilities;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+	// Getters and Setters
+	public Long getId() {
+		return id;
+	}
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Hotel getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
     }
 
     public String getRname() {
@@ -150,13 +163,13 @@ public class RoomType {
         this.imgUrl = imgUrl;
     }
 
-    public Boolean getIsCanceled() {
-        return isCanceled;
-    }
+	public Boolean getIsCanceled() {
+		return isCanceled;
+	}
 
-    public void setIsCanceled(Boolean isCanceled) {
-        this.isCanceled = isCanceled;
-    }
+	public void setIsCanceled(Boolean isCanceled) {
+		this.isCanceled = isCanceled;
+	}
 
     public Integer getQuantity() {
         return quantity;
@@ -190,14 +203,6 @@ public class RoomType {
         this.capacity = capacity;
     }
 
-    public Hotel getHotel() {
-        return hotel;
-    }
-
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
-    }
-
     public Set<Amenity> getAmenities() {
         return amenities;
     }
@@ -206,11 +211,20 @@ public class RoomType {
         this.amenities = amenities;
     }
 
-    public List<RoomAvailability> getAvailabilities() {
-        return availabilities;
-    }
 
-    public void setAvailabilities(List<RoomAvailability> availabilities) {
-        this.availabilities = availabilities;
-    }
+	public List<RoomAvailability> getAvailabilities() {
+		return availabilities;
+	}
+	public void setAvailabilities(List<RoomAvailability> availabilities) {
+		this.availabilities = availabilities;
+	}
+
+
+	// -------------------------------------
+	// @Override
+	// public String toString() {
+	// return "RoomType{" + "id=" + id + ", hotelId=" + hotel + ", rname='" + rname
+	// + '\'' + ", price=" + price
+	// + ", size=" + size + ", quantity=" + quantity + '}';
+	// }
 }
