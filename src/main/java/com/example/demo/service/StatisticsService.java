@@ -44,7 +44,8 @@ public class StatisticsService {
 
 		// 總房數
 		Integer totalRooms = roomTypeRepository.sumTotalRoomsByOwner(ownerId);
-		if (totalRooms == null || totalRooms == 0) totalRooms = 1; // 避免除以零
+		if (totalRooms == null || totalRooms == 0)
+			totalRooms = 1; // 避免除以零
 
 		// 本月每天訂出去的房數
 		LocalDate startDate = LocalDate.of(year, month, 1);
@@ -78,14 +79,8 @@ public class StatisticsService {
 				.collect(Collectors.toList());
 
 		// 回傳 DTO
-		ReportSummary summary = new ReportSummary(
-				yearRevenue,
-				monthRevenue,
-				totalRevenue,
-				orderCount,
-				roomTypeChart,
-				trendChart
-		);
+		ReportSummary summary = new ReportSummary(yearRevenue, monthRevenue, totalRevenue, orderCount, roomTypeChart,
+				trendChart);
 		summary.setOccupancyRate(occupancyRate);
 		summary.setAveragePrice(averagePrice);
 
@@ -99,13 +94,14 @@ public class StatisticsService {
 	// 入住率趨勢
 	public List<Map<String, Object>> getOccupancyRateTrend(Long ownerId, LocalDate start, LocalDate end) {
 		Integer totalRooms = roomTypeRepository.sumTotalRoomsByOwner(ownerId);
-		if (totalRooms == null || totalRooms == 0) totalRooms = 1;
+		if (totalRooms == null || totalRooms == 0)
+			totalRooms = 1;
 
 		List<Map<String, Object>> rawList = orderRepository.findDailyBookedRooms(ownerId, start, end);
 		Map<LocalDate, Integer> bookedMap = new HashMap<>();
 		for (Map<String, Object> row : rawList) {
 			LocalDate date = (LocalDate) row.get("date");
-			Integer bookedRooms = ((Number)row.get("bookedRooms")).intValue();
+			Integer bookedRooms = ((Number) row.get("bookedRooms")).intValue();
 			bookedMap.put(date, bookedRooms);
 		}
 

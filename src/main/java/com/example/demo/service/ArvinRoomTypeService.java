@@ -67,7 +67,7 @@ public class ArvinRoomTypeService {
         Hotel hotel = hotelRepository.findById(dto.getHotelId())
                 .orElseThrow(() -> new RuntimeException("Hotel not found with id: " + dto.getHotelId()));
 
-        Set<Amenity> amenities = dto.getAmenityIds() == null ? Set.of()
+        Set<Amenity> amenities = dto.getAmenityIds() == null ? new HashSet<>()
                 : new HashSet<>(amenityRepository.findAllById(dto.getAmenityIds()));
 
         RoomType room = toEntity(dto, hotel, amenities);
