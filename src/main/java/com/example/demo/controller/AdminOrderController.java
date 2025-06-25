@@ -22,9 +22,18 @@ import com.example.demo.dto.response.OrderResponseDto;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.Payment;
 import com.example.demo.service.AdminOrderService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admins/orders")
@@ -32,8 +41,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Admin Order Management", description = "後台訂單管理 API")
 public class AdminOrderController {
 
-	@Autowired
-	private AdminOrderService service;
+    @Autowired
+    private AdminOrderService service;
 
 //	@GetMapping
 //	@Operation(summary = "取得所有訂單", operationId = "getAllOrdersForAdmin")
@@ -48,24 +57,24 @@ public class AdminOrderController {
 		return service.getOrdersByHotelOwner(ownerId, pageable);
 	}
 
-	@PutMapping("/{id}/status")
-	@Operation(summary = "更新訂單狀態", description = "根據訂單 ID 修改其狀態（例如：處理中、已完成、已取消等）", operationId = "updateOrderStatus")
-	public OrderResponseDto updateStatus(@PathVariable Long id, @RequestParam Order.OrderStatus status) {
-		return service.updateStatus(id, status);
-	}
+    @PutMapping("/{id}/status")
+    @Operation(summary = "更新訂單狀態", description = "根據訂單 ID 修改其狀態（例如：處理中、已完成、已取消等）", operationId = "updateOrderStatus")
+    public OrderResponseDto updateStatus(@PathVariable Long id, @RequestParam Order.OrderStatus status) {
+        return service.updateStatus(id, status);
+    }
 
-	@PutMapping("/{id}/payment-status")
-	@Operation(summary = "更新訂單付款狀態", description = "根據訂單 ID 更新其付款狀態（PAID / UNPAID / CANCELED）", operationId = "updateOrderPaymentStatus")
-	public OrderResponseDto updatePaymentStatus(@PathVariable Long id,
-			@RequestParam Payment.PaymentStatus paymentStatus) {
-		return service.updatePaymentStatus(id, paymentStatus);
-	}
+    @PutMapping("/{id}/payment-status")
+    @Operation(summary = "更新訂單付款狀態", description = "根據訂單 ID 更新其付款狀態（PAID / UNPAID / CANCELED）", operationId = "updateOrderPaymentStatus")
+    public OrderResponseDto updatePaymentStatus(@PathVariable Long id,
+                                                @RequestParam Payment.PaymentStatus paymentStatus) {
+        return service.updatePaymentStatus(id, paymentStatus);
+    }
 
-	@DeleteMapping("/{id}")
-	@Operation(summary = "刪除訂單", description = "根據訂單 ID 刪除對應的訂單紀錄", operationId = "deleteOrderById")
-	public void delete(@PathVariable Long id) {
-		service.deleteOrder(id);
-	}
+    @DeleteMapping("/{id}")
+    @Operation(summary = "刪除訂單", description = "根據訂單 ID 刪除對應的訂單紀錄", operationId = "deleteOrderById")
+    public void delete(@PathVariable Long id) {
+        service.deleteOrder(id);
+    }
 
 	@GetMapping("/filter")
 	@Operation(summary = "篩選訂單（狀態、日期、關鍵字、付款）", description = "可依據訂單狀態、建立時間區間、關鍵字（姓名/電話）、付款方式與付款狀態等條件進行訂單查詢（支援分頁）", operationId = "filterOrdersForAdmin")
