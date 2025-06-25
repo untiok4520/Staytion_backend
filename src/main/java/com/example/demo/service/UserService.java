@@ -32,6 +32,9 @@ public class UserService {
 		return userRepository.save(user);
 	}
 	
+	
+	
+	// 刪除帳號
 	public String deleteUser(String email) {
 	    User user = userRepository.findByEmail(email)
 	            .orElseThrow(() -> new RuntimeException("找不到使用者"));

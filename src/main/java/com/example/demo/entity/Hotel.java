@@ -153,6 +153,29 @@ public class Hotel {
 	public void setImages(List<Image> images) {
 		this.images = images;
 	}
+	// -------------------------------------
+	// // 要再討論看看要不要加
+	// private Double rating;
+	//
+	// public Double getRating() {
+	// return rating;
+	// }
+	//
+	// public void setRating(Double rating) {
+	// this.rating = rating;
+	// }
+
+
+	// -------------------------------------
+	// @Override
+	// public String toString() {
+	// return "Hotel{" + "id=" + id + ", hname='" + hname + '\'' + ", address='" +
+	// address + '\'' + ", tel='" + tel
+	// + '\'' + ", districtId=" + district.getId() + ", latitude=" + latitude + ",
+	// longitude=" + longitude
+	// + ", ownerId=" + owner.getId() + '}';
+	// }
+
 
 	public List<Review> getReviews() {
 		return reviews;
