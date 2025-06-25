@@ -137,6 +137,10 @@ public class BookingService {
                 OrderItemResponse itemDto = new OrderItemResponse();
                 itemDto.setRoomTypeId(item.getRoomType().getId());
                 itemDto.setRoomTypeName(item.getRoomType().getRname());
+                itemDto.setHotelName(item.getRoomType().getHotel().getHname());
+                itemDto.setHotelId(item.getRoomType().getHotel().getId());
+                itemDto.setHotelCity(item.getRoomType().getHotel().getDistrict().getCity().getCname());
+                itemDto.setRoomImgUrl(item.getRoomType().getImgUrl());
                 itemDto.setQuantity(item.getQuantity());
                 itemDto.setPricePerRoom(item.getPricePerRoom());
                 itemDto.setSubtotal(item.getSubtotal());

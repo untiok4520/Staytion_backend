@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/**",
+                                "/api/bookings/**",
                                 "/api/auth/google-login",
                                 "/api/auth/login-password", "/api/auth/register",
                                 "/api/auth/check-email", "/api/top-hotels",

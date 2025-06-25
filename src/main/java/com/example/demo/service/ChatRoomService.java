@@ -85,10 +85,10 @@ public class ChatRoomService {
 
     // 取得某用戶相關的聊天室列表
     public List<ChatRoomDto> getChatRoomsForUser(Long userId) {
-        System.out.println("🔍 準備查詢聊天室，使用者 userId = " + userId);
+        System.out.println("取得聊天室列表，使用者 userId = " + userId);
 
         List<ChatRoom> chatRooms = chatRoomRepository.findByUser1_IdOrUser2_Id(userId, userId);
-        System.out.println("📦 查到聊天室筆數: " + chatRooms.size());
+        System.out.println("查到聊天室筆數: " + chatRooms.size());
         return chatRooms.stream().map(room -> {
             ChatRoomDto dto = new ChatRoomDto();
             dto.setChatRoomId(room.getId());

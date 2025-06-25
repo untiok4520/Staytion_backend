@@ -66,6 +66,9 @@ public class ChatController {
             message.setSentAt(LocalDateTime.now());
             Message savedMessage = messageRepository.save(message);
             System.out.println("儲存訊息成功，ID: " + savedMessage.getId());
+            chatRoom.setLastMessage(savedMessage.getContent());
+            chatRoom.setUpdatedAt(LocalDateTime.now());
+            chatRoomRepository.save(chatRoom);
 
             MessageDto outDto = new MessageDto();
             outDto.setId(savedMessage.getId());
