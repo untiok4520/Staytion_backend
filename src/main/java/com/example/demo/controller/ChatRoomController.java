@@ -6,12 +6,13 @@ import com.example.demo.entity.ChatRoom;
 import com.example.demo.repository.ChatRoomRepository;
 import com.example.demo.service.ChatRoomService;
 import com.example.demo.service.JwtService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/chatrooms")
@@ -26,6 +27,7 @@ public class ChatRoomController {
     private ChatRoomRepository chatRoomRepository;
 
     @PostMapping("/find-or-create")
+    @Operation(summary = "尋找或建立聊天室", description = "根據 senderId（由JWT解析userId）、receiverId 和 hotelId，尋找或建立聊天室並回傳 chatRoomId")
     public Map<String, Long> findOrCreateChatRoom(
             @RequestBody ChatRoomRequestDto requestDto,
             @RequestHeader("Authorization") String authHeader) {
@@ -46,8 +48,9 @@ public class ChatRoomController {
     }
 
     @GetMapping("/my")
+
     public List<ChatRoomDto> getMyChatRooms(@RequestHeader("Authorization") String authHeader) {
-        System.out.println("✅ getMyChatRooms 執行了！");
+        System.out.println("getMyChatRooms 執行了！");
         String token = authHeader.replace("Bearer ", "");
         Long userId = jwtService.getUserIdFromToken(token);
 

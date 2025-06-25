@@ -9,9 +9,18 @@ public class OrderItemResponse {
     private String roomImgUrl;
     private Long hotelId;
     private String hotelName;
+    private String hotelCity;
     private Integer quantity;
     private BigDecimal pricePerRoom;
     private BigDecimal subtotal;
+
+    public String getHotelCity() {
+        return hotelCity;
+    }
+
+    public void setHotelCity(String hotelCity) {
+        this.hotelCity = hotelCity;
+    }
 
     public Long getRoomTypeId() {
         return roomTypeId;
