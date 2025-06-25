@@ -187,6 +187,8 @@ public class ReviewService {
     private ReviewResponseDto toResponse(Review review) {
         ReviewResponseDto dto = new ReviewResponseDto();
         dto.setOrderId(review.getOrder().getId());
+        dto.setHotelId(review.getHotel().getId());
+        dto.setHotelName(review.getHotel().getHname());
         dto.setScore(review.getScore());
         dto.setComment(review.getComment());
         dto.setReply(review.getReply());
