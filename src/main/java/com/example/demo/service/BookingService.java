@@ -30,8 +30,11 @@ public class BookingService {
     @Autowired
     private OrderItemRepository orderItemRepository;
     @Autowired
+    private RoomAvailabilityRepository roomAvailabilityRepository; // <<== 加這個
+    @Autowired
     private RoomAvailabilityService roomAvailabilityService;
 
+    // ===== 建立訂單並遞減庫存 =====
     @Transactional
     public BookingResponse createBooking(BookingRequest dto) {
         User user = userRepository.findById(dto.getUserId())
@@ -40,6 +43,7 @@ public class BookingService {
         LocalDate checkIn = LocalDate.parse(dto.getCheckInDate());
         LocalDate checkOut = LocalDate.parse(dto.getCheckOutDate());
 
+        // 1. 先檢查每一天的庫存是否足夠
         for (OrderItemRequest itemDto : dto.getItems()) {
             Long roomTypeId = itemDto.getRoomTypeId();
             int quantity = itemDto.getQuantity();
@@ -49,10 +53,26 @@ public class BookingService {
             }
         }
 
+        // 2. 實際扣庫存（每一天、每一房型都要扣）
+        for (OrderItemRequest itemDto : dto.getItems()) {
+            Long roomTypeId = itemDto.getRoomTypeId();
+            int quantity = itemDto.getQuantity();
+            LocalDate d = checkIn;
+            while (!d.isAfter(checkOut.minusDays(1))) { // checkout 不含最後一天
+                RoomAvailability avail = roomAvailabilityRepository.findByRoomType_IdAndDate(roomTypeId, d)
+                        .orElseThrow(() -> new RuntimeException("查無可用庫存"));
+                if (avail.getAvailableQuantity() < quantity) throw new RuntimeException("庫存不足");
+                avail.setAvailableQuantity(avail.getAvailableQuantity() - quantity);
+                roomAvailabilityRepository.save(avail);
+                d = d.plusDays(1);
+            }
+        }
+
+        // ===== 建立訂單資料 =====
         Order order = new Order();
         order.setUser(user);
-        order.setCheckInDate(LocalDate.parse(dto.getCheckInDate()));
-        order.setCheckOutDate(LocalDate.parse(dto.getCheckOutDate()));
+        order.setCheckInDate(checkIn);
+        order.setCheckOutDate(checkOut);
         order.setStatus(Order.OrderStatus.CONFIRMED);
         order.setCreatedAt(LocalDateTime.now());
 
@@ -114,12 +134,28 @@ public class BookingService {
         return toResponseDto(order);
     }
 
+    // ===== 取消訂單並補回庫存 =====
     @Transactional
     public BookingResponse cancelBooking(Long bookingId) {
         Order order = orderRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("找不到此訂單"));
         order.setStatus(Order.OrderStatus.CANCELED);
         orderRepository.save(order);
+
+        // 補庫存（加回去）
+        for (OrderItem item : order.getOrderItems()) {
+            Long roomTypeId = item.getRoomType().getId();
+            int quantity = item.getQuantity();
+            LocalDate d = order.getCheckInDate();
+            while (!d.isAfter(order.getCheckOutDate().minusDays(1))) {
+                RoomAvailability avail = roomAvailabilityRepository.findByRoomType_IdAndDate(roomTypeId, d)
+                        .orElseThrow(() -> new RuntimeException("查無可用庫存"));
+                avail.setAvailableQuantity(avail.getAvailableQuantity() + quantity);
+                roomAvailabilityRepository.save(avail);
+                d = d.plusDays(1);
+            }
+        }
+
         return toResponseDto(order);
     }
 
