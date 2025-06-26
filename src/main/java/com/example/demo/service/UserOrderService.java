@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class UserOrderService {
 	public OrderResponseDto createOrder(OrderRequestDto dto) {
 		User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
 
+		LocalDate checkIn = dto.getCheckInDate();
+		LocalDate checkOut = dto.getCheckOutDate();
+
 		List<RoomType> roomTypes = roomTypeRepository
 				.findAllByIdWithLock(dto.getItems().stream().map(OrderItemRequestDto::getRoomTypeId).toList());
 
@@ -45,9 +50,12 @@ public class UserOrderService {
 			RoomType room = roomTypes.stream().filter(rt -> rt.getId().equals(itemDto.getRoomTypeId())).findFirst()
 					.orElseThrow(() -> new RuntimeException("RoomType not found: " + itemDto.getRoomTypeId()));
 
-			// 累計總價（room.price * 數量）
-			BigDecimal price = room.getPrice().multiply(BigDecimal.valueOf(itemDto.getQuantity()));
+			// 累計總價（room.price * 數量 * 入住天數）
+			int night = (int) ChronoUnit.DAYS.between(checkIn, checkOut);
+			BigDecimal price = room.getPrice().multiply(BigDecimal.valueOf(itemDto.getQuantity()))
+					.multiply(BigDecimal.valueOf(night));
 			totalPrice = totalPrice.add(price);
+
 		}
 
 		// 建立訂單 entity，傳入總價
