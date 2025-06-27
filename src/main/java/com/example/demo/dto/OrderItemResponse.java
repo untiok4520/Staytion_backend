@@ -2,8 +2,8 @@ package com.example.demo.dto;
 
 import java.math.BigDecimal;
 
-
 public class OrderItemResponse {
+    private Long orderItemId;
     private Long roomTypeId;
     private String roomTypeName;
     private String roomImgUrl;
@@ -12,6 +12,16 @@ public class OrderItemResponse {
     private Integer quantity;
     private BigDecimal pricePerRoom;
     private BigDecimal subtotal;
+    private String paymentStatus;
+    private String paymentMethod;
+
+    public Long getOrderItemId() {
+        return orderItemId;
+    }
+
+    public void setOrderItemId(Long orderItemId) {
+        this.orderItemId = orderItemId;
+    }
 
     public Long getRoomTypeId() {
         return roomTypeId;
@@ -75,5 +85,21 @@ public class OrderItemResponse {
 
     public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

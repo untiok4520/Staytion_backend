@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.dto.response.OrderResponseDto;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.Payment;
-import com.example.demo.enums.PaymentStatus;
 import com.example.demo.service.AdminOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,7 +46,7 @@ public class AdminOrderController {
     @PutMapping("/{id}/payment-status")
     @Operation(summary = "更新訂單付款狀態", description = "根據訂單 ID 更新其付款狀態（PAID / UNPAID / CANCELED）", operationId = "updateOrderPaymentStatus")
     public OrderResponseDto updatePaymentStatus(@PathVariable Long id,
-                                                @RequestParam PaymentStatus paymentStatus) {
+                                                @RequestParam Payment.PaymentStatus paymentStatus) {
         return service.updatePaymentStatus(id, paymentStatus);
     }
 

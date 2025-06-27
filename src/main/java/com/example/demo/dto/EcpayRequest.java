@@ -1,45 +1,56 @@
 package com.example.demo.dto;
 
-import com.example.demo.enums.PaymentMethod;
+import com.example.demo.entity.Payment;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class EcpayRequest {
 
-    private String roomTypeName;   // 房型名稱（例如：雙人房）
-    private int nights;            // 入住晚數
-    private int totalAmount;       // 總金額（int）
-    private PaymentMethod method;  // 付款方式（如：Credit、ATM）
+    private Long userId;
 
-    // ✅ Getter & Setter
+    @JsonProperty("paymentMethod") // 對應前端欄位名稱
+    private Payment.PaymentMethod paymentMethod;
 
+    private String email;
+    private String phone;
+    private String roomTypeName;
+    // Getter & Setter
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Payment.PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(Payment.PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+    // ✅ 🔽 Getter & Setter for roomTypeName
     public String getRoomTypeName() {
         return roomTypeName;
     }
 
     public void setRoomTypeName(String roomTypeName) {
         this.roomTypeName = roomTypeName;
-    }
-
-    public int getNights() {
-        return nights;
-    }
-
-    public void setNights(int nights) {
-        this.nights = nights;
-    }
-
-    public int getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(int totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public PaymentMethod getMethod() {
-        return method;
-    }
-
-    public void setMethod(PaymentMethod method) {
-        this.method = method;
     }
 }

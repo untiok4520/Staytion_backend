@@ -32,13 +32,21 @@ public class OrderItemController {
         return items.stream().map(item -> {
             OrderItemResponse response = new OrderItemResponse();
 
-            response.setId(item.getId() != null ? item.getId().intValue() : null);
+            response.setOrderItemId(item.getId());
             response.setQuantity(item.getQuantity());
-            response.setPricePerRoom(item.getPricePerRoom() != null ? item.getPricePerRoom().intValue() : null);
-            response.setSubtotal(item.getSubtotal() != null ? item.getSubtotal().intValue() : null);
+            response.setPricePerRoom(item.getPricePerRoom());
+            response.setSubtotal(item.getSubtotal());
 
-            response.setRoomType(item.getRoomType());
+            if (item.getRoomType() != null) {
+                response.setRoomTypeId(item.getRoomType().getId());
+                response.setRoomTypeName(item.getRoomType().getRname()); // ✅ 改成 getRname()
+                response.setRoomImgUrl(item.getRoomType().getImgUrl());
 
+                if (item.getRoomType().getHotel() != null) {
+                    response.setHotelId(item.getRoomType().getHotel().getId());
+                    response.setHotelName(item.getRoomType().getHotel().getHname()); // ✅ 改成 getHname()
+                }
+            }
 
             if (payment != null) {
                 response.setPaymentStatus(payment.getStatus() != null ? payment.getStatus().name() : "未知");
@@ -51,6 +59,7 @@ public class OrderItemController {
             return response;
         }).collect(Collectors.toList());
     }
+
 
     // ✅ 新增一筆訂單明細
     @PostMapping

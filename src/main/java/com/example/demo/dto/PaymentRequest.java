@@ -1,13 +1,11 @@
 package com.example.demo.dto;
 
-import com.example.demo.enums.PaymentMethod;
+import com.example.demo.entity.Payment;
 
 public class PaymentRequest {
     private Integer orderId;
-    private PaymentMethod method;
+    private Payment.PaymentMethod paymentMethod;
     private String email;
-
-    // getter & setter ...
 
     public Integer getOrderId() {
         return orderId;
@@ -17,12 +15,12 @@ public class PaymentRequest {
         this.orderId = orderId;
     }
 
-    public PaymentMethod getMethod() {
-        return method;
+    public Payment.PaymentMethod getPaymentmethod() {
+        return paymentMethod;
     }
 
-    public void setMethod(PaymentMethod method) {
-        this.method = method;
+    public void setPaymentmethod(Payment.PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public String getEmail() {

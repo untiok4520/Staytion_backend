@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.demo.enums.PaymentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,7 +63,7 @@ public class AdminOrderService {
 
 	// 修改訂單付款狀態
 	@Transactional
-	public OrderResponseDto updatePaymentStatus(Long orderId, PaymentStatus status) {
+	public OrderResponseDto updatePaymentStatus(Long orderId, Payment.PaymentStatus status) {
 		Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
 
 		Payment payment = order.getPayment();

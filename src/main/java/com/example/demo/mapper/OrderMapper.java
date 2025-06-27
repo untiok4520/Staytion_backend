@@ -15,8 +15,6 @@ import com.example.demo.entity.OrderItem;
 import com.example.demo.entity.Payment;
 import com.example.demo.entity.RoomType;
 import com.example.demo.entity.User;
-import com.example.demo.enums.PaymentMethod;
-import com.example.demo.enums.PaymentStatus;
 
 public class OrderMapper {
 
@@ -29,8 +27,8 @@ public class OrderMapper {
 		order.setStatus(Order.OrderStatus.CONFIRMED);
 
 		Payment payment = new Payment();
-		payment.setStatus(PaymentStatus.UNPAID);
-		payment.setMethod(PaymentMethod.CASH);
+		payment.setStatus(Payment.PaymentStatus.UNPAID);
+		payment.setMethod(Payment.PaymentMethod.CASH);
 		payment.setCreatedAt(LocalDateTime.now());
 		order.setPayment(payment);
 

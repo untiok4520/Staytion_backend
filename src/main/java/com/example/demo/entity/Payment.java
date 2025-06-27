@@ -2,8 +2,8 @@ package com.example.demo.entity;
 
 import java.time.LocalDateTime;
 
-import com.example.demo.enums.PaymentMethod;
-import com.example.demo.enums.PaymentStatus;
+//import com.example.demo.enums.PaymentMethod;
+//import com.example.demo.enums.PaymentStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -49,13 +49,13 @@ public class Payment {
     private Order order;
 
     // -------------------------------------
-//    public enum PaymentMethod {
-//        CREDIT_CARD, CASH , ECPAY
-//    }
-//
-//    public enum PaymentStatus {
-//        PAID, UNPAID, CANCELED
-//    }
+    public enum PaymentMethod {
+        CREDIT_CARD, CASH , ECPAY
+    }
+
+    public enum PaymentStatus {
+        PAID, UNPAID, CANCELED
+    }
 
     // Getters and Setters
     public Long getId() {
