@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.EmailRequest;
@@ -23,10 +24,10 @@ import com.example.demo.dto.ResetPasswordRequest;
 import com.example.demo.dto.UserUpdateRequest;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.AuthService;
-import com.example.demo.service.FirebaseService;
-import com.example.demo.service.JwtService;
-import com.example.demo.service.UserService;
+import com.example.demo.service.*;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -36,22 +37,28 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 public class AuthController {
 
+    private final MailService mailService;
+
 	@Autowired
 	private AuthService authService;
 
 	@Autowired
 	private UserRepository userRepository;
-	
-	// Google 登入
-    @PostMapping("/auth/google-login")
-    public ResponseEntity<Map<String, Object>> googleLogin(@RequestBody Map<String, String> googleUserData) {
-        String email = googleUserData.get("email");
-        String firstName = googleUserData.get("firstName");
-        String lastName = googleUserData.get("lastName");
 
-        return authService.handleGoogleLogin(email, firstName, lastName);
+    AuthController(MailService mailService) {
+        this.mailService = mailService;
     }
-	
+
+	// Google 登入
+	@PostMapping("/auth/google-login")
+	@Operation(summary = "Google登入")
+	public ResponseEntity<Map<String, Object>> googleLogin(@RequestBody Map<String, String> googleUserData) {
+		String email = googleUserData.get("email");
+		String firstName = googleUserData.get("firstName");
+		String lastName = googleUserData.get("lastName");
+
+		return authService.handleGoogleLogin(email, firstName, lastName);
+	}
 
 	// 檢查email是否存在
 	@Operation(summary = "檢查電子郵件是否已註冊", description = "提供電子郵件來檢查該郵箱是否已經註冊過")
@@ -73,6 +80,29 @@ public class AuthController {
 	@PostMapping("/auth/register")
 	public ResponseEntity<Map<String, String>> register(@RequestBody @Valid RegisterRequest request) {
 		return authService.register(request);
+	}
+
+	// 檢查使用者email是否經過驗證
+	@Operation(summary = "檢查使用者email是否經過驗證", description = "判斷使用者是否有點擊驗證連結")
+	@GetMapping("/auth/check-email-verified")
+	public ResponseEntity<Map<String, Boolean>> checkEmailVerified(@RequestParam String email)
+			throws FirebaseAuthException {
+		UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
+		boolean verified = userRecord.isEmailVerified();
+		return ResponseEntity.ok(Map.of("emailVerified", verified));
+	}
+
+	// 重新發送驗證信
+	@PostMapping("/auth/resend-verification")
+	@Operation(summary = "重新發送驗證信")
+	public ResponseEntity<Map<String, String>> resendVerification(@RequestBody Map<String, String> body)
+			throws FirebaseAuthException {
+		String email = body.get("email");
+		String link = FirebaseAuth.getInstance().generateEmailVerificationLink(email);
+		String html = "<p>請點擊以下連結完成帳號驗證：</p><a href=\"" + link + "\">驗證帳號</a>";
+		System.out.println(link);
+		mailService.sendHtmlMail(email, "重新寄發驗證信", html);
+		return ResponseEntity.ok(Map.of("message", "驗證信已寄出"));
 	}
 
 	// 忘記密碼，發送驗證連結
