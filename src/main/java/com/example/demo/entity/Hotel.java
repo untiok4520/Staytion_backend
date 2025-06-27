@@ -1,11 +1,11 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-
+import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "hotels")
@@ -119,11 +119,11 @@ public class Hotel {
 	// ------------------
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonBackReference
-	private List<RoomType> roomTypes;
+	private List<RoomType> roomTypes  = new ArrayList<>();
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonBackReference
-	private List<Image> images;
+	private List<Image> images = new ArrayList<>();
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonBackReference
@@ -190,5 +190,22 @@ public class Hotel {
 
 	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
+	}
+
+	//----------------
+	@ManyToMany
+	@JoinTable(
+			name = "hotel_amenities",
+			joinColumns = @JoinColumn(name = "hotel_id"),
+			inverseJoinColumns = @JoinColumn(name = "amenities_id")
+	)
+	private List<Amenity> amenities = new ArrayList<>();
+
+	public List<Amenity> getAmenities() {
+		return amenities;
+	}
+
+	public void setAmenities(List<Amenity> amenities) {
+		this.amenities = amenities;
 	}
 }
