@@ -128,6 +128,7 @@ public class ReviewService {
 
     // 後台分頁查詢所有評論
     public Page<ReviewResponseDto> searchReviewsForHost(
+            Long ownerId,
             String firstName,
             String comment,
             String hotelName,
@@ -139,7 +140,8 @@ public class ReviewService {
 
     ) {
         Specification<Review> spec = (root, query, cb) -> cb.conjunction();
-        if(firstName != null && !firstName.isBlank()){
+        spec = spec.and((root, query, cb) -> cb.equal(root.get("hotel").get("owner").get("id"), ownerId));
+        if (firstName != null && !firstName.isBlank()) {
             spec = spec.and((root, query, cb) -> cb.like(root.get("user").get("firstName"), "%" + firstName + "%"));
         }
         if (comment != null && !comment.isBlank()) {
@@ -178,6 +180,7 @@ public class ReviewService {
         return reviewRepo.findAll(spec, pageable)
                 .map(this::toResponse);
     }
+
     public Double getAverageScoreByHotel(Long hotelId) {
         Double avg = reviewRepo.findAverageScoreByHotelId(hotelId);
         return avg == null ? 0.0 : avg;
@@ -187,8 +190,8 @@ public class ReviewService {
     private ReviewResponseDto toResponse(Review review) {
         ReviewResponseDto dto = new ReviewResponseDto();
         dto.setOrderId(review.getOrder().getId());
-        dto.setHotelId(review.getHotel().getId());
-        dto.setHotelName(review.getHotel().getHname());
+        dto.setHotelId(review.getHotel().getId());        
+        dto.setHotelName(review.getHotel().getHname());        
         dto.setScore(review.getScore());
         dto.setComment(review.getComment());
         dto.setReply(review.getReply());
