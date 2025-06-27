@@ -140,6 +140,8 @@ public class BookingService {
                 itemDto.setHotelName(item.getRoomType().getHotel().getHname());
                 itemDto.setHotelId(item.getRoomType().getHotel().getId());
                 itemDto.setHotelCity(item.getRoomType().getHotel().getDistrict().getCity().getCname());
+                itemDto.setAddress(item.getRoomType().getHotel().getAddress());
+                itemDto.setTel(item.getRoomType().getHotel().getTel());
                 itemDto.setRoomImgUrl(item.getRoomType().getImgUrl());
                 itemDto.setQuantity(item.getQuantity());
                 itemDto.setPricePerRoom(item.getPricePerRoom());

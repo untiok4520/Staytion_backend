@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.HotelReviewSummaryDto;
 import com.example.demo.dto.ReviewReplyDto;
+import com.example.demo.dto.UnreviewedOrderDto;
 import com.example.demo.dto.request.CreateReviewRequestDto;
 import com.example.demo.dto.response.ReviewResponseDto;
 import com.example.demo.service.JwtService;
@@ -39,10 +40,20 @@ public class ReviewController {
     }
 
     // 使用者中心：取得自己的評論
-    @GetMapping("/users/{userId}/reviews")
+    @GetMapping("/users/me/reviews")
     @Operation(summary = "使用者中心：取得自己的評論")
-    public List<ReviewResponseDto> getMyReviews(@PathVariable("userId") Long userId) {
+    public List<ReviewResponseDto> getMyReviews(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        Long userId = jwtService.getUserIdFromToken(token);
         return reviewService.getByUser(userId);
+    }
+
+    @GetMapping("/unreviewed")
+    @Operation(summary = "取得尚未評論")
+    public List<UnreviewedOrderDto> getUnreviewedOrders(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        Long userId = jwtService.getUserIdFromToken(token);
+        return reviewService.findUnreviewedOrdersByUser(userId);
     }
 
     //後台條件篩選分頁查詢
@@ -65,10 +76,12 @@ public class ReviewController {
     }
 
     // 新增評論
-    @PostMapping("/users/{userId}/reviews")
+    @PostMapping("/users/me/reviews")
     @Operation(summary = "新增房客評論")
-    public ReviewResponseDto postReview(@PathVariable("userId") Long userId,
+    public ReviewResponseDto postReview(@RequestHeader("Authorization") String authHeader,
                                         @Valid @RequestBody CreateReviewRequestDto req) {
+        String token = authHeader.replace("Bearer ", "");
+        Long userId = jwtService.getUserIdFromToken(token);
         return reviewService.createReview(userId, req);
     }
 
@@ -76,6 +89,7 @@ public class ReviewController {
     @PatchMapping("/reviews/{orderId}/reply")
     @Operation(summary = "新增房東回覆")
     public ReviewResponseDto replyReview(
+            @RequestHeader("Authorization") String authHeader,
             @PathVariable("orderId") Long orderId,
             @RequestBody ReviewReplyDto dto
     ) {
@@ -83,11 +97,13 @@ public class ReviewController {
     }
 
     // 更新評論
-    @PutMapping("/users/{userId}/reviews/{id}")
+    @PutMapping("/users/me/updatereviews/{id}")
     @Operation(summary = "更新評論")
-    public ReviewResponseDto putReview(@PathVariable("userId") Long userId,
+    public ReviewResponseDto putReview(@RequestHeader("Authorization") String authHeader,
                                        @PathVariable("id") Long id,
                                        @Valid @RequestBody CreateReviewRequestDto req) {
+        String token = authHeader.replace("Bearer ", "");
+        Long userId = jwtService.getUserIdFromToken(token);
         return reviewService.updateReview(userId, id, req);
     }
 
