@@ -60,7 +60,10 @@ public class OrderMapper {
 	public static OrderResponseDto toDto(Order order) {
 		OrderResponseDto dto = new OrderResponseDto();
 		dto.setId(order.getId());
+		dto.setUserId(order.getUser().getId());
 		dto.setUserName(order.getUser().getFirstName() + " " + order.getUser().getLastName());
+		dto.setUserEmail(order.getUser().getEmail());
+		dto.setUserTel(order.getUser().getTel());
 		dto.setCheckInDate(order.getCheckInDate());
 		dto.setCheckOutDate(order.getCheckOutDate());
 		dto.setCreatedAt(order.getCreatedAt());

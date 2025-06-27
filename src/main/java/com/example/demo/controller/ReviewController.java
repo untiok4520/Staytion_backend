@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.HotelReviewSummaryDto;
-import com.example.demo.dto.request.CreateReviewRequestDto;
 import com.example.demo.dto.ReviewReplyDto;
+import com.example.demo.dto.request.CreateReviewRequestDto;
 import com.example.demo.dto.response.ReviewResponseDto;
+import com.example.demo.service.JwtService;
 import com.example.demo.service.ReviewService;
+import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
@@ -19,9 +21,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class ReviewController {
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private JwtService jwtService;
 
     // 房型詳情頁：取得某飯店的評論
     @GetMapping("/rooms/{hotelId}/reviews")
@@ -36,10 +45,12 @@ public class ReviewController {
     public List<ReviewResponseDto> getMyReviews(@PathVariable("userId") Long userId) {
         return reviewService.getByUser(userId);
     }
+
     //後台條件篩選分頁查詢
     @GetMapping("/host/reviews")
     @Operation(summary = "後台評論管理")
     public Page<ReviewResponseDto> searchReviewsForHost(
+            @RequestHeader("Authorization") String authHeader,
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String comment,
             @RequestParam(required = false) String hotelName,
@@ -48,8 +59,10 @@ public class ReviewController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @ParameterObject Pageable pageable
-    ){
-        return reviewService.searchReviewsForHost(firstName, comment, hotelName, minScore, maxScore,startDate, endDate, pageable);
+    ) {
+        String token = authHeader.replace("Bearer ", "");
+        Long ownerId = jwtService.getUserIdFromToken(token);
+        return reviewService.searchReviewsForHost(ownerId, firstName, comment, hotelName, minScore, maxScore, startDate, endDate, pageable);
     }
 
     // 新增評論
@@ -59,6 +72,7 @@ public class ReviewController {
                                         @Valid @RequestBody CreateReviewRequestDto req) {
         return reviewService.createReview(userId, req);
     }
+
     // 新增房東回覆
     @PatchMapping("/reviews/{orderId}/reply")
     @Operation(summary = "新增房東回覆")
@@ -73,24 +87,25 @@ public class ReviewController {
     @PutMapping("/users/{userId}/reviews/{id}")
     @Operation(summary = "更新評論")
     public ReviewResponseDto putReview(@PathVariable("userId") Long userId,
-                                        @PathVariable("id") Long id,
-                               @Valid @RequestBody CreateReviewRequestDto req) {
-        return reviewService.updateReview(userId,id, req);
+                                       @PathVariable("id") Long id,
+                                       @Valid @RequestBody CreateReviewRequestDto req) {
+        return reviewService.updateReview(userId, id, req);
     }
 
     // 刪除評論
     @DeleteMapping("/users/{userId}/reviews/{id}")
     @Operation(summary = "刪除評論")
     public void deleteReview(
-        @PathVariable("userId") Long userId,
-        @PathVariable("id") Long id
+            @PathVariable("userId") Long userId,
+            @PathVariable("id") Long id
     ) {
         reviewService.deleteReview(userId, id);
     }
+
     // 查詢飯店平均分數
     @GetMapping("/rooms/{hotelId}/reviews/average-score")
     @Operation(summary = "取得某飯店的平均評分")
-    public  Double getAverageScoreByHotel(@PathVariable("hotelId") Long hotelId){
+    public Double getAverageScoreByHotel(@PathVariable("hotelId") Long hotelId) {
         return reviewService.getAverageScoreByHotel(hotelId);
     }
 }
