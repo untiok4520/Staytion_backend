@@ -56,4 +56,21 @@ public class BookingController {
         BookingResponse result = bookingService.cancelBooking(bookingId);
         return ResponseEntity.ok(result);
     }
+    
+ // 更新訂單
+    @PutMapping("/{bookingId}")
+    @Operation(
+            summary = "更新訂單資訊",
+            description = "根據訂單編號更新入住日期與房型等資訊"
+    )
+    public ResponseEntity<BookingResponse> updateBooking(
+            @PathVariable Long bookingId,
+            @RequestBody BookingRequest bookingRequest) {
+        try {
+            BookingResponse response = bookingService.updateBooking(bookingId, bookingRequest);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new BookingResponse(null, null, null, null, null, null, e.getMessage()));
+        }
+    }
 }

@@ -1,6 +1,9 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.Review;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -22,5 +25,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecif
     //統計飯店評論則數
     @Query("SELECT COUNT(r) FROM Review r WHERE r.hotel.id = :hotelId")
     Long countByHotelId(@Param("hotelId") Long hotelId);
+
 
 }

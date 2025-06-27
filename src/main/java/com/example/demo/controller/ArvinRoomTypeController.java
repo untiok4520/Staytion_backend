@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/api/admin/roomTypes")
-@CrossOrigin
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @Tag(name = "Admin RoomType Management", description = "後台房型管理 API")
 public class ArvinRoomTypeController {
 
@@ -31,14 +31,15 @@ public class ArvinRoomTypeController {
     private ArvinRoomTypeService arvinRoomTypeService;
 
     @Operation(
-        summary = "取得所有房型",
-        description = "回傳所有房型的清單，不包含分頁或過濾條件",
-        operationId = "getAllRoomTypes"
-    )
-    @GetMapping
-    public List<RoomTypeResponseDto> getAll() {
-        return arvinRoomTypeService.getAllRoomTypes();
-    }
+    	    summary = "取得單一房型",
+    	    description = "根據房型 ID 回傳房型詳細資料",
+    	    operationId = "getRoomTypeById"
+    	)
+    	@GetMapping("/{id}")
+    	public RoomTypeResponseDto getById(@PathVariable Long id) {
+    	    return arvinRoomTypeService.getRoomTypeById(id);
+    	}
+
 
     @Operation(
         summary = "取得指定飯店的房型清單",
