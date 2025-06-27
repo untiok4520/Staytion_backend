@@ -4,67 +4,82 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class BookingResponse {
-    private Long orderId;
-    private String status;
-    private String checkInDate;
-    private String checkOutDate;
-    private BigDecimal totalPrice;
-    private List<OrderItemResponse> items;
-    private String message;
+	private Long orderId;
+	private String status;
+	private String checkInDate;
+	private String checkOutDate;
+	private BigDecimal totalPrice;
+	private List<OrderItemResponse> items;
+	private String message;
 
-    public Long getOrderId() {
-        return orderId;
-    }
+	public BookingResponse() {
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
+	}
+	
+	public BookingResponse(Long orderId, String status, String checkInDate, String checkOutDate, BigDecimal totalPrice,
+			List<OrderItemResponse> items, String message) {
+		this.orderId = orderId;
+		this.status = status;
+		this.checkInDate = checkInDate;
+		this.checkOutDate = checkOutDate;
+		this.totalPrice = totalPrice;
+		this.items = items;
+		this.message = message;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public Long getOrderId() {
+		return orderId;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
+	}
 
-    public String getCheckInDate() {
-        return checkInDate;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public void setCheckInDate(String checkInDate) {
-        this.checkInDate = checkInDate;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public String getCheckOutDate() {
-        return checkOutDate;
-    }
+	public String getCheckInDate() {
+		return checkInDate;
+	}
 
-    public void setCheckOutDate(String checkOutDate) {
-        this.checkOutDate = checkOutDate;
-    }
+	public void setCheckInDate(String checkInDate) {
+		this.checkInDate = checkInDate;
+	}
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
+	public String getCheckOutDate() {
+		return checkOutDate;
+	}
 
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
+	public void setCheckOutDate(String checkOutDate) {
+		this.checkOutDate = checkOutDate;
+	}
 
-    public List<OrderItemResponse> getItems() {
-        return items;
-    }
+	public BigDecimal getTotalPrice() {
+		return totalPrice;
+	}
 
-    public void setItems(List<OrderItemResponse> items) {
-        this.items = items;
-    }
+	public void setTotalPrice(BigDecimal totalPrice) {
+		this.totalPrice = totalPrice;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public List<OrderItemResponse> getItems() {
+		return items;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public void setItems(List<OrderItemResponse> items) {
+		this.items = items;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 }

@@ -1,8 +1,9 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-
+import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "hotels")
@@ -113,10 +114,10 @@ public class Hotel {
 
 	// ------------------
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<RoomType> roomTypes;
+	private List<RoomType> roomTypes  = new ArrayList<>();
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Image> images;
+	private List<Image> images = new ArrayList<>();
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Review> reviews;
@@ -182,5 +183,22 @@ public class Hotel {
 
 	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
+	}
+
+	//----------------
+	@ManyToMany
+	@JoinTable(
+			name = "hotel_amenities",
+			joinColumns = @JoinColumn(name = "hotel_id"),
+			inverseJoinColumns = @JoinColumn(name = "amenities_id")
+	)
+	private List<Amenity> amenities = new ArrayList<>();
+
+	public List<Amenity> getAmenities() {
+		return amenities;
+	}
+
+	public void setAmenities(List<Amenity> amenities) {
+		this.amenities = amenities;
 	}
 }
