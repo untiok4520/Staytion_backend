@@ -63,4 +63,13 @@ public interface RoomTypeRepository extends JpaRepository<RoomType, Long> {
 
 
     List<RoomType> findByHotelIdAndCapacityGreaterThanEqual(Long hotelId, Integer capacity);
+
+	// 查詢業主底下所有飯店房型的總房數
+	@Query("""
+    SELECT SUM(rt.quantity)
+    FROM RoomType rt
+    JOIN rt.hotel h
+    WHERE h.owner.id = :ownerId
+""")
+	Integer sumTotalRoomsByOwner(@Param("ownerId") Long ownerId);
 }
