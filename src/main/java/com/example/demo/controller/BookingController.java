@@ -51,7 +51,7 @@ public class BookingController {
             summary = "取消訂單",
             description = "依訂單ID取消該筆訂單,回傳已取消訂單的詳細資訊,內容包含:訂單ID、狀態、入住/退房日期、金額、各房型明細"
     )
-    @PutMapping("/{bookingId}/cancel")
+    @PostMapping("/{bookingId}/cancel")
     public ResponseEntity<BookingResponse> cancelBooking(@PathVariable Long bookingId) {
         BookingResponse result = bookingService.cancelBooking(bookingId);
         return ResponseEntity.ok(result);
