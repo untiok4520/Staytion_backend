@@ -42,7 +42,7 @@ public class ChatRoomService {
         Optional<ChatRoom> optionalRoom = chatRoomRepository.findByUser1IdAndUser2IdAndHotel_Id(user1Id, user2Id, hotelId);
         if (optionalRoom.isEmpty()) {
             // 再查詢 user2Id-user1Id
-            optionalRoom = chatRoomRepository.findByUser1IdAndUser2IdAndHotel_Id(user2Id, user1Id, hotelId);
+            optionalRoom = chatRoomRepository.findByUser2IdAndUser1IdAndHotel_Id(user2Id, user1Id, hotelId);
         }
         if (optionalRoom.isPresent()) {
             return optionalRoom.get();

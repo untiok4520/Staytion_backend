@@ -10,9 +10,27 @@ public class OrderItemResponse {
     private Long hotelId;
     private String hotelName;
     private String hotelCity;
+    private String tel;
+    private String address;
     private Integer quantity;
     private BigDecimal pricePerRoom;
     private BigDecimal subtotal;
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getHotelCity() {
         return hotelCity;

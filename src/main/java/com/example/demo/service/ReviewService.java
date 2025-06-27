@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.HotelReviewSummaryDto;
+import com.example.demo.dto.UnreviewedOrderDto;
 import com.example.demo.dto.request.CreateReviewRequestDto;
 import com.example.demo.dto.response.ReviewResponseDto;
 import com.example.demo.entity.Hotel;
@@ -62,6 +63,11 @@ public class ReviewService {
                 .stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    //取得尚未評論
+    public List<UnreviewedOrderDto> findUnreviewedOrdersByUser(Long userId) {
+        return reviewRepo.findUnreviewedOrdersByUserId(userId);
     }
 
     // 新增評論
