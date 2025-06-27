@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "hotels")
@@ -106,6 +107,7 @@ public class Hotel {
 	// ------------------------------
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "district_id")
+	@JsonBackReference
 	private District district;
 
 	// -------------------------------
@@ -116,12 +118,15 @@ public class Hotel {
 
 	// ------------------
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonBackReference
 	private List<RoomType> roomTypes;
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonBackReference
 	private List<Image> images;
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonBackReference
 	private List<Review> reviews;
 
 	public District getDistrict() {

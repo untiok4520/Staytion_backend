@@ -2,6 +2,9 @@ package com.example.demo.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,6 +53,7 @@ public class District {
 	// -------------------------------------
 	@ManyToOne
 	@JoinColumn(name = "city_id")
+	@JsonBackReference
 	private City city;
 
 	public City getCity() {
@@ -62,6 +66,7 @@ public class District {
 
 	// -------------------------
 	@OneToMany(mappedBy = "district", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonManagedReference
 	private List<Hotel> hotels;
 
 	public List<Hotel> getHotels() {
