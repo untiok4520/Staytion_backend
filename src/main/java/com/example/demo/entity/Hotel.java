@@ -1,8 +1,11 @@
 package com.example.demo.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "hotels")
@@ -104,21 +107,26 @@ public class Hotel {
 	// ------------------------------
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "district_id")
+	@JsonBackReference
 	private District district;
 
 	// -------------------------------
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner_id")
+	@JsonBackReference
 	private User owner;
 
 	// ------------------
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<RoomType> roomTypes;
+	@JsonBackReference
+	private List<RoomType> roomTypes  = new ArrayList<>();
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Image> images;
+	@JsonBackReference
+	private List<Image> images = new ArrayList<>();
 
 	@OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonBackReference
 	private List<Review> reviews;
 
 	public District getDistrict() {
@@ -182,5 +190,22 @@ public class Hotel {
 
 	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
+	}
+
+	//----------------
+	@ManyToMany
+	@JoinTable(
+			name = "hotel_amenities",
+			joinColumns = @JoinColumn(name = "hotel_id"),
+			inverseJoinColumns = @JoinColumn(name = "amenities_id")
+	)
+	private List<Amenity> amenities = new ArrayList<>();
+
+	public List<Amenity> getAmenities() {
+		return amenities;
+	}
+
+	public void setAmenities(List<Amenity> amenities) {
+		this.amenities = amenities;
 	}
 }
