@@ -48,6 +48,7 @@ public class ReviewController {
         return reviewService.getByUser(userId);
     }
 
+    // 使用者中心：取得尚未評論
     @GetMapping("/unreviewed")
     @Operation(summary = "取得尚未評論")
     public List<UnreviewedOrderDto> getUnreviewedOrders(@RequestHeader("Authorization") String authHeader) {

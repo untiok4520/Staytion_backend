@@ -4,10 +4,7 @@ import com.example.demo.dto.HotelReviewSummaryDto;
 import com.example.demo.dto.UnreviewedOrderDto;
 import com.example.demo.dto.request.CreateReviewRequestDto;
 import com.example.demo.dto.response.ReviewResponseDto;
-import com.example.demo.entity.Hotel;
-import com.example.demo.entity.Order;
-import com.example.demo.entity.Review;
-import com.example.demo.entity.User;
+import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -196,12 +193,24 @@ public class ReviewService {
     private ReviewResponseDto toResponse(Review review) {
         ReviewResponseDto dto = new ReviewResponseDto();
         dto.setOrderId(review.getOrder().getId());
+        dto.setHotelName(review.getHotel().getHname());
         dto.setScore(review.getScore());
         dto.setComment(review.getComment());
         dto.setReply(review.getReply());
         dto.setFirstName(review.getUser().getFirstName());
         dto.setCreatedAt(review.getCreatedAt());
         dto.setUserId(review.getUser().getId());
+        List<Image> images = review.getHotel().getImages();
+        if (images != null) {
+            String coverUrl = images.stream()
+                    .filter(img -> Boolean.TRUE.equals(img.getIsCover()))
+                    .map(Image::getImgUrl)
+                    .findFirst()
+                    .orElse("/images/default-hotel.jpg");
+            dto.setImgUrl(coverUrl);
+        } else {
+            dto.setImgUrl("/images/default-hotel.jpg");
+        }
         return dto;
     }
 }

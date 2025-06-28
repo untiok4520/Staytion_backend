@@ -9,13 +9,22 @@ public class UnreviewedOrderDto {
     private LocalDate checkOutDate;
     private String imgUrl;
 
-    public UnreviewedOrderDto(Long orderId, String hotelName, LocalDate checkInDate, LocalDate checkOutDate) {
+    public UnreviewedOrderDto(Long orderId, String hotelName, LocalDate checkInDate, LocalDate checkOutDate, String imgUrl) {
         this.orderId = orderId;
         this.hotelName = hotelName;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
+        this.imgUrl = imgUrl;
     }
 
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 
     public Long getOrderId() {
         return orderId;
