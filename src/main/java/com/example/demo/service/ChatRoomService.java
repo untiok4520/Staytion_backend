@@ -1,9 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ChatRoomDto;
-import com.example.demo.dto.MessageDto;
 import com.example.demo.entity.ChatRoom;
-import com.example.demo.entity.Message;
 import com.example.demo.repository.ChatRoomRepository;
 import com.example.demo.repository.HotelRepository;
 import com.example.demo.repository.MessageRepository;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,32 +52,6 @@ public class ChatRoomService {
         newRoom.setCreatedAt(LocalDateTime.now());
         newRoom.setUpdatedAt(LocalDateTime.now());
         return chatRoomRepository.save(newRoom);
-    }
-
-    // 新增: 查詢聊天室歷史訊息並回傳 List<MessageDto>
-    public List<MessageDto> getChatHistory(Long senderId, Long receiverId, Long hotelId) {
-        // 支援發話方與接收方順序不固定
-        Optional<ChatRoom> chatRoomOptional = chatRoomRepository.findByUser1IdAndUser2IdAndHotel_Id(senderId, receiverId, hotelId);
-        if (chatRoomOptional.isEmpty()) {
-            chatRoomOptional = chatRoomRepository.findByUser1IdAndUser2IdAndHotel_Id(receiverId, senderId, hotelId);
-        }
-        if (chatRoomOptional.isEmpty()) {
-            return new ArrayList<>();
-        }
-        List<Message> messages = messageRepository.findByChatRoomIdOrderBySentAt(chatRoomOptional.get().getId());
-        return messages.stream().map(this::toDto).collect(Collectors.toList());
-    }
-
-    // 將 Message 實體轉換為 MessageDto
-    private MessageDto toDto(Message message) {
-        MessageDto dto = new MessageDto();
-        dto.setId(message.getId());
-        dto.setChatRoomId(message.getChatRoom() != null ? message.getChatRoom().getId() : null);
-        dto.setSenderId(message.getSender() != null ? message.getSender().getId() : null);
-        dto.setReceiverId(message.getReceiver() != null ? message.getReceiver().getId() : null);
-        dto.setContent(message.getContent());
-        dto.setSentAt(message.getSentAt());
-        return dto;
     }
 
     // 取得某用戶相關的聊天室列表

@@ -9,6 +9,7 @@ import com.example.demo.repository.MessageRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.ChatRoomService;
 import com.example.demo.service.JwtService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class MessageController {
 
     @Transactional
     @PostMapping
+    @Operation(summary = "保留測試用，正式用WebSocket")
     public Message sendMessage(@RequestBody MessageDto dto, HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         if (userId == null) {
@@ -76,6 +78,7 @@ public class MessageController {
     }
 
     @GetMapping("/{chatRoomId}/messages")
+    @Operation(summary = "查看歷史訊息")
     public List<MessageDto> getMessages(@PathVariable Long chatRoomId, HttpServletRequest request) {
 
         Long userId = (Long) request.getAttribute("userId");

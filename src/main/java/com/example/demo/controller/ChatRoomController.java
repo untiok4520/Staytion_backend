@@ -48,7 +48,7 @@ public class ChatRoomController {
     }
 
     @GetMapping("/my")
-
+    @Operation(summary = "載入使用者聊天室列表")
     public List<ChatRoomDto> getMyChatRooms(@RequestHeader("Authorization") String authHeader) {
         System.out.println("getMyChatRooms 執行了！");
         String token = authHeader.replace("Bearer ", "");
