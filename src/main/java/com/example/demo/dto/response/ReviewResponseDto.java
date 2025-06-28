@@ -4,17 +4,20 @@ import java.time.LocalDateTime;
 
 public class ReviewResponseDto {
     private Long orderId;
+    private String hotelName;
     private Integer score;
     private String comment;
     private String reply;
     private String firstName;
     private LocalDateTime createdAt;
     private Long userId;
+    private String imgUrl;
 
-    public ReviewResponseDto() {}
+    public ReviewResponseDto() {
+    }
 
     public ReviewResponseDto(Long orderId, Integer score, String comment, String reply,
-                             String firstName, LocalDateTime createdAt, Long userId) {
+                             String firstName, LocalDateTime createdAt, Long userId, String hotelName, String imgUrl) {
         this.orderId = orderId;
         this.score = score;
         this.comment = comment;
@@ -22,6 +25,24 @@ public class ReviewResponseDto {
         this.firstName = firstName;
         this.createdAt = createdAt;
         this.userId = userId;
+        this.hotelName = hotelName;
+        this.imgUrl = imgUrl;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public Long getOrderId() {
