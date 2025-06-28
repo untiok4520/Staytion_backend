@@ -79,11 +79,11 @@ public class EcpayController {
 
 		// 綠界通知後台的網址 (Server-to-Server)，重要！用於更新訂單狀態
 		// 這裡的路徑是 /api/payments/return，請確保此 URL 在綠界測試環境中是可存取的
-		ecpayParams.put("ReturnURL", "  https://metal-deer-enjoy.loca.lt/api/payments/return");
+		ecpayParams.put("ReturnURL", " https://baking-suites-on-myers.trycloudflare.com/api/payments/return");
 
 		// 綠界支付頁面完成後，用戶瀏覽器會導回的網址 (Client-to-Client)
 		// 這裡的路徑是 /api/payments/success，請確保此 URL 在綠界測試環境中是可存取的
-		ecpayParams.put("OrderResultURL", "  https://metal-deer-enjoy.loca.lt/api/payments/success");
+		ecpayParams.put("OrderResultURL", " https://baking-suites-on-myers.trycloudflare.com/api/payments/success");
 
 		ecpayParams.put("ChoosePayment", "ALL"); // 讓用戶選擇支付方式 (信用卡/ATM/超商等)
 		// 如果您希望強制信用卡，可以設定為 "Credit"
