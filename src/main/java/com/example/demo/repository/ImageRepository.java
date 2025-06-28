@@ -1,15 +1,19 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.Image;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
 import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.entity.Hotel;
+import com.example.demo.entity.Image;
+import org.springframework.data.jpa.repository.Query;
 
 public interface ImageRepository extends JpaRepository<Image, Long> {
     List<Image> findByHotelId(Long hotelId);
 
     List<Image> findByHotelIdAndIsCover(Long hotelId, Boolean isCover);
+
+    void deleteByHotel(Hotel hotel);
 
     //查詢飯店首圖
     @Query("""
