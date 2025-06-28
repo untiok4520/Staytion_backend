@@ -34,7 +34,9 @@ public class FavoriteController {
     // 移除收藏
     @DeleteMapping
     @Operation(summary = "移除收藏")
-    public ResponseEntity<Void> removeFavorite(@RequestParam Long userId, @RequestParam Long hotelId) {
+    public ResponseEntity<Void> removeFavorite(@RequestHeader("Authorization") String authHeader, @RequestParam Long hotelId) {
+        String token = authHeader.replace("Bearer", "");
+        Long userId = jwtService.getUserIdFromToken(token);
         favoriteService.removeFavorite(userId, hotelId);
         return ResponseEntity.noContent().build();
     }
