@@ -59,14 +59,15 @@ public class HomeController {
 	// 查詢精選飯店
 	@Operation(summary = "查詢精選飯店", description = "查詢排名前 10 的精選飯店，根據評分排序")
 	@GetMapping("/top-hotels")
-	public List<HotelProjection> getTopHotels() {
-		return hotelService.getTopHotels();
+	public ResponseEntity<List<HotelProjection>> getTopHotels() {
+		List<HotelProjection> hotels = hotelService.getTopHotels();
+		return ResponseEntity.ok(hotels);
 	}
 
 	// 查詢熱門城市資料
 	@Operation(summary = "查詢熱門城市的飯店數量", description = "根據城市 ID 查詢該城市的飯店數量和其他相關資料")
 	@GetMapping("/city/{id}/hotel-count")
-	public ResponseEntity<Map<String, Object>> getCityHotelCount(@PathVariable("id") Long id) {
+	public ResponseEntity<Map<String, Object>> getCityHotelCount(@PathVariable Long id) {
 		return ResponseEntity.ok(cityService.getCityHotelCount(id));
 	}
 
