@@ -31,9 +31,9 @@ public interface HotelRepository extends JpaRepository<Hotel, Long>{
 			LEFT JOIN images i ON i.hotel_id = h.id AND i.is_cover = 1
 			LEFT JOIN reviews r ON r.hotel_id = h.id
 			LEFT JOIN room_types ro ON ro.hotel_id = h.id
-			GROUP BY h.id, h.hname, c.cname, d.dname
+			GROUP BY h.id, h.hname, c.cname, d.dname, i.img_url
 			ORDER BY averageRating DESC
-			LIMIT 10;
+			LIMIT 10
 			      
 			""", nativeQuery = true)
 
