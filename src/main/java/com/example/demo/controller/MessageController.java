@@ -79,9 +79,12 @@ public class MessageController {
 
     @GetMapping("/{chatRoomId}/messages")
     @Operation(summary = "查看歷史訊息")
-    public List<MessageDto> getMessages(@PathVariable Long chatRoomId, HttpServletRequest request) {
-
-        Long userId = (Long) request.getAttribute("userId");
+    public List<MessageDto> getMessages(@PathVariable Long chatRoomId, @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "JWT 驗證失敗");
+        }
+        String token = authHeader.replace("Bearer ", "");
+        Long userId = jwtService.getUserIdFromToken(token);
         if (userId == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "JWT 驗證失敗");
         }
