@@ -19,7 +19,7 @@ public class CityService {
 	public Map<String, Object> getCityHotelCount(Long cityId) {
 		CityProjection data = cityRepository.findHotelCountByCityId(cityId);
 
-		Map<String, Object> result = new HashMap();
+		Map<String, Object> result = new HashMap<>();
 		result.put("city", data.getCname());
 		result.put("img_url", data.getImgUrl());
 		result.put("hotelCount", data.getHotelCount());
