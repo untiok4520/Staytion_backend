@@ -5,6 +5,19 @@ import java.time.LocalDateTime;
 public class ChatRoomDto {
     private Long chatRoomId;
     private Long receiverId;
+    private Long hotelId;
+    private String hotelName;
+    private String displayName;
+    private String lastMessage;
+    private LocalDateTime updatedAt;
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
+    }
 
     public Long getReceiverId() {
         return receiverId;
@@ -21,11 +34,6 @@ public class ChatRoomDto {
     public void setHotelId(Long hotelId) {
         this.hotelId = hotelId;
     }
-
-    private Long hotelId;
-    private String displayName;
-    private String lastMessage;
-    private LocalDateTime updatedAt;
 
     public Long getChatRoomId() {
         return chatRoomId;
