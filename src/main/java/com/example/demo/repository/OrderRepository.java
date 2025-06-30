@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import com.example.demo.entity.Order;
+import com.example.demo.entity.Payment;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
