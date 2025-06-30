@@ -4,9 +4,10 @@ package com.example.demo.dto;
 //如果這個檔案不存在，請在相同套件下創建 PaymentProcessRequest.java
 public class PaymentProcessRequest {
  private String userId;
- private String paymentMethod; // 前端傳過來的 "ECPAY"
+//	private Long orderId;
+	private String paymentMethod; // 前端傳過來的 "ECPAY"
 
- // Getter and Setter
+	// Getter and Setter
  public String getUserId() {
      return userId;
  }
@@ -15,12 +16,19 @@ public class PaymentProcessRequest {
      this.userId = userId;
  }
 
- public String getPaymentMethod() {
-     return paymentMethod;
- }
+//	public Long getOrderId() {
+//		return orderId;
+//	}
+//
+//	public void setOrderId(Long orderId) {
+//		this.orderId = orderId;
+//	}
 
- public void setPaymentMethod(String paymentMethod) {
-     this.paymentMethod = paymentMethod;
- }
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
 }
-
