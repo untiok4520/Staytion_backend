@@ -61,4 +61,14 @@ public class JwtService {
             throw new RuntimeException("無法解析使用者 ID");
         }
     }
+    
+    // 從授權標頭中擷取使用者 ID
+    public Long extractUserIdFromAuthHeader(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("缺少或格式錯誤的 Authorization header");
+        }
+        String token = authHeader.replace("Bearer ", "");
+        return getUserIdFromToken(token);
+    }
+
 }
