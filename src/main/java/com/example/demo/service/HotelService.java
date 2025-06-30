@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.example.demo.projection.HotelProjection;
 import com.example.demo.repository.HotelRepository;
 
-
 public interface HotelService {
     List<HotelProjection> getTopHotels();
 
