@@ -1,21 +1,21 @@
 package com.example.demo.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.example.demo.entity.Hotel;
 import com.example.demo.projection.HotelProjection;
 
-import java.util.Optional;
-
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
-	List<Hotel> findByOwnerId(Long ownerId);
+    List<Hotel> findByOwnerId(Long ownerId);
 
-	List<Hotel> findByHnameContaining(String keyword);
+    List<Hotel> findByHnameContaining(String keyword);
 
-	Optional<Hotel> findByHname(String hname);
+    Optional<Hotel> findByHname(String hname);
 
 	List<Hotel> findByHnameContainingIgnoreCase(String keyword);
 
@@ -42,5 +42,16 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
 			""", nativeQuery = true)
 
 	List<HotelProjection> findTopHotels();
+
+    //查詢飯店縣市和區域
+    @Query("""
+                SELECT h
+                FROM Hotel h
+                JOIN FETCH h.district d
+                JOIN FETCH d.city c
+                WHERE h.id IN :ids
+            """)
+    List<Hotel> findHotelsWithDistrictAndCity(@Param("ids") List<Long> hotelIds);
+
 
 }

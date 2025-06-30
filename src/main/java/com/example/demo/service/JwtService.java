@@ -25,10 +25,10 @@ public class JwtService {
 
     public String createToken(User user) {
         Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
-		
-		
+
+
 	    List<String> hotelNames = user.getHotels().stream()
-	        .map(Hotel::getHname) 
+	        .map(Hotel::getHname)
 	        .collect(Collectors.toList());
 
         return Jwts.builder().setSubject(user.getEmail()).claim("id", user.getId()).claim("hotels", hotelNames).setIssuedAt(new Date())

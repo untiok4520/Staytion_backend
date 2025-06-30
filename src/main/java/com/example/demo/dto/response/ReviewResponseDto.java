@@ -3,101 +3,112 @@ package com.example.demo.dto.response;
 import java.time.LocalDateTime;
 
 public class ReviewResponseDto {
-	private Long orderId;
-	private Long hotelId;
-	private String hotelName;
-	private Integer score;
-	private String comment;
-	private String reply;
-	private String firstName;
-	private LocalDateTime createdAt;
-	private Long userId;
+    private Long orderId;
+    private Long hotelId;
+    private String hotelName;
+    private Integer score;
+    private String comment;
+    private String reply;
+    private String firstName;
+    private LocalDateTime createdAt;
+    private Long userId;
+    private String imgUrl;
 
-	public ReviewResponseDto() {
-	}
+    public ReviewResponseDto() {
+    }
 
-	public ReviewResponseDto(Long orderId, Long hotelId, String hotelName, Integer score, String comment, String reply,
-			String firstName, LocalDateTime createdAt, Long userId) {
-		this.orderId = orderId;
-		this.hotelId = hotelId;
-		this.hotelName = hotelName;
-		this.score = score;
-		this.comment = comment;
-		this.reply = reply;
-		this.firstName = firstName;
-		this.createdAt = createdAt;
-		this.userId = userId;
-	}
+    public ReviewResponseDto(Long orderId, Long hotelId, Integer score, String comment, String reply,
+                             String firstName, LocalDateTime createdAt, Long userId, String hotelName, String imgUrl) {
+        this.orderId = orderId;
+        this.hotelId = hotelId;
+        this.score = score;
+        this.comment = comment;
+        this.reply = reply;
+        this.firstName = firstName;
+        this.createdAt = createdAt;
+        this.userId = userId;
+        this.hotelName = hotelName;
+        this.imgUrl = imgUrl;
+    }
 
-	public Long getOrderId() {
-		return orderId;
-	}
 
-	public void setOrderId(Long orderId) {
-		this.orderId = orderId;
-	}
+    public String getImgUrl() {
+        return imgUrl;
+    }
 
-	public Long getHotelId() {
-		return hotelId;
-	}
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 
-	public void setHotelId(Long hotelId) {
-		this.hotelId = hotelId;
-	}
+    public Long getOrderId() {
+        return orderId;
+    }
 
-	public String getHotelName() {
-		return hotelName;
-	}
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
 
-	public void setHotelName(String hotelName) {
-		this.hotelName = hotelName;
-	}
+    public Long getHotelId() {
+        return hotelId;
+    }
 
-	public Integer getScore() {
-		return score;
-	}
+    public void setHotelId(Long hotelId) {
+        this.hotelId = hotelId;
+    }
 
-	public void setScore(Integer score) {
-		this.score = score;
-	}
+    public String getHotelName() {
+        return hotelName;
+    }
 
-	public String getComment() {
-		return comment;
-	}
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
+    }
 
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
+    public Integer getScore() {
+        return score;
+    }
 
-	public String getReply() {
-		return reply;
-	}
+    public void setScore(Integer score) {
+        this.score = score;
+    }
 
-	public void setReply(String reply) {
-		this.reply = reply;
-	}
+    public String getComment() {
+        return comment;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public String getReply() {
+        return reply;
+    }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+    public void setReply(String reply) {
+        this.reply = reply;
+    }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public Long getUserId() {
-		return userId;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }
