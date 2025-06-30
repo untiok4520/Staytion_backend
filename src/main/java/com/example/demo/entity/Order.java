@@ -1,24 +1,11 @@
 package com.example.demo.entity;
 
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "orders")
@@ -39,10 +26,10 @@ public class Order {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-	// 枚舉類型映射
-	@Enumerated(EnumType.STRING)
-	@Column(name = "status", columnDefinition = "ENUM('CONFIRMED','CANCELED','PENDING') DEFAULT 'PENDING'")
-	private OrderStatus status = OrderStatus.CONFIRMED;
+    // 枚舉類型映射
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "ENUM('CONFIRMED','CANCELED','PENDING') DEFAULT 'PENDING'")
+    private OrderStatus status = OrderStatus.PENDING;
 
     // Constructor
     public Order() {
@@ -62,16 +49,16 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
-	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<OrderItem> orderItems;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems;
 
-	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
-	private Payment payment;
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    private Payment payment;
 
-	// -------------------------------------
-	public enum OrderStatus {
-		CONFIRMED, CANCELED, PENDING
-	}
+    // -------------------------------------
+    public enum OrderStatus {
+        CONFIRMED, CANCELED, PENDING
+    }
 
     // Getters and Setters
     public Long getId() {
@@ -142,11 +129,11 @@ public class Order {
         return payment;
     }
 
-	public void setPayment(Payment payment) {
-		this.payment = payment;
-		if (payment != null) {
-			payment.setOrder(this);
-		}
-	}
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+        if (payment != null) {
+            payment.setOrder(this);
+        }
+    }
 
 }
