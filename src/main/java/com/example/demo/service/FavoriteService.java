@@ -8,8 +8,11 @@ import java.util.List;
 
 public interface FavoriteService {
     Favorite addFavorite(FavoriteDto dto);
-    void removeFavorite(Long userId, Long hotelId);
-    boolean isFavorite(Long userId, Long hotelId);
-    List<FavHotelDto> getFavoriteHotels(Long userId, String city);
 
+    void removeFavorite(Long userId, Long hotelId);
+
+    boolean isFavorite(Long userId, Long hotelId);
+
+    List<FavHotelDto> getFavoriteHotels(Long userId, String city);
+    
 }

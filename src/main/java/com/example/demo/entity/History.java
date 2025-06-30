@@ -88,8 +88,12 @@ public class History {
 	private User user;
 
 	@ManyToOne
-	@JoinColumn(name = "city_id")
+	@JoinColumn(name = "city_id", nullable = true)
 	private City city;
+
+	@ManyToOne
+	@JoinColumn(name = "district_id", nullable = true)
+	private District district;
 
 	public User getUser() {
 		return user;
@@ -106,5 +110,15 @@ public class History {
 	public void setCity(City city) {
 		this.city = city;
 	}
+
+	public District getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(District district) {
+		this.district = district;
+	}
+	
+	
 
 }
