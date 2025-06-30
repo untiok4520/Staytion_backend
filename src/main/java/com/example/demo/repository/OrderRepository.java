@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -14,7 +15,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.demo.entity.Order;
 import com.example.demo.entity.Payment;
-
+import com.example.demo.entity.Order;
+import com.example.demo.entity.Order.OrderStatus;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Order> findByUserId(Long userId);
 
@@ -227,5 +229,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			""")
 	List<Map<String, Object>> findDailyBookedRooms(@Param("ownerId") Long ownerId, @Param("start") LocalDate start,
 			@Param("end") LocalDate end);
+	// 取得該使用者最新一筆 PENDING 訂單（依建立時間排序）
+	Optional<Order> findTopByUserIdAndStatusOrderByCreatedAtDesc(Long userId, Order.OrderStatus status);
+
 
 }
