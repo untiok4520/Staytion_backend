@@ -10,10 +10,14 @@ import com.example.demo.projection.HotelProjection;
 
 import java.util.Optional;
 
-public interface HotelRepository extends JpaRepository<Hotel, Long>{
+public interface HotelRepository extends JpaRepository<Hotel, Long> {
 	List<Hotel> findByOwnerId(Long ownerId);
-    List<Hotel> findByHnameContaining(String keyword);
-    Optional<Hotel> findByHname(String hname);
+
+	List<Hotel> findByHnameContaining(String keyword);
+
+	Optional<Hotel> findByHname(String hname);
+
+	List<Hotel> findByHnameContainingIgnoreCase(String keyword);
 
 	@Query(value = """
 			SELECT
@@ -34,11 +38,9 @@ public interface HotelRepository extends JpaRepository<Hotel, Long>{
 			GROUP BY h.id, h.hname, c.cname, d.dname, i.img_url
 			ORDER BY averageRating DESC
 			LIMIT 10
-			      
+
 			""", nativeQuery = true)
 
 	List<HotelProjection> findTopHotels();
-
-
 
 }

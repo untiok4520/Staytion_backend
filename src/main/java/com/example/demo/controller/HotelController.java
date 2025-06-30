@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.HotelDetailDTO;
 import com.example.demo.dto.HotelSearchRequest;
 import com.example.demo.dto.HotelSearchResult;
+import com.example.demo.entity.Hotel;
 import com.example.demo.service.HotelService;
 
 @RestController
@@ -89,4 +90,14 @@ public class HotelController {
     public HotelDetailDTO getHotelDetail(@PathVariable Long hotelId) {
         return hotelService.getHotelDetail(hotelId);
     }
+    
+    
+    @GetMapping("/search")
+    public List<HotelSearchRequest> searchHotels(
+        @RequestParam("keyword") String keyword,
+        @RequestParam(value = "highlight_hotel_id", required = false) Long highlightHotelId
+    ) {
+    	return hotelService.searchHotelsByName(keyword, highlightHotelId);
+    }
+    
 }
