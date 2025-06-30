@@ -66,16 +66,19 @@ public class ChatRoomService {
             dto.setUpdatedAt(room.getUpdatedAt());
             dto.setLastMessage(room.getLastMessage());
             dto.setHotelId(room.getHotel().getId());
+            dto.setHotelName(room.getHotel().getHname());
 
             Long ownerId = room.getHotel().getOwner().getId();
             if (userId.equals(ownerId)) {
+                //房東身份，顯示房客名字＋
                 Long guestId = room.getUser1().getId().equals(ownerId)
                         ? room.getUser2().getId() : room.getUser1().getId();
                 dto.setReceiverId(guestId);
-                dto.setDisplayName(userRepository.findById(guestId)
-                        .map(u -> u.getFirstName())
-                        .orElse("未知房客"));
+                String guestName = userRepository.findById(guestId).map(u -> u.getFirstName()).orElse("未知房客");
+                dto.setDisplayName(guestName + "｜" + room.getHotel().getHname());
+
             } else {
+                //房客身份，顯示飯店名
                 Long owner = room.getHotel().getOwner().getId();
                 dto.setReceiverId(owner);
                 dto.setDisplayName(room.getHotel().getHname());
