@@ -109,6 +109,16 @@ public class BookingService {
 
         order.setTotalPrice(total);
         order.setOrderItems(orderItems);
+
+        // 新增：建立 Payment
+        Payment payment = new Payment();
+        payment.setOrder(order); // 關聯訂單
+        payment.setCreatedAt(LocalDateTime.now());
+        payment.setMethod(Payment.PaymentMethod.valueOf(dto.getPaymentMethod())); // 從 BookingRequest 傳入
+        payment.setStatus(Payment.PaymentStatus.UNPAID); // 預設未付款
+        //payment.setAmount(order.getTotalPrice()); // 建議有金額欄位
+
+        order.setPayment(payment); // 關聯到 order（雙向）
         orderRepository.save(order); // 會 cascade 一併存 orderItems
 
         BookingResponse response = new BookingResponse();
@@ -140,6 +150,12 @@ public class BookingService {
         Order order = orderRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("找不到此訂單"));
         order.setStatus(Order.OrderStatus.CANCELED);
+
+        // 新增：同步取消付款狀態
+        if (order.getPayment() != null) {
+            order.getPayment().setStatus(Payment.PaymentStatus.CANCELED);
+        }
+
         orderRepository.save(order);
 
         // 補庫存（加回去）
@@ -180,6 +196,14 @@ public class BookingService {
             }).collect(Collectors.toList());
             dto.setItems(itemResponses);
         }
+
+        // 新增：填入 payment 資訊
+        if (order.getPayment() != null) {
+            dto.setPaymentStatus(order.getPayment().getStatus().name());
+            dto.setPaymentMethod(order.getPayment().getMethod().name());
+            //dto.setPaymentAmount(order.getPayment().getAmount());
+        }
+
         return dto;
     }
 }
