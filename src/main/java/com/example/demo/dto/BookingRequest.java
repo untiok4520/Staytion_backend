@@ -7,6 +7,7 @@ public class BookingRequest {
     private String checkInDate;
     private String checkOutDate;
     private List<OrderItemRequest> items;
+    private String paymentMethod;
 
     public Long getUserId() {
         return userId;
@@ -38,5 +39,13 @@ public class BookingRequest {
 
     public void setItems(List<OrderItemRequest> items) {
         this.items = items;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

@@ -14,6 +14,7 @@ public class HotelSearchResult {
     private List<Long> amenity;
     private Integer score;
     private String sort;
+    private Double distance;
 
     public String getCity() {
         return city;
@@ -103,4 +104,11 @@ public class HotelSearchResult {
         this.sort = sort;
     }
 
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
+    }
 }
