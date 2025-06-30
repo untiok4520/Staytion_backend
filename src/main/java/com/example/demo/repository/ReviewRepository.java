@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.dto.UnreviewedOrderDto;
 import com.example.demo.entity.Review;
 
 import org.springframework.data.domain.Page;
@@ -26,5 +27,24 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecif
     @Query("SELECT COUNT(r) FROM Review r WHERE r.hotel.id = :hotelId")
     Long countByHotelId(@Param("hotelId") Long hotelId);
 
-
+    //查詢尚未評論
+    @Query("""
+                 SELECT DISTINCT new com.example.demo.dto.UnreviewedOrderDto(
+                   o.id,
+                   h.hname,
+                   o.checkInDate,
+                   o.checkOutDate,
+                   COALESCE(i.imgUrl, '/images/default-hotel.jpg')
+                   )
+                   FROM Order o
+                   JOIN o.orderItems oi
+                   JOIN oi.roomType rt
+                   JOIN rt.hotel h
+                   LEFT JOIN h.images i ON i.isCover = true
+                   LEFT JOIN Review r ON r.order.id = o.id
+                   WHERE o.user.id = :userId
+                   AND o.checkOutDate < CURRENT_DATE
+                   AND r.id IS NULL
+            """)
+    List<UnreviewedOrderDto> findUnreviewedOrdersByUserId(@Param("userId") Long userId);
 }

@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,14 +22,14 @@ import com.google.firebase.auth.UserRecord.CreateRequest;
 @Service
 public class AuthService {
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private MailService mailService;
+    @Autowired
+    private MailService mailService;
 
 	@Autowired
 	private JwtService jwtService;
@@ -38,8 +37,8 @@ public class AuthService {
 	@Autowired
 	FirebaseService firebaseService;
 
-	// 檢查 email 是否存在
-	public ResponseEntity<String> checkEmail(String email) {
+    // 檢查 email 是否存在
+    public ResponseEntity<String> checkEmail(String email) {
 
 		if (userRepository.existsByEmail(email)) {
 			return ResponseEntity.ok("EXISTS");
@@ -69,34 +68,34 @@ public class AuthService {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "密碼錯誤");
 		}
 
-		String token = jwtService.createToken(user);
+        String token = jwtService.createToken(user);
 
-		return ResponseEntity.ok(Map.of("token", token));
-	}
+        return ResponseEntity.ok(Map.of("token", token));
+    }
 
-	// 註冊
-	public ResponseEntity<Map<String, String>> register(RegisterRequest request) {
-		if (userRepository.existsByEmail(request.getEmail())) {
-			throw new RuntimeException("Email 已註冊");
-		}
+    // 註冊
+    public ResponseEntity<Map<String, String>> register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email 已註冊");
+        }
 
-		// 1. 儲存本地用戶
-		User user = new User();
-		user.setEmail(request.getEmail());
-		user.setPassword(passwordEncoder.encode(request.getPassword()));
-		user.setFirstName(request.getFirstName());
-		user.setLastName(request.getLastName());
-		user.setTel(request.getTel());
-		user.setCreatedAt(LocalDateTime.now());
-		userRepository.save(user);
+        // 1. 儲存本地用戶
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setTel(request.getTel());
+        user.setCreatedAt(LocalDateTime.now());
+        userRepository.save(user);
 
-		try {
-			// 2. 在 Firebase 建立帳號
-			CreateRequest firebaseRequest = new CreateRequest().setEmail(request.getEmail())
-					.setPassword(request.getPassword());
+        try {
+            // 2. 在 Firebase 建立帳號
+            CreateRequest firebaseRequest = new CreateRequest().setEmail(request.getEmail())
+                    .setPassword(request.getPassword());
 
-			UserRecord firebaseUser = FirebaseAuth.getInstance().createUser(firebaseRequest);
-			System.out.println("Firebase user created: " + firebaseUser.getUid());
+            UserRecord firebaseUser = FirebaseAuth.getInstance().createUser(firebaseRequest);
+            System.out.println("Firebase user created: " + firebaseUser.getUid());
 
 			// 3. 產生驗證連結並寄信
 			String link = FirebaseAuth.getInstance().generateEmailVerificationLink(request.getEmail());
@@ -104,45 +103,45 @@ public class AuthService {
 			mailService.sendHtmlMail(request.getEmail(), "帳號驗證信", html);
 			System.out.println(link);
 
-		} catch (Exception e) {
-			throw new RuntimeException("Firebase 建立用戶或發送驗證信失敗: " + e.getMessage());
-		}
+        } catch (Exception e) {
+            throw new RuntimeException("Firebase 建立用戶或發送驗證信失敗: " + e.getMessage());
+        }
 
-		return ResponseEntity.ok(Map.of("message", "註冊成功，驗證郵件已發送"));
-	}
+        return ResponseEntity.ok(Map.of("message", "註冊成功，驗證郵件已發送"));
+    }
 
-	// 用於處理 Google 登入後的用戶資料
-	public ResponseEntity<Map<String, Object>> handleGoogleLogin(String email, String firstName, String lastName) {
-		Optional<User> userOptional = userRepository.findByEmail(email);
-		User user;
+    // 用於處理 Google 登入後的用戶資料
+    public ResponseEntity<Map<String, Object>> handleGoogleLogin(String email, String firstName, String lastName) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        User user;
 
-		if (userOptional.isPresent()) {
-			user = userOptional.get();
-		} else {
-			user = new User();
-			user.setEmail(email);
-			user.setFirstName(firstName);
-			user.setLastName(lastName);
-			user.setCreatedAt(LocalDateTime.now());
-			userRepository.save(user);
-		}
+        if (userOptional.isPresent()) {
+            user = userOptional.get();
+        } else {
+            user = new User();
+            user.setEmail(email);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setCreatedAt(LocalDateTime.now());
+            userRepository.save(user);
+        }
 
-		// Firebase 同步可選擇性抽出或加參數控制
-		firebaseService.createFirebaseUser(email, firstName, lastName);
+        // Firebase 同步可選擇性抽出或加參數控制
+        firebaseService.createFirebaseUser(email, firstName, lastName);
 
-		String token = jwtService.createToken(user);
+        String token = jwtService.createToken(user);
 
-		return ResponseEntity.ok(Map.of("message",
-				userOptional.isPresent() ? "User already exists" : "New user created", "user", user, "token", token));
-	}
+        return ResponseEntity.ok(Map.of("message",
+                userOptional.isPresent() ? "User already exists" : "New user created", "user", user, "token", token));
+    }
 
-	// 發送重設密碼連結
-	public ResponseEntity<Map<String, String>> sendResetPasswordEmail(String email) {
-		Optional<User> userOpt = userRepository.findByEmail(email);
-		if (userOpt.isEmpty()) {
-			// 返回 404 錯誤，並將錯誤訊息包裝成 JSON 格式
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "該 email 不存在"));
-		}
+    // 發送重設密碼連結
+    public ResponseEntity<Map<String, String>> sendResetPasswordEmail(String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            // 返回 404 錯誤，並將錯誤訊息包裝成 JSON 格式
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "該 email 不存在"));
+        }
 
 		User user = userOpt.get();
 		String token = jwtService.createToken(user); // JWT: 含 email、15 分鐘有效
@@ -151,9 +150,9 @@ public class AuthService {
 		String html = "<p>請點擊以下連結重設密碼：</p><a href=\"" + resetLink + "\">重設密碼</a>";
 		mailService.sendHtmlMail(email, "重設密碼", html);
 
-		// 返回 200 OK，並將成功訊息包裝成 JSON 格式
-		return ResponseEntity.ok(Map.of("message", "重設密碼連結已寄出"));
-	}
+        // 返回 200 OK，並將成功訊息包裝成 JSON 格式
+        return ResponseEntity.ok(Map.of("message", "重設密碼連結已寄出"));
+    }
 
 	// 重設密碼
 	public ResponseEntity<Map<String, String>> resetPassword(String token, String newPassword, String confirmPassword) {
