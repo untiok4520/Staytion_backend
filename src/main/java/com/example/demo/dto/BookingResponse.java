@@ -11,6 +11,9 @@ public class BookingResponse {
     private BigDecimal totalPrice;
     private List<OrderItemResponse> items;
     private String message;
+    private String paymentStatus;
+    private String paymentMethod;
+    private BigDecimal paymentAmount;
 
     public Long getOrderId() {
         return orderId;
@@ -66,5 +69,29 @@ public class BookingResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public BigDecimal getPaymentAmount() {
+        return paymentAmount;
+    }
+
+    public void setPaymentAmount(BigDecimal paymentAmount) {
+        this.paymentAmount = paymentAmount;
     }
 }
