@@ -16,7 +16,9 @@ import java.util.Map;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByUserId(Long userId);
 
-    Page<Order> findByUserId(Long userId, Pageable pageable);
+	Page<Order> findByUserId(Long userId, Pageable pageable);
+
+	List<Order> findByStatusAndCreatedAtBefore(Order.OrderStatus status, LocalDateTime createdAt);
 
     // 取得擁有飯店的所有訂單
     @Query("""
