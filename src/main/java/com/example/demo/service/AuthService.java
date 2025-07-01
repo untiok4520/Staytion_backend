@@ -99,8 +99,8 @@ public class AuthService {
 
 			// 3. 產生驗證連結並寄信
 			String link = FirebaseAuth.getInstance().generateEmailVerificationLink(request.getEmail());
-			String html = "<p>請點擊以下連結完成帳號驗證：</p><a href=\"" + link + "\">驗證帳號</a>";
-			mailService.sendHtmlMail(request.getEmail(), "帳號驗證信", html);
+			String html = "<p>您好，歡迎加入 Staytion！</p><p>請點擊以下連結完成帳號驗證：</p><a href=\"" + link + "\">驗證帳號</a>";
+			mailService.sendHtmlMail(request.getEmail(), "歡迎加入 Staytion", html);
 			System.out.println(link);
 
         } catch (Exception e) {
@@ -147,8 +147,8 @@ public class AuthService {
 		String token = jwtService.createToken(user); // JWT: 含 email、15 分鐘有效
 		String resetLink = "http://127.0.0.1:5500/pages/homepage/change-passwd.html?token=" + token;
 		System.out.println(resetLink);
-		String html = "<p>請點擊以下連結重設密碼：</p><a href=\"" + resetLink + "\">重設密碼</a>";
-		mailService.sendHtmlMail(email, "重設密碼", html);
+		String html = "<p>我們收到您的重設密碼要求，請點擊下方連結完成設定：</p><a href=\"" + resetLink + "\">立即重設密碼</a><p>若您沒有提出此請求，請忽略此封信。</p>";
+		mailService.sendHtmlMail(email, "Staytion 密碼重設驗證信", html);
 
         // 返回 200 OK，並將成功訊息包裝成 JSON 格式
         return ResponseEntity.ok(Map.of("message", "重設密碼連結已寄出"));
