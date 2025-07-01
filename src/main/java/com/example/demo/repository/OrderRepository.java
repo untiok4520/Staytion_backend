@@ -24,7 +24,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	Page<Order> findByUserId(Long userId, Pageable pageable);
 
-	// 取得擁有飯店的所有訂單
+    List<Order> findByStatusAndCreatedAtBefore(Order.OrderStatus status, LocalDateTime createdAt);
+
+    // 取得擁有飯店的所有訂單
 	@Query("""
 			    SELECT DISTINCT o FROM Order o
 			    JOIN o.orderItems i

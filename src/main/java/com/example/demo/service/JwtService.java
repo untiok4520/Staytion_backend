@@ -15,11 +15,6 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.security.Key;
-import java.util.Date;
 
 @Service
 public class JwtService {
@@ -58,7 +53,7 @@ public class JwtService {
             Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
             return claims.getSubject();
         } catch (JwtException e) {
-            e.printStackTrace(); // 👈 看看到底是哪裡錯
+            e.printStackTrace();
             throw new RuntimeException("Token 解析失敗");
         }
     }
@@ -75,4 +70,14 @@ public class JwtService {
             throw new RuntimeException("無法解析使用者 ID");
         }
     }
+    
+    // 從授權標頭中擷取使用者 ID
+    public Long extractUserIdFromAuthHeader(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("缺少或格式錯誤的 Authorization header");
+        }
+        String token = authHeader.replace("Bearer ", "");
+        return getUserIdFromToken(token);
+    }
+
 }

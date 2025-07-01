@@ -6,7 +6,7 @@ package com.example.demo.dto;
  */
 public class WebhookData {
 
-    private Integer orderId;
+    private Long orderId;
     private String email;
 
     // 🟢 無參數建構子（必要）
@@ -14,17 +14,17 @@ public class WebhookData {
     }
 
     // 🟢 有參數建構子（可有可無）
-    public WebhookData(Integer orderId, String email) {
+    public WebhookData(Long orderId, String email) {
         this.orderId = orderId;
         this.email = email;
     }
 
     // 🟢 Getter & Setter
-    public Integer getOrderId() {
+    public Long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Integer orderId) {
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
 

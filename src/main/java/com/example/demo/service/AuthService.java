@@ -7,9 +7,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
@@ -18,16 +18,6 @@ import com.example.demo.repository.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserRecord;
 import com.google.firebase.auth.UserRecord.CreateRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -41,41 +31,42 @@ public class AuthService {
     @Autowired
     private MailService mailService;
 
-    @Autowired
-    private JwtService jwtService;
+	@Autowired
+	private JwtService jwtService;
 
-    @Autowired
-    FirebaseService firebaseService;
+	@Autowired
+	FirebaseService firebaseService;
 
     // 檢查 email 是否存在
     public ResponseEntity<String> checkEmail(String email) {
 
-        if (userRepository.existsByEmail(email)) {
-            return ResponseEntity.ok("EXISTS");
-        } else {
-            // 帳號不存在 => 跳轉到註冊頁面
-            return ResponseEntity.status(404).body("NOT_FOUND");
-        }
-    }
+		if (userRepository.existsByEmail(email)) {
+			return ResponseEntity.ok("EXISTS");
+		} else {
+			// 帳號不存在
+			return ResponseEntity.status(404).body("NOT_FOUND");
+		}
+	}
 
-    // 使用email+密碼登入
-    public ResponseEntity<Map<String, String>> loginWithPassword(LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("帳號不存在"));
+	// 使用email+密碼登入
+	public ResponseEntity<Map<String, String>> loginWithPassword(LoginRequest request) {
+		User user = userRepository.findByEmail(request.getEmail())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "帳號不存在"));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("密碼錯誤");
-        }
+		// 檢查 Firebase 上的 email 是否已驗證
+		try {
+			UserRecord firebaseUser = FirebaseAuth.getInstance().getUserByEmail(request.getEmail());
+			System.out.println("Firebase 驗證狀態：" + firebaseUser.isEmailVerified());
+			if (!firebaseUser.isEmailVerified()) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "您的電子郵件尚未驗證。請查收驗證郵件。");
+			}
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Firebase 錯誤：" + e.getMessage());
+		}
 
-        // 檢查 Firebase 上的 email 是否已驗證
-        try {
-            UserRecord firebaseUser = FirebaseAuth.getInstance().getUserByEmail(request.getEmail());
-            if (!firebaseUser.isEmailVerified()) {
-                throw new RuntimeException("您的電子郵件尚未驗證。請查收驗證郵件。");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("檢查 Firebase 驗證狀態時發生錯誤: " + e.getMessage());
-        }
+		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "密碼錯誤");
+		}
 
         String token = jwtService.createToken(user);
 
@@ -163,27 +154,26 @@ public class AuthService {
         return ResponseEntity.ok(Map.of("message", "重設密碼連結已寄出"));
     }
 
-    // 重設密碼
-    public ResponseEntity<Map<String, String>> resetPassword(String token, String newPassword, String confirmPassword) {
-        // 檢查新密碼和確認密碼是否一致
-        if (!newPassword.equals(confirmPassword)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("message", "密碼與確認密碼不一致"));
-        }
+	// 重設密碼
+	public ResponseEntity<Map<String, String>> resetPassword(String token, String newPassword, String confirmPassword) {
+		// 檢查新密碼和確認密碼是否一致
+		if (!newPassword.equals(confirmPassword)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "密碼與確認密碼不一致"));
+		}
 
-        try {
-            String email = jwtService.getEmailFromToken(token);
-            User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("找不到使用者"));
+		try {
+			String email = jwtService.getEmailFromToken(token);
+			User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("找不到使用者"));
 
-            user.setPassword(passwordEncoder.encode(newPassword));
-            userRepository.save(user);
+			user.setPassword(passwordEncoder.encode(newPassword));
+			userRepository.save(user);
 
-            // 返回成功訊息
-            return ResponseEntity.ok(Map.of("message", "密碼已更新，請重新登入！"));
-        } catch (Exception e) {
-            // 返回錯誤訊息
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Token 錯誤或已過期"));
-        }
-    }
+			// 返回成功訊息
+			return ResponseEntity.ok(Map.of("message", "密碼已更新，請重新登入！"));
+		} catch (Exception e) {
+			// 返回錯誤訊息
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Token 錯誤或已過期"));
+		}
+	}
 
 }

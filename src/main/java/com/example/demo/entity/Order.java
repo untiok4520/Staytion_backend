@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,10 +41,10 @@ public class Order {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-	// 枚舉類型映射
-	@Enumerated(EnumType.STRING)
-	@Column(name = "status", columnDefinition = "ENUM('CONFIRMED','CANCELED','PENDING') DEFAULT 'PENDING'")
-	private OrderStatus status = OrderStatus.PENDING;
+    // 枚舉類型映射
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "ENUM('CONFIRMED','CANCELED','PENDING') DEFAULT 'PENDING'")
+    private OrderStatus status = OrderStatus.PENDING;
 
     // Constructor
     public Order() {
