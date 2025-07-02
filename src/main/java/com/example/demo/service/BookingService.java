@@ -73,7 +73,7 @@ public class BookingService {
         order.setUser(user);
         order.setCheckInDate(checkIn);
         order.setCheckOutDate(checkOut);
-        order.setStatus(Order.OrderStatus.CONFIRMED);
+        order.setStatus(Order.OrderStatus.PENDING);
         order.setCreatedAt(LocalDateTime.now());
 
         BigDecimal total = BigDecimal.ZERO;
@@ -280,6 +280,16 @@ public class BookingService {
         return toResponseDto(order);
     }
 
+    // 更新訂單狀態
+    @Transactional 
+    public Order updateOrderStatus(Long orderId, Order.OrderStatus newStatus) {
+        return orderRepository.findById(orderId).map(order -> {
+            order.setStatus(newStatus);
+            System.out.println("BookingService: 訂單 " + orderId + " 狀態已更新為「" + newStatus.name() + "」。");
+            return orderRepository.save(order);
+        }).orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
+    }
+    
     // toDTO
     private BookingResponse toResponseDto(Order order) {
         BookingResponse dto = new BookingResponse();
@@ -313,6 +323,7 @@ public class BookingService {
         if (order.getPayment() != null) {
             dto.setPaymentStatus(order.getPayment().getStatus().name());
             dto.setPaymentMethod(order.getPayment().getMethod().name());
+            dto.setPaymentId(order.getPayment().getId());
             //dto.setPaymentAmount(order.getPayment().getAmount());
         }
 
