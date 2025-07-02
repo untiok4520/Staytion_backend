@@ -17,7 +17,7 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
     List<String> findDistinctHotelNamesByOrderId(@Param("orderId") Long orderId);
 
     // ✅ 查詢某一筆訂單的所有明細（推薦命名）
-    List<OrderItem> findAllByOrderId(Integer orderId);
+    List<OrderItem> findAllByOrderId(Long orderId);
 
 
     // 更新訂單

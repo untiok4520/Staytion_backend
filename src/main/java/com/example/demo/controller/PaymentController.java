@@ -41,3 +41,13 @@ public class PaymentController {
                 .body(htmlForm);
     }
 }
+
+@PostMapping("/confirm-order")
+public ResponseEntity<String> confirmOrder(@RequestBody ConfirmOrderRequest request) {
+    Order order = orderRepository.findById(request.getOrderId())
+            .orElseThrow(() -> new RuntimeException("找不到訂單"));
+
+    order.setStatus(OrderStatus.CONFIRMED); // 狀態改成 CONFIRMED
+    orderRepository.save(order);
+    return ResponseEntity.ok("已確認訂單");
+}

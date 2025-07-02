@@ -25,7 +25,7 @@ public class OrderItemController {
 
     // ✅ 查詢某一訂單所有明細（回傳 DTO 包含付款資訊）
     @GetMapping("/order/{orderId}")
-    public List<OrderItemResponse> getItemsByOrderId(@PathVariable Integer orderId) {
+    public List<OrderItemResponse> getItemsByOrderId(@PathVariable Long orderId) {
         List<OrderItem> items = orderItemRepository.findAllByOrderId(orderId);
         Payment payment = paymentRepository.findByOrderId(orderId);
 
