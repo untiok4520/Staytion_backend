@@ -73,7 +73,7 @@ public class BookingService {
         order.setUser(user);
         order.setCheckInDate(checkIn);
         order.setCheckOutDate(checkOut);
-        order.setStatus(Order.OrderStatus.CONFIRMED);
+        order.setStatus(Order.OrderStatus.PENDING);
         order.setCreatedAt(LocalDateTime.now());
 
         BigDecimal total = BigDecimal.ZERO;

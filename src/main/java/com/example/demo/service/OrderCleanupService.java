@@ -19,10 +19,10 @@ public class OrderCleanupService {
     @Autowired
     private OrderRepository orderRepository;
 
-    @Scheduled(fixedRate = 30 * 60 * 1000) // 每 30 分鐘執行一次
+    @Scheduled(fixedRate = 15 * 60 * 1000) // 每 30 分鐘執行一次
     @Transactional
     public void cancelExpiredOrders() {
-        LocalDateTime expiredBefore = LocalDateTime.now().minusMinutes(30);
+        LocalDateTime expiredBefore = LocalDateTime.now().minusMinutes(15);
 
         List<Order> expiredOrders = orderRepository
                 .findByStatusAndCreatedAtBefore(OrderStatus.PENDING, expiredBefore);
