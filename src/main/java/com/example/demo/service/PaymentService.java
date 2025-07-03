@@ -74,4 +74,17 @@ public class PaymentService {
         System.err.println("無法更新 Payment 狀態：找不到 ID 為 " + paymentId + " 的支付記錄。");
         return null;
     }
+    
+    @Transactional
+    public Payment updatePaymentMethod(Long paymentId, PaymentMethod method) {
+    	Optional<Payment> optionalPayment = paymentRepository.findById(paymentId);
+    	if (optionalPayment.isPresent()) {
+    		Payment payment = optionalPayment.get();
+    		payment.setMethod(method);
+    		
+    		return paymentRepository.save(payment);
+    	}
+    	System.err.println("無法更新 Payment 記錄：找不到 ID 為 " + paymentId + " 的付款方式。");
+    	return null;
+    }
 }
