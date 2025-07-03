@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.HotelReviewSummaryDto;
 import com.example.demo.dto.ReviewReplyDto;
-import com.example.demo.dto.request.CreateReviewRequestDto;
 import com.example.demo.dto.UnreviewedOrderDto;
 import com.example.demo.dto.request.CreateReviewRequestDto;
 import com.example.demo.dto.response.ReviewResponseDto;
@@ -23,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+//@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class ReviewController {
     @Autowired
     private ReviewService reviewService;
