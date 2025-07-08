@@ -20,13 +20,15 @@ public class OrderCleanupService {
     @Autowired
     private OrderRepository orderRepository;
 
+
     @Autowired
     private PaymentService paymentService; // 注入 PaymentService
 
     @Scheduled(fixedRate = 30 * 60 * 1000) // 每 30 分鐘執行一次
     @Transactional // 確保整個操作（訂單和支付狀態更新）在一個事務中
+
     public void cancelExpiredOrders() {
-        LocalDateTime expiredBefore = LocalDateTime.now().minusMinutes(30);
+        LocalDateTime expiredBefore = LocalDateTime.now().minusMinutes(15);
 
         List<Order> expiredOrders = orderRepository
                 .findByStatusAndCreatedAtBefore(OrderStatus.PENDING, expiredBefore);
