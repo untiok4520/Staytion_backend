@@ -1,17 +1,8 @@
 package com.example.demo.entity;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "payments")
@@ -48,7 +39,7 @@ public class Payment {
 
     // -------------------------------------
     public enum PaymentMethod {
-        CREDIT_CARD, CASH , ECPAY
+        CREDIT_CARD, CASH, ECPAY
     }
 
     public enum PaymentStatus {
