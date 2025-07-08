@@ -224,7 +224,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/payments")
-@CrossOrigin(origins = { "https://yen-ward-plates-visitor.trycloudflare.com", "http://127.0.0.1:5500",
+@CrossOrigin(origins = { "https://harm-hopefully-sms-elimination.trycloudflare.com", "http://127.0.0.1:5500",
 		"https://payment-stage.ecpay.com.tw" }) // 測試方便，正式環境請換為明確來源
 public class EcpayController {
 
@@ -241,7 +241,7 @@ public class EcpayController {
 	private final String ECPAY_ACTION_URL = "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5";
 
 	// 測試用網址 (您的 ngrok 或 cloudflare tunnel URL)
-	private String TUNNEL_URL = " https://yen-ward-plates-visitor.trycloudflare.com";
+	private String TUNNEL_URL = " https://harm-hopefully-sms-elimination.trycloudflare.com";
 
 	// --- ID 編碼/解碼邏輯 (使用 O<OrderID>P<PaymentID> 格式) ---
 	private String encodeOrderAndPaymentIds(Long orderId, Long paymentId) {
