@@ -1,24 +1,18 @@
 package com.example.demo.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.dto.HotelDetailDTO;
 import com.example.demo.dto.HotelSearchRequest;
 import com.example.demo.dto.HotelSearchResult;
-import com.example.demo.entity.Hotel;
 import com.example.demo.service.HotelService;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/hotels")
@@ -90,14 +84,22 @@ public class HotelController {
     public HotelDetailDTO getHotelDetail(@PathVariable Long hotelId) {
         return hotelService.getHotelDetail(hotelId);
     }
-    
-    
+
+
     @GetMapping("/search")
     public List<HotelSearchRequest> searchHotels(
-        @RequestParam("keyword") String keyword,
-        @RequestParam(value = "highlight_hotel_id", required = false) Long highlightHotelId
+            @RequestParam("keyword") String keyword,
+            @RequestParam(value = "highlight_hotel_id", required = false) Long highlightHotelId
     ) {
-    	return hotelService.searchHotelsByName(keyword, highlightHotelId);
+        return hotelService.searchHotelsByName(keyword, highlightHotelId);
     }
-    
+
+    @GetMapping("/{hotelId}/owner")
+    public ResponseEntity<Map<String, Long>> getHotelOwner(@PathVariable Long hotelId) {
+        Long hostUserId = hotelService.getHotelOwnerId(hotelId);
+        Map<String, Long> result = new HashMap<>();
+        result.put("hostUserId", hostUserId);
+        return ResponseEntity.ok(result);
+    }
+
 }

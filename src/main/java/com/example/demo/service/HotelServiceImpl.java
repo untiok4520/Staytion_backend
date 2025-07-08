@@ -1,13 +1,12 @@
 package com.example.demo.service;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Optional;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.example.demo.dto.*;
+import com.example.demo.entity.Hotel;
 import com.example.demo.projection.HotelProjection;
+import com.example.demo.repository.AmenityRepository;
+import com.example.demo.repository.HotelRepository;
+import com.example.demo.repository.ImageRepository;
+import com.example.demo.repository.RoomTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -15,17 +14,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.AmenityDTO;
-import com.example.demo.dto.HotelDetailDTO;
-import com.example.demo.dto.HotelSearchRequest;
-import com.example.demo.dto.HotelSearchResult;
-import com.example.demo.dto.ImageDTO;
-import com.example.demo.dto.RoomTypeDTO;
-import com.example.demo.entity.Hotel;
-import com.example.demo.repository.AmenityRepository;
-import com.example.demo.repository.HotelRepository;
-import com.example.demo.repository.ImageRepository;
-import com.example.demo.repository.RoomTypeRepository;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class HotelServiceImpl implements HotelService {
@@ -133,7 +127,7 @@ public class HotelServiceImpl implements HotelService {
                                     .map(img -> img.getImgUrl())
                                     .findFirst()
                                     .orElse("https://fakeimg.pl/200x200/?text=No+Image"));
-                            // 建議編碼，避免有空格等字元
+                    // 建議編碼，避免有空格等字元
                     String mapQuery = hotel.getHname() + " " + hotel.getDistrict().getCity().getCname();
                     String mapUrl = "https://www.google.com/maps/search/?api=1&query=" +
                             URLEncoder.encode(mapQuery, StandardCharsets.UTF_8);
@@ -259,57 +253,64 @@ public class HotelServiceImpl implements HotelService {
         return hotelRepository.findTopHotels();
     }
 
-	@Override
-	public List<HotelSearchRequest> searchHotelsByName(String keyword, Long highlightHotelId) {
-		List<Hotel> hotels = hotelRepository.findByHnameContainingIgnoreCase(keyword);
+    @Override
+    public List<HotelSearchRequest> searchHotelsByName(String keyword, Long highlightHotelId) {
+        List<Hotel> hotels = hotelRepository.findByHnameContainingIgnoreCase(keyword);
 
-		if (highlightHotelId != null) {
-			Optional<Hotel> highlight = hotelRepository.findById(highlightHotelId);
-			if (highlight.isPresent()) {
-				Hotel h = highlight.get();
-				if (h.getHname().toLowerCase().contains(keyword.toLowerCase())) {
-					hotels.removeIf(hotel -> hotel.getId().equals(highlightHotelId));
-					hotels.add(0, h);
-				}
-			}
-		}
+        if (highlightHotelId != null) {
+            Optional<Hotel> highlight = hotelRepository.findById(highlightHotelId);
+            if (highlight.isPresent()) {
+                Hotel h = highlight.get();
+                if (h.getHname().toLowerCase().contains(keyword.toLowerCase())) {
+                    hotels.removeIf(hotel -> hotel.getId().equals(highlightHotelId));
+                    hotels.add(0, h);
+                }
+            }
+        }
 
-		return hotels.stream().map(hotel -> {
-			HotelSearchRequest dto = new HotelSearchRequest();
-			dto.setId(hotel.getId());
-			dto.setName(hotel.getHname());
+        return hotels.stream().map(hotel -> {
+            HotelSearchRequest dto = new HotelSearchRequest();
+            dto.setId(hotel.getId());
+            dto.setName(hotel.getHname());
 
-			// 城市與區域資訊
-			dto.setDistrict(hotel.getDistrict().getDname());
-			dto.setCity(hotel.getDistrict().getCity().getCname());
+            // 城市與區域資訊
+            dto.setDistrict(hotel.getDistrict().getDname());
+            dto.setCity(hotel.getDistrict().getCity().getCname());
 
-			// 位置座標與地圖連結
-			dto.setLat(hotel.getLatitude());
-			dto.setLng(hotel.getLongitude());
-			dto.setMapUrl("https://maps.google.com/?q=" + hotel.getLatitude() + "," + hotel.getLongitude());
+            // 位置座標與地圖連結
+            dto.setLat(hotel.getLatitude());
+            dto.setLng(hotel.getLongitude());
+            dto.setMapUrl("https://maps.google.com/?q=" + hotel.getLatitude() + "," + hotel.getLongitude());
 
-			// 房型資訊
-			dto.setRoomType(hotel.getRoomTypes().stream().map(rt -> rt.getRname()).findFirst().orElse(""));
+            // 房型資訊
+            dto.setRoomType(hotel.getRoomTypes().stream().map(rt -> rt.getRname()).findFirst().orElse(""));
 
-			// 價格最低房型
-			dto.setPrice(hotel.getRoomTypes().stream().map(rt -> rt.getPrice().intValue()).min(Integer::compareTo)
-					.orElse(0));
+            // 價格最低房型
+            dto.setPrice(hotel.getRoomTypes().stream().map(rt -> rt.getPrice().intValue()).min(Integer::compareTo)
+                    .orElse(0));
 
-			// 評分平均
-			double avgScore = hotel.getReviews().stream().mapToDouble(r -> r.getScore()).average().orElse(0.0);
-			dto.setRating(avgScore);
+            // 評分平均
+            double avgScore = hotel.getReviews().stream().mapToDouble(r -> r.getScore()).average().orElse(0.0);
+            dto.setRating(avgScore);
 
-			// 圖片封面
-			dto.setImgUrl(hotel.getImages().stream().filter(img -> Boolean.TRUE.equals(img.getIsCover()))
-					.map(img -> img.getImgUrl()).findFirst().orElse("https://fakeimg.pl/200x200/?text=No+Image"));
+            // 圖片封面
+            dto.setImgUrl(hotel.getImages().stream().filter(img -> Boolean.TRUE.equals(img.getIsCover()))
+                    .map(img -> img.getImgUrl()).findFirst().orElse("https://fakeimg.pl/200x200/?text=No+Image"));
 
-			// 其他欄位（如果你想在模糊搜尋階段就傳）
-			dto.setAdults(2); // 預設值，如果你有查詢條件可以再處理
-			dto.setNight(1); // 預設值
+            // 其他欄位（如果你想在模糊搜尋階段就傳）
+            dto.setAdults(2); // 預設值，如果你有查詢條件可以再處理
+            dto.setNight(1); // 預設值
 
-			return dto;
-		}).collect(Collectors.toList());
-	}
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Long getHotelOwnerId(Long hotelId) {
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new RuntimeException("找不到 hotelId = " + hotelId));
+        return hotel.getOwner().getId();
+    }
 
     private static final Map<String, double[]> CITY_CENTER_MAP = Map.ofEntries(
             Map.entry("台北市", new double[]{25.0478, 121.5170}),      // 台北車站
