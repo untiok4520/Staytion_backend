@@ -1,127 +1,90 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.EcpayRequest;
-import com.example.demo.dto.WebhookData;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.Payment;
-import com.example.demo.repository.OrderRepository;
-import com.example.demo.repository.PaymentRepository;
-import com.example.demo.utils.EcpayHelper;
+import com.example.demo.entity.Payment.PaymentMethod;
+import com.example.demo.entity.Payment.PaymentStatus;
+import com.example.demo.repository.PaymentRepository; // 導入 PaymentRepository
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
-@Service
+/**
+ * 支付服務類別。
+ * 結合了介面定義和實作，直接作為 Spring 服務元件。
+ */
+@Service // 將 @Service 註解直接加在類別上
 public class PaymentService {
+
 
     @Autowired
     private PaymentRepository paymentRepository;
+    
 
-    @Autowired
-    private OrderRepository orderRepository;
-
-    private static final DateTimeFormatter ECPAY_DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-
-    // ✅ [1] 用 orderId 產生綠界表單（個別指定用）
-    public String generateEcpayForm(EcpayRequest request, Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("找不到訂單"));
-
+    /**
+     * 根據訂單和支付方式創建新的支付記錄。
+     *
+     * @param order           關聯的訂單實體。
+     * @param paymentMethod   支付方式 (例如 ECPAY)。
+     * @return 新創建的 Payment 實體。
+     */
+    @Transactional
+    public Payment createPayment(Order order, PaymentMethod paymentMethod) {
         Payment payment = new Payment();
         payment.setOrder(order);
-        payment.setMethod(request.getPaymentMethod());
-        payment.setStatus(Payment.PaymentStatus.UNPAID);
-        payment.setCreatedAt(LocalDateTime.now());
-        paymentRepository.save(payment);
+        payment.setMethod(paymentMethod);
+        payment.setStatus(PaymentStatus.UNPAID);
+        payment.setCreatedAt(null); // 初始為空，待支付成功後更新
 
-        Map<String, String> params = new HashMap<>();
-        params.put("MerchantID", "2000132");
-        params.put("MerchantTradeNo", "EC" + System.currentTimeMillis());
-        params.put("MerchantTradeDate", LocalDateTime.now().minusSeconds(5).format(ECPAY_DATE_FORMATTER)); // ✅ 修正格式
-        params.put("PaymentType", "aio");
-        params.put("TotalAmount", String.valueOf(order.getTotalPrice().intValue()));
-        params.put("TradeDesc", "訂房付款");
-        params.put("ItemName", "訂房金額");
-        params.put("ReturnURL", "http://localhost:8080/api/payments/webhook");
-        params.put("ClientBackURL", "http://127.0.0.1:5500/pages/booking_success.html");
-        params.put("ChoosePayment", "ALL");
-        params.put("EncryptType", "1");
-
-        params.put("CustomField1", String.valueOf(orderId));
-
-        String hashKey = "5294y06JbISpM5x9";
-        String hashIV = "v77hoKGq4kWxNNIS";
-        String checkMacValue = EcpayHelper.generateCheckMacValue(params, hashKey, hashIV);
-        params.put("CheckMacValue", checkMacValue);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("<form id='ecpay-form' method='post' action='https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'>");
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            sb.append(String.format("<input type='hidden' name='%s' value='%s'/>", entry.getKey(), entry.getValue()));
-        }
-        sb.append("</form>");
-        sb.append("<script>document.getElementById('ecpay-form').submit();</script>");
-        return sb.toString();
+        return paymentRepository.save(payment);
     }
 
-    // ✅ [2] 用 userId 自動找最新 UNPAID 訂單，產生綠界表單（loading 頁用）
-    public String generateEcpayForm(EcpayRequest request) {
-        List<Order> orders = orderRepository.findByUserId(request.getUserId());
-
-        Order targetOrder = orders.stream()
-                .filter(o -> o.getPayment() != null &&
-                        o.getPayment().getStatus() == Payment.PaymentStatus.UNPAID)
-                .max((o1, o2) -> o1.getCreatedAt().compareTo(o2.getCreatedAt()))
-                .orElseThrow(() -> new RuntimeException("找不到使用者的未付款訂單"));
-
-        Payment payment = targetOrder.getPayment();
-
-        Map<String, String> params = new HashMap<>();
-        params.put("MerchantID", "2000132");
-        params.put("MerchantTradeNo", "EC" + System.currentTimeMillis());
-        params.put("MerchantTradeDate", LocalDateTime.now().minusSeconds(5).format(ECPAY_DATE_FORMATTER)); // ✅ 修正格式
-        params.put("PaymentType", "aio");
-        params.put("TotalAmount", String.valueOf(targetOrder.getTotalPrice().intValue()));
-        params.put("TradeDesc", "訂房付款");
-        params.put("ItemName", "訂房金額");
-        params.put("ReturnURL", "http://localhost:8080/api/payments/webhook");
-        params.put("ClientBackURL", "http://127.0.0.1:5500/pages/booking_success.html");
-        params.put("ChoosePayment", "ALL");
-        params.put("EncryptType", "1");
-
-        params.put("CustomField1", String.valueOf(targetOrder.getId()));
-
-        String hashKey = "5294y06JbISpM5x9";
-        String hashIV = "v77hoKGq4kWxNNIS";
-        String checkMacValue = EcpayHelper.generateCheckMacValue(params, hashKey, hashIV);
-        params.put("CheckMacValue", checkMacValue);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("<form id='ecpay-form' method='post' action='https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'>");
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            sb.append(String.format("<input type='hidden' name='%s' value='%s'/>", entry.getKey(), entry.getValue()));
-        }
-        sb.append("</form>");
-        sb.append("<script>document.getElementById('ecpay-form').submit();</script>");
-        return sb.toString();
+    /**
+     * 根據支付記錄 ID 查找支付記錄。
+     *
+     * @param paymentId 支付記錄的唯一 ID。
+     * @return 包含 Payment 實體的 Optional，如果找不到則為 Optional.empty()。
+     */
+    public Optional<Payment> findPaymentById(Long paymentId) {
+        return paymentRepository.findById(paymentId);
     }
 
-    // ✅ [3] 處理綠界 webhook，更新付款狀態
-    public void handleEcpayWebhook(WebhookData data) {
-        Payment payment = paymentRepository.findByOrderId(data.getOrderId());
-        if (payment == null) {
-            throw new RuntimeException("找不到對應付款資料");
+    /**
+     * 更新支付記錄的狀態。
+     *
+     * @param paymentId 支付記錄的唯一 ID。
+     * @param status    要更新為的支付狀態 (例如 PAID, CANCELED)。
+     * @return 更新後的 Payment 實體，如果找不到則為 null。
+     */
+    @Transactional
+    public Payment updatePaymentStatus(Long paymentId, PaymentStatus status) {
+        Optional<Payment> optionalPayment = paymentRepository.findById(paymentId);
+        if (optionalPayment.isPresent()) {
+            Payment payment = optionalPayment.get();
+            payment.setStatus(status);
+            if (status == PaymentStatus.PAID) {
+                payment.setCreatedAt(LocalDateTime.now());
+            }
+            return paymentRepository.save(payment);
         }
-
-        payment.setStatus(Payment.PaymentStatus.PAID);
-        paymentRepository.save(payment);
-
-        System.out.println("✅ 付款成功，已更新訂單狀態");
+        System.err.println("無法更新 Payment 狀態：找不到 ID 為 " + paymentId + " 的支付記錄。");
+        return null;
+    }
+    
+    @Transactional
+    public Payment updatePaymentMethod(Long paymentId, PaymentMethod method) {
+    	Optional<Payment> optionalPayment = paymentRepository.findById(paymentId);
+    	if (optionalPayment.isPresent()) {
+    		Payment payment = optionalPayment.get();
+    		payment.setMethod(method);
+    		
+    		return paymentRepository.save(payment);
+    	}
+    	System.err.println("無法更新 Payment 記錄：找不到 ID 為 " + paymentId + " 的付款方式。");
+    	return null;
     }
 }
