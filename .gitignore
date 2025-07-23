@@ -50,4 +50,4 @@ application-dev.properties
 application-prod.properties
 src/main/resources/firebase/
 src/main/resources/firebase/staytion-serviceAccountKey.json
-src/main/java/com/example/demo/service/FakeDataService.java
+src/main/java/com/example/demo/service/FakeDataService.java*.jar
