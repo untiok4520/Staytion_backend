@@ -44,4 +44,8 @@ build/
 *.log
 logs/
 
+.env
+application-local.properties
+application-dev.properties
+application-prod.properties
 src/main/java/com/example/demo/service/FakeDataService.java
