@@ -29,4 +29,4 @@
 - **測試與管理 API**：Postman、Swagger
 
 ## 專案連結
-- GitHub Repo: [Staytion_Backend](https://github.com/xxx) | [Staytion_Frontend](https://github.com/xxx)
+- GitHub Repo: [Staytion_Backend](https://github.com/untiok4520/Staytion_backend.git) | [Staytion_Frontend](https://github.com/untiok4520/Staytion_frontend.git)
