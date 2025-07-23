@@ -26,7 +26,7 @@
 - **通訊**：WebSocket (前端搭配SockJS、STOMP)
 - **資料庫**：MySQL
 - **版本控制**：Git、GitHub
-- **測試與管理 API **：Postman、Swagger
+- **測試與管理 API**：Postman、Swagger
 
 ## 專案連結
 - GitHub Repo: [Staytion_Backend](https://github.com/xxx) | [Staytion_Frontend](https://github.com/xxx)
